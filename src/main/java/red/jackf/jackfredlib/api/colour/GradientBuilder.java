@@ -24,8 +24,9 @@ public class GradientBuilder {
     public static final float END = Math.nextDown(1F);
 
     /**
-     * Adds a colour point to the given position in the gradient. If you want to add a keyframe at the end of the gradient,
-     * use {@link GradientBuilder#END} as the point.
+     * <p>Adds a colour point to the given position in the gradient.</p>
+     * <p>Adding a point at '<code>1f</code>' is equivalent to placing this at the start due to wrapping; if you want to add
+     * a keyframe atthe end of the gradient, use {@link GradientBuilder#END} as the point.</p>
      *
      * @param point  Position on the gradient to add this colour
      * @param colour Colour to be placed at this position

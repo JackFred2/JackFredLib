@@ -51,6 +51,7 @@ public interface Gradient {
      * in a sharp cut as the progress value loops when sampling.
      * @param first Start colour at 0
      * @param second End colour at 1
+     * @param mode How the transition between the two colours is handled. For more information, see {@link LinearMode}.
      * @return The built linear gradient from the first colour to the second.
      */
     static Gradient linear(Colour first, Colour second, LinearMode mode) {

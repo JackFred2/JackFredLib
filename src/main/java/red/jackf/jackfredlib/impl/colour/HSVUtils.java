@@ -148,10 +148,10 @@ public class HSVUtils {
     }
 
     public static void main(String[] args) {
-        doHSVShort(Colours.Standard.RED, Colours.Standard.BLUE);
-        doHSVShort(Colours.Standard.AQUAMARINE, Colours.Standard.RED);
-        doHSVShort(Colours.Standard.RED, Colours.Standard.AQUAMARINE);
-        doHSVShort(Colours.Standard.PURPLE, Colours.Standard.ORANGE);
-        doHSVShort(Colours.Standard.ORANGE, Colours.Standard.PINK);
+        doHSVShort(Colours.RED, Colours.BLUE);
+        doHSVShort(Colours.AQUAMARINE, Colours.RED);
+        doHSVShort(Colours.RED, Colours.AQUAMARINE);
+        doHSVShort(Colours.PURPLE, Colours.ORANGE);
+        doHSVShort(Colours.ORANGE, Colours.PINK);
     }
 }
