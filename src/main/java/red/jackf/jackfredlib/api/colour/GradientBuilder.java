@@ -4,13 +4,12 @@ import org.jetbrains.annotations.Contract;
 import red.jackf.jackfredlib.impl.colour.GradientImpl;
 
 import java.util.NavigableMap;
-import java.util.TreeMap;
 
 /**
  * Aids with the construction of a gradient, providing several methods to slice and splice colours and gradients.
  */
 public class GradientBuilder {
-    private final NavigableMap<Float, Colour> points = new TreeMap<>();
+    private final NavigableMap<Float, Colour> points = GradientImpl.newPointMap();
 
     GradientBuilder() {}
 

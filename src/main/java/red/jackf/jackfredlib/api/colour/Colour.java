@@ -4,10 +4,10 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import red.jackf.jackfredlib.impl.colour.GradientImpl;
 
 import java.util.NavigableMap;
 import java.util.Objects;
-import java.util.TreeMap;
 
 /**
  * Represents a single colour value. Implements {@link Gradient} as a single-coloured gradient
@@ -225,10 +225,21 @@ public final class Colour implements Gradient {
         return this;
     }
 
+    /**
+     * Returns this colour
+     * @param edgeMargin Ignored
+     * @return This colour.
+     */
+    @Override
+    @Contract(value = "_ -> this", pure = true)
+    public Gradient squish(float edgeMargin) {
+        return this;
+    }
+
     @Override
     @ApiStatus.Internal
     public NavigableMap<Float, Colour> getPoints() {
-        var map = new TreeMap<Float, Colour>();
+        var map = GradientImpl.newPointMap();
         map.put(GradientBuilder.START, this);
         map.put(GradientBuilder.END, this);
         return map;
@@ -249,7 +260,6 @@ public final class Colour implements Gradient {
 
     @Override
     public String toString() {
-        return "Colour[" +
-                "value=" + integer + ']';
+        return "Colour[0x%2X_%6X]".formatted(a(), integer & 0xFFFFFF);
     }
 }

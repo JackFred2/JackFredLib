@@ -94,6 +94,14 @@ public interface Gradient {
     Gradient reversed();
 
     /**
+     * Scales the gradient inwards a set amount, centered at the midpoint. This generates a smooth transition at the
+     * edges of the gradient.
+     * @param edgeMargin How far in to push the gradient at each edge. Must be in the range [0, 0.5).
+     * @return Squished gradient, with smooth edge transitions generated.
+     */
+    Gradient squish(float edgeMargin);
+
+    /**
      * Defines how a linear gradient will be interpolated between two colours.
      */
     enum LinearMode {
