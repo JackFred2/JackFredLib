@@ -54,19 +54,14 @@ public interface Gradient {
      * @return The built linear gradient from the first colour to the second.
      */
     static Gradient linear(Colour first, Colour second, LinearMode mode) {
-        switch (mode) {
-            case RGB -> {
-                return builder()
+        return switch (mode) {
+            case RGB -> builder()
                         .add(GradientBuilder.START, first)
                         .add(GradientBuilder.END, second)
                         .build();
-            }
-            case HSV_SHORT -> {
-                return HSVUtils.doHSVShort(first, second);
-            }
-        }
-
-        return null;
+            case HSV_SHORT -> HSVUtils.doHSVShort(first, second);
+            case HSV_LONG -> HSVUtils.doHSVLong(first, second);
+       };
     }
 
     /**

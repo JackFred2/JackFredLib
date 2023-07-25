@@ -44,6 +44,18 @@ public class ColourTestScreen extends Screen {
             Colours.Standard.CYAN,
             Colours.Standard.RED,
             Gradient.LinearMode.HSV_SHORT);
+    private static final Gradient HSV_LONG_TEST1 = Gradient.linear(
+            Colours.Standard.ORANGE,
+            Colours.Standard.PURPLE,
+            Gradient.LinearMode.HSV_LONG);
+    private static final Gradient HSV_LONG_TEST2 = Gradient.linear(
+            Colours.Standard.YELLOW,
+            Colours.Standard.YELLOW,
+            Gradient.LinearMode.HSV_LONG);
+    private static final Gradient HSV_LONG_TEST3 = Gradient.linear(
+            Colours.Standard.RED,
+            Colours.Standard.RED,
+            Gradient.LinearMode.HSV_LONG);
 
     protected ColourTestScreen() {
         super(Component.literal("JackFredLib Test Screen"));
@@ -61,6 +73,9 @@ public class ColourTestScreen extends Screen {
         drawGradient(guiGraphics, 10, 85, 200, 10, HSV_SHORT_TEST2);
         drawGradient(guiGraphics, 215, 25, 200, 10, HSV_SHORT_TEST3);
         drawGradient(guiGraphics, 215, 40, 200, 10, HSV_SHORT_TEST4);
+        drawGradient(guiGraphics, 215, 55, 200, 10, HSV_LONG_TEST1);
+        drawGradient(guiGraphics, 215, 70, 200, 10, HSV_LONG_TEST2);
+        drawGradient(guiGraphics, 215, 70, 200, 20, HSV_LONG_TEST3);
     }
 
     private void drawGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient) {
