@@ -32,7 +32,7 @@ public class Colours {
      */
     public static class TextColours {
         private static Colour make(DyeColor dye) {
-            return new Colour(dye.getTextColor());
+            return Colour.fromInt(dye.getTextColor());
         }
 
         public static final Colour RED = make(DyeColor.RED);

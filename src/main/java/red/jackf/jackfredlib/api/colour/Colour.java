@@ -2,170 +2,139 @@ package red.jackf.jackfredlib.api.colour;
 
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import red.jackf.jackfredlib.impl.colour.GradientImpl;
-
-import java.util.NavigableMap;
-import java.util.Objects;
+import red.jackf.jackfredlib.impl.colour.ColourImpl;
 
 /**
- * Represents a single colour value. Implements {@link Gradient} as a single-coloured gradient
+ * <p>Represents a singular colour value. Provides helper methods for lerping, HSV and RGB operations.</p>
+ *
+ * <p>Colours implement {@link Gradient} as a single-colour gradient.</p>
  */
-public final class Colour implements Gradient {
-    private final int integer;
-
-    // Memoized HSV components
-    private float h = Float.NaN; // hue, range [0, 1)
-    private float s = Float.NaN; // saturation, range [0, 1)
-    private float v = Float.NaN; // value, range [0, 1)
+public interface Colour extends Gradient {
 
     /**
-     * Creates a colour from an ARGB integer colour.
-     * @param integer Integer representation of a colour, in ARGB format.
-     */
-    public Colour(int integer) {
-        this.integer = integer;
-    }
-
-    /**
-     * Returns the integer representation of this colour, in ARGB format.
-     * @return Integer value of this colour
-     */
-    public int integer() {
-        return integer;
-    }
-
-    /**
-     * Constructs a new colour from the given components
+     * <p>Create a colour from given alpha, red, green and blue colour components.</p>
      *
-     * @param a Alpha value of the new colour, in the range [0, 255]
-     * @param r Red value of the new colour, in the range [0, 255]
-     * @param g Green value of the new colour, in the range [0, 255]
-     * @param b Blue value of the new colour, in the range [0, 255]
-     * @return Constructed colour from given components
+     * @param a Alpha component of the colour
+     * @param r Red component of the colour
+     * @param g Green component of the colour
+     * @param b Blue component of the colour
+     * @return Built Colour instance
      */
-    @Contract(pure = true, value = "_, _, _, _ -> new")
-    public static Colour fromARGB(int a, int r, int g, int b) {
-        return new Colour(FastColor.ARGB32.color(a, r, g, b));
+    static Colour fromARGB(int a, int r, int g, int b) {
+        return new ColourImpl(FastColor.ARGB32.color(a, r, g, b));
     }
 
     /**
-     * Constructs a new colour from the given components, and a full alpha value.
+     * <p>Create a colour from given red, green and blue colour components, with an alpha value of 255 making it opaque.</p>
      *
-     * @param r Red value of the new colour, in the range [0, 255]
-     * @param g Green value of the new colour, in the range [0, 255]
-     * @param b Blue value of the new colour, in the range [0, 255]
-     * @return Constructed colour from given components
+     * @param r Red component of the colour
+     * @param g Green component of the colour
+     * @param b Blue component of the colour
+     * @return Built Colour instance, fully opaque
      */
-    @Contract(pure = true, value = " _, _, _ -> new")
-    public static Colour fromRGB(int r, int g, int b) {
+    static Colour fromRGB(int r, int g, int b) {
         return fromARGB(255, r, g, b);
     }
 
     /**
-     * Get the alpha component of this colour.
+     * <p>Create a colour from a given alpha, hue, saturation and value.</p>
+     *
+     * <p>For more information, see <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">the Wikipedia page on HSV</a>.</p>
+     *
+     * @param h Hue of the colour
+     * @param s Saturation of the colour
+     * @param v Value of the colour
+     * @return Built Colour instance
+     */
+    static Colour fromAHSV(int a, float h, float s, float v) {
+        return new ColourImpl(a << 24 | Mth.hsvToRgb(h, s, v));
+    }
+
+    /**
+     * <p>Create a colour from a given hue, saturation and value, with an alpha value of 255 making it opaque.</p>
+     *
+     * <p>For more information, see <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">the Wikipedia page on HSV</a>.</p>
+     *
+     * @param h Hue of the colour
+     * @param s Saturation of the colour
+     * @param v Value of the colour
+     * @return Built Colour instance, fully opaque
+     */
+    static Colour fromHSV(float h, float s, float v) {
+        return fromAHSV(255, h, s, v);
+    }
+
+    /**
+     * Create a colour from an existing colour integer, in the format ARGB.
+     * @param argb Integer representing a colour, in the format ARGB
+     * @return Built Colour instance
+     */
+    static Colour fromInt(int argb) {
+        return new ColourImpl(argb);
+    }
+
+    /**
+     * Returns the ARGB representation of this colour as an integer
+     *
+     * @return Integer representation of this colour, in ARGB format.
+     */
+    int toARGB();
+
+    /**
+     * Get the alpha (transparency) component of this colour in the range [0, 255], where 0 is transparent and 255 is
+     * opaque.
      *
      * @return Alpha component of this colour.
      */
-    @Contract(pure = true)
-    public int a() {
-        return FastColor.ARGB32.alpha(integer);
-    }
+    int a();
 
     /**
-     * Get the red component of this colour.
+     * Get the red component of this colour in the range [0, 255].
      *
      * @return Red component of this colour.
      */
-    @Contract(pure = true)
-    public int r() {
-        return FastColor.ARGB32.red(integer);
-    }
+    int r();
 
     /**
-     * Get the green component of this colour.
+     * Get the green component of this colour in the range [0, 255].
      *
      * @return Green component of this colour.
      */
-    @Contract(pure = true)
-    public int g() {
-        return FastColor.ARGB32.green(integer);
-    }
+    int g();
 
     /**
-     * Get the blue component of this colour.
+     * Get the blue component of this colour in the range [0, 255].
      *
      * @return Blue component of this colour.
      */
-    @Contract(pure = true)
-    public int b() {
-        return FastColor.ARGB32.blue(integer);
-    }
+    int b();
 
     /**
-     * Returns the hue of this colour, in the range [0, 1), calculating and caching the result on first run.
+     * <p>Returns the hue of this colour, in the range [0, 1), calculating and caching the result on first run.</p>
+     *
+     * <p>For more information, see <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">the Wikipedia page on HSV</a>.</p>
+     *
      * @return The hue component of this colour.
      */
-    public float hue() {
-        if (Float.isNaN(this.h)) {
-            float r = r() / 255f;
-            float g = g() / 255f;
-            float b = b() / 255f;
-            float greatest = Math.max(Math.max(r, g), b);
-            float least = Math.min(Math.min(r, g), b);
-            float range = greatest - least;
-
-            this.h = 0f;
-            if (range > 0) {
-                if (greatest == r) {
-                    this.h = (g - b) / range;
-                } else if (greatest == g) {
-                    this.h = 2f + (b - r) / range;
-                } else {
-                    this.h = 4f + (r - g) / range;
-                }
-                this.h /= 6;
-                this.h = Gradient.wrapPoint(this.h);
-            }
-        }
-
-        return this.h;
-    }
+    float hue();
 
     /**
-     * Returns the saturation value of this colour in the range [0, 1), calculating and caching the result on first run.
+     * <p>Returns the saturation of this colour in the range [0, 1], where 0 is grayscale and 1 is full colour brightness.</p>
+     *
+     * <p>For more information, see <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">the Wikipedia page on HSV</a>.</p>
+     *
      * @return The saturation component of this colour.
      */
-    public float saturation() {
-        if (Float.isNaN(this.s)) {
-            float r = r() / 255f;
-            float g = g() / 255f;
-            float b = b() / 255f;
-            float greatest = Math.max(Math.max(r, g), b);
-            float least = Math.min(Math.min(r, g), b);
-            float range = greatest - least;
-
-            this.s = greatest == 0f ? 0f : range / greatest;
-        }
-
-        return this.s;
-    }
+    float saturation();
 
     /**
-     * Returns the saturation value of this colour in the range [0, 1), calculating and caching the result on first run.
-     * @return The saturation component of this colour.
+     * <p>Returns the 'value' of this colour in the range [0, 1], where 0 is pure black and 1 is full colour brightness.</p>
+     *
+     * <p>For more information, see <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">the Wikipedia page on HSV</a>.</p>
+     *
+     * @return The value component of this colour.
      */
-    public float value() {
-        if (Float.isNaN(this.v)) {
-            float r = r() / 255f;
-            float g = g() / 255f;
-            float b = b() / 255f;
-            this.v = Math.max(Math.max(r, g), b);
-        }
-
-        return this.v;
-    }
+    float value();
 
     /**
      * Scales the brightness of this colour by a certain factor by multiplying each colour component.
@@ -173,14 +142,7 @@ public final class Colour implements Gradient {
      * @param factor Factor to scale brightness by; i.e. 0.5 to darken 50%, 2.0 to brighten 200%
      * @return Brightness-adjusted colour
      */
-    @Contract(pure = true)
-    public Colour scaleBrightness(float factor) {
-        return Colour.fromARGB(this.a(),
-                (int) Mth.clamp(this.r() * factor, 0, 255),
-                (int) Mth.clamp(this.g() * factor, 0, 255),
-                (int) Mth.clamp(this.b() * factor, 0, 255)
-        );
-    }
+    Colour scaleBrightness(float factor);
 
     /**
      * Blends this colour towards another at a given factor, giving a smooth transition.
@@ -189,90 +151,5 @@ public final class Colour implements Gradient {
      * @param delta Factor capped at the range [0, 1] to lerp at
      * @return Lerped colour
      */
-    @Contract(pure = true)
-    public Colour lerp(Colour to, float delta) {
-        if (delta <= 0F) return this;
-        else if (delta >= 1F) return to;
-        else return fromARGB(
-                    Mth.lerpInt(delta, this.a(), to.a()),
-                    Mth.lerpInt(delta, this.r(), to.r()),
-                    Mth.lerpInt(delta, this.g(), to.g()),
-                    Mth.lerpInt(delta, this.b(), to.b())
-            );
-    }
-
-    /**
-     * Returns this colour regardless of progress.
-     *
-     * @param progress Ignored.
-     * @return This colour.
-     */
-    @Override
-    @Contract(value = "_ -> this", pure = true)
-    public Colour sample(float progress) {
-        return this;
-    }
-
-    /**
-     * Returns this colour
-     *
-     * @param start Ignored
-     * @param end   Ignored
-     * @return This colour.
-     */
-    @Override
-    @Contract(value = "_, _ -> this", pure = true)
-    public Gradient slice(float start, float end) {
-        return this;
-    }
-
-
-    /**
-     * Returns this colour
-     *
-     * @return This colour.
-     */
-    @Override
-    @Contract(value = "-> this", pure = true)
-    public Gradient reversed() {
-        return this;
-    }
-
-    /**
-     * Returns this colour
-     * @param edgeMargin Ignored
-     * @return This colour.
-     */
-    @Override
-    @Contract(value = "_ -> this", pure = true)
-    public Gradient squish(float edgeMargin) {
-        return this;
-    }
-
-    @Override
-    @ApiStatus.Internal
-    public NavigableMap<Float, Colour> getPoints() {
-        var map = GradientImpl.newPointMap();
-        map.put(GradientBuilder.START, this);
-        map.put(GradientBuilder.END, this);
-        return map;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Colour) obj;
-        return this.integer == that.integer;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(integer);
-    }
-
-    @Override
-    public String toString() {
-        return "Colour[0x%2X_%6X]".formatted(a(), integer & 0xFFFFFF);
-    }
+    Colour lerp(Colour to, float delta);
 }

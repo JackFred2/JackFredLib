@@ -1,8 +1,8 @@
 package red.jackf.jackfredlib.impl.colour;
 
-import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.GradientBuilder;
+import red.jackf.jackfredlib.api.colour.Colour;
 
 import java.util.Collections;
 import java.util.NavigableMap;

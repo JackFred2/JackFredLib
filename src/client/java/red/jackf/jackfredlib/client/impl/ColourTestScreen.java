@@ -93,7 +93,7 @@ public class ColourTestScreen extends Screen {
 
     private void drawGradient(GuiGraphics graphics, int x, int y, int width, int height, int mouseX, Gradient gradient) {
         for (int i = 0; i < width; i++) {
-            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) (i - mouseX / 3) / width).integer());
+            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) (i - mouseX / 3) / width).toARGB());
         }
     }
 }

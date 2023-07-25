@@ -1,9 +1,9 @@
 package red.jackf.jackfredlib.impl.colour;
 
 import net.minecraft.util.Mth;
-import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.GradientBuilder;
+import red.jackf.jackfredlib.api.colour.Colour;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,12 +71,11 @@ public class HSVUtils {
             if (!ascending) progress = 1f - progress;
 
             if (progress == 1F) progress = GradientBuilder.END;
-            builder.add(progress,
-                    new Colour(0xFF_000000 | Mth.hsvToRgb(
+            builder.add(progress, Colour.fromHSV(
                             Gradient.wrapPoint(hue),
                             Mth.lerp(progress, firstCol.saturation(), secondCol.saturation()),
                             Mth.lerp(progress, firstCol.value(), secondCol.value())
-                    )));
+                    ));
         }
 
         return builder.build();
@@ -129,7 +128,7 @@ public class HSVUtils {
 
             if (progress == 1F) progress = GradientBuilder.END;
             builder.add(progress,
-                    new Colour(0xFF_000000 | Mth.hsvToRgb(
+                    new ColourImpl(0xFF_000000 | Mth.hsvToRgb(
                             Gradient.wrapPoint(hue),
                             Mth.lerp(progress, firstCol.saturation(), secondCol.saturation()),
                             Mth.lerp(progress, firstCol.value(), secondCol.value())
