@@ -6,15 +6,39 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.TreeMap;
 
 /**
  * Represents a single colour value. Implements {@link Gradient} as a single-coloured gradient
- * @param value Integer representation of a colour, in ARGB format.
  */
-public record Colour(int value) implements Gradient {
+public final class Colour implements Gradient {
+    private final int integer;
+
+    // Memoized HSV components
+    private float h = Float.NaN; // hue, range [0, 1)
+    private float s = Float.NaN; // saturation, range [0, 1)
+    private float v = Float.NaN; // value, range [0, 1)
+
+    /**
+     * Creates a colour from an ARGB integer colour.
+     * @param integer Integer representation of a colour, in ARGB format.
+     */
+    public Colour(int integer) {
+        this.integer = integer;
+    }
+
+    /**
+     * Returns the integer representation of this colour, in ARGB format.
+     * @return Integer value of this colour
+     */
+    public int integer() {
+        return integer;
+    }
+
     /**
      * Constructs a new colour from the given components
+     *
      * @param a Alpha value of the new colour, in the range [0, 255]
      * @param r Red value of the new colour, in the range [0, 255]
      * @param g Green value of the new colour, in the range [0, 255]
@@ -28,42 +52,111 @@ public record Colour(int value) implements Gradient {
 
     /**
      * Get the alpha component of this colour.
+     *
      * @return Alpha component of this colour.
      */
     @Contract(pure = true)
     public int a() {
-        return FastColor.ARGB32.alpha(value);
+        return FastColor.ARGB32.alpha(integer);
     }
 
     /**
      * Get the red component of this colour.
+     *
      * @return Red component of this colour.
      */
     @Contract(pure = true)
     public int r() {
-        return FastColor.ARGB32.red(value);
+        return FastColor.ARGB32.red(integer);
     }
 
     /**
      * Get the green component of this colour.
+     *
      * @return Green component of this colour.
      */
     @Contract(pure = true)
     public int g() {
-        return FastColor.ARGB32.green(value);
+        return FastColor.ARGB32.green(integer);
     }
 
     /**
      * Get the blue component of this colour.
+     *
      * @return Blue component of this colour.
      */
     @Contract(pure = true)
     public int b() {
-        return FastColor.ARGB32.blue(value);
+        return FastColor.ARGB32.blue(integer);
+    }
+
+    /**
+     * Returns the hue of this colour, in the range [0, 1), calculating and caching the result on first run.
+     * @return The hue component of this colour.
+     */
+    public float hue() {
+        if (Float.isNaN(this.h)) {
+            float r = r() / 255f;
+            float g = g() / 255f;
+            float b = b() / 255f;
+            float greatest = Math.max(Math.max(r, g), b);
+            float least = Math.min(Math.min(r, g), b);
+            float range = greatest - least;
+
+            this.h = 0f;
+            if (range > 0) {
+                if (greatest == r) {
+                    this.h = (g - b) / range;
+                } else if (greatest == g) {
+                    this.h = 2f + (b - r) / range;
+                } else {
+                    this.h = 4f + (r - g) / range;
+                }
+                this.h /= 6;
+                this.h = Gradient.wrapPoint(this.h);
+            }
+        }
+
+        return this.h;
+    }
+
+    /**
+     * Returns the saturation value of this colour in the range [0, 1), calculating and caching the result on first run.
+     * @return The saturation component of this colour.
+     */
+    public float saturation() {
+        if (Float.isNaN(this.s)) {
+            float r = r() / 255f;
+            float g = g() / 255f;
+            float b = b() / 255f;
+            float greatest = Math.max(Math.max(r, g), b);
+            float least = Math.min(Math.min(r, g), b);
+            float range = greatest - least;
+
+            this.s = greatest == 0f ? 0f : range / greatest;
+        }
+
+        return this.s;
+    }
+
+    /**
+     * Returns the saturation value of this colour in the range [0, 1), calculating and caching the result on first run.
+     * @return The saturation component of this colour.
+     */
+    public float value() {
+        if (Float.isNaN(this.v)) {
+            float r = r() / 255f;
+            float g = g() / 255f;
+            float b = b() / 255f;
+            this.v = Math.max(Math.max(r, g), b);
+        }
+
+        return this.v;
     }
 
     /**
      * Scales the brightness of this colour by a certain factor by multiplying each colour component.
+     *
      * @param factor Factor to scale brightness by; i.e. 0.5 to darken 50%, 2.0 to brighten 200%
      * @return Brightness-adjusted colour
      */
@@ -78,7 +171,8 @@ public record Colour(int value) implements Gradient {
 
     /**
      * Blends this colour towards another at a given factor, giving a smooth transition.
-     * @param to Colour to blend towards
+     *
+     * @param to    Colour to blend towards
      * @param delta Factor capped at the range [0, 1] to lerp at
      * @return Lerped colour
      */
@@ -96,6 +190,7 @@ public record Colour(int value) implements Gradient {
 
     /**
      * Returns this colour regardless of progress.
+     *
      * @param progress Ignored.
      * @return This colour.
      */
@@ -107,8 +202,9 @@ public record Colour(int value) implements Gradient {
 
     /**
      * Returns this colour
+     *
      * @param start Ignored
-     * @param end Ignored
+     * @param end   Ignored
      * @return This colour.
      */
     @Override
@@ -120,6 +216,7 @@ public record Colour(int value) implements Gradient {
 
     /**
      * Returns this colour
+     *
      * @return This colour.
      */
     @Override
@@ -132,8 +229,27 @@ public record Colour(int value) implements Gradient {
     @ApiStatus.Internal
     public NavigableMap<Float, Colour> getPoints() {
         var map = new TreeMap<Float, Colour>();
-        map.put(Builder.START, this);
-        map.put(Builder.END, this);
+        map.put(GradientBuilder.START, this);
+        map.put(GradientBuilder.END, this);
         return map;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Colour) obj;
+        return this.integer == that.integer;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(integer);
+    }
+
+    @Override
+    public String toString() {
+        return "Colour[" +
+                "value=" + integer + ']';
     }
 }

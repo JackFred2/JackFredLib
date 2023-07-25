@@ -28,6 +28,22 @@ public class ColourTestScreen extends Screen {
             .addBlock(0.25f, 0.45f, RAINBOW_TEST)
             .addBlock(0.55f, 0.75f, RAINBOW_TEST.reversed())
             .build();
+    private static final Gradient HSV_SHORT_TEST = Gradient.linear(
+            Colours.Standard.RED,
+            Colours.Standard.AQUAMARINE,
+            Gradient.LinearMode.HSV_SHORT);
+    private static final Gradient HSV_SHORT_TEST2 = Gradient.linear(
+            Colours.Standard.ORANGE,
+            Colours.Standard.PURPLE,
+            Gradient.LinearMode.HSV_SHORT);
+    private static final Gradient HSV_SHORT_TEST3 = Gradient.linear(
+            Colours.Standard.RED,
+            Colours.Standard.CYAN,
+            Gradient.LinearMode.HSV_SHORT);
+    private static final Gradient HSV_SHORT_TEST4 = Gradient.linear(
+            Colours.Standard.CYAN,
+            Colours.Standard.RED,
+            Gradient.LinearMode.HSV_SHORT);
 
     protected ColourTestScreen() {
         super(Component.literal("JackFredLib Test Screen"));
@@ -37,15 +53,19 @@ public class ColourTestScreen extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        drawGradient(guiGraphics, 10, 10, 200, 25, RAINBOW_TEST);
-        drawGradient(guiGraphics, 10, 40, 200, 25, EDGE_TRANSITION_TEST);
-        drawGradient(guiGraphics, 10, 70, 200, 25, CUT_TEST);
-        drawGradient(guiGraphics, 10, 100, 400, 25, MERGE_GRADIENT_TEST);
+        drawGradient(guiGraphics, 10, 10, 405, 10, RAINBOW_TEST);
+        drawGradient(guiGraphics, 10, 25, 200, 10, EDGE_TRANSITION_TEST);
+        drawGradient(guiGraphics, 10, 40, 200, 10, CUT_TEST);
+        drawGradient(guiGraphics, 10, 55, 200, 10, MERGE_GRADIENT_TEST);
+        drawGradient(guiGraphics, 10, 70, 200, 10, HSV_SHORT_TEST);
+        drawGradient(guiGraphics, 10, 85, 200, 10, HSV_SHORT_TEST2);
+        drawGradient(guiGraphics, 215, 25, 200, 10, HSV_SHORT_TEST3);
+        drawGradient(guiGraphics, 215, 40, 200, 10, HSV_SHORT_TEST4);
     }
 
     private void drawGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient) {
         for (int i = 0; i < width; i++) {
-            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) i / width).value());
+            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) i / width).integer());
         }
     }
 }
