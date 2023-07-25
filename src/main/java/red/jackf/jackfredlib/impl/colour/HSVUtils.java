@@ -2,7 +2,6 @@ package red.jackf.jackfredlib.impl.colour;
 
 import net.minecraft.util.Mth;
 import red.jackf.jackfredlib.api.colour.Colour;
-import red.jackf.jackfredlib.api.colour.Colours;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.GradientBuilder;
 
@@ -12,13 +11,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * This place is not a place of honor. <br />
+ * No highly esteemed deed is commemorated here. <br />
+ * Nothing valued is here.
+ *
+ * <hr />
+ *
+ * Maps Long and Short HSV gradients to a series of RGB gradients by adding a lerped point whenever the hue passes
+ * though a 60° segment of the colour wheel.
+ */
+
 public class HSVUtils {
     private static final List<Float> HSV_CHECKPOINTS = IntStream.range(0, 12).mapToObj(i -> i / 6f).toList();
 
     /**
-     * This place is not a place of honor. <br />
-     * No highly esteemed deed is commemorated here. <br />
-     * Nothing valued is here.
+     * Creates a gradient from firstCol to secondCol, by converting a single HSV gradient to a series of RGB transitions.
+     * Takes the shortest path between two hues. If both directions are equal, do hue ascending.
      */
     public static Gradient doHSVShort(Colour firstCol, Colour secondCol) {
         float first = firstCol.hue();
@@ -73,6 +82,10 @@ public class HSVUtils {
         return builder.build();
     }
 
+    /**
+     * Creates a gradient from firstCol to secondCol, by converting a single HSV gradient to a series of RGB transitions.
+     * Takes the longest path between two hues. If both directions are equal, do hue descending.
+     */
     public static Gradient doHSVLong(Colour firstCol, Colour secondCol) {
         float first = firstCol.hue();
         float second = secondCol.hue();
@@ -126,6 +139,9 @@ public class HSVUtils {
         return builder.build();
     }
 
+    /**
+     * Returns a list of checkpoints including and between first (hue) to second (hue).
+     */
     private static List<Float> getCheckpoints(float first, float second) {
         boolean flip = first > second;
         if (flip) {
@@ -145,13 +161,5 @@ public class HSVUtils {
 
         if (flip) Collections.reverse(checkpoints);
         return checkpoints;
-    }
-
-    public static void main(String[] args) {
-        doHSVShort(Colours.RED, Colours.BLUE);
-        doHSVShort(Colours.AQUAMARINE, Colours.RED);
-        doHSVShort(Colours.RED, Colours.AQUAMARINE);
-        doHSVShort(Colours.PURPLE, Colours.ORANGE);
-        doHSVShort(Colours.ORANGE, Colours.PINK);
     }
 }
