@@ -14,7 +14,8 @@ public class ColourTestScreen extends Screen {
             Colours.YELLOW,
             Colours.GREEN,
             Colours.BLUE,
-            Colours.PURPLE
+            Colours.PURPLE,
+            Colours.RED
     );
     private static final Gradient EDGE_TRANSITION_TEST = Gradient.builder()
             .addBlock(0.1f, 0.4f, Colours.RED)
@@ -70,12 +71,18 @@ public class ColourTestScreen extends Screen {
 
         drawGradient(guiGraphics, 215, 35, 200, 10, Gradients.GAY, mouseX);
         drawGradient(guiGraphics, 215, 50, 200, 10, Gradients.LESBIAN, mouseX);
-        drawGradient(guiGraphics, 215, 50, 200, 10, Gradients.BISEXUAL, mouseX);
+        drawGradient(guiGraphics, 215, 65, 200, 10, Gradients.BISEXUAL, mouseX);
+        drawGradient(guiGraphics, 215, 80, 200, 10, Gradients.PANSEXUAL, mouseX);
+        drawGradient(guiGraphics, 215, 95, 200, 10, Gradients.INTERSEX, mouseX);
+        drawGradient(guiGraphics, 215, 110, 200, 10, Gradients.NONBINARY, mouseX);
+        drawGradient(guiGraphics, 215, 125, 200, 10, Gradients.TRANS, mouseX);
+        drawGradient(guiGraphics, 215, 140, 200, 10, Gradients.ACE, mouseX);
+        drawGradient(guiGraphics, 215, 155, 200, 10, Gradients.ARO, mouseX);
     }
 
     private void drawGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient, int mouseX) {
         for (int i = 0; i < width; i++) {
-            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) (i + mouseX / 2) / width).integer());
+            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) (i - mouseX / 3) / width).integer());
         }
     }
 }

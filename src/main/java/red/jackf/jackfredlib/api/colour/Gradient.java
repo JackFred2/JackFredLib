@@ -30,20 +30,21 @@ public interface Gradient {
     }
 
     /**
-     * Constructs a gradient based of a set of equally-spaced colours. A copy of <code>points[0]</code> is placed at
-     * {@link GradientBuilder#END} in order to have a smooth loop.
+     * <p>Constructs a gradient based of a set of equally-spaced colours, ranging from 0 to {@link GradientBuilder#END}.</p>
+     * <p>If you wish to have a smooth loop, have both the first and last colour be the same, or use a method such as
+     * {@link Gradient#squish(float)}.</p>
      * @param points Colours to build a gradient with, spaced equally apart from each other
      * @return A built gradient made out of these points
      */
     static Gradient of(Colour... points) {
         if (points.length == 0) throw new IllegalArgumentException("Can't build a gradient with 0 points");
         if (points.length == 1) return points[0];
-        float factor = 1f / points.length;
+        float factor = 1f / (points.length - 1);
         var builder = builder();
         for (int i = 0; i < points.length; i++) {
-            builder.add(i * factor, points[i]);
+            builder.add(Math.min(i * factor, GradientBuilder.END), points[i]);
         }
-        return builder.add(GradientBuilder.END, points[0]).build();
+        return builder.build();
     }
 
     /**
@@ -72,8 +73,13 @@ public interface Gradient {
      */
     @Contract(pure = true)
     static float wrapPoint(float point) {
+        if (point == -1.0F) return 0.0F;
         float mod = point % 1F;
-        if (mod >= 0) return mod;
+
+        // since -0.0f > 0f equals true, we always want a positive result
+        if (mod == -0.0f) return 0.0f;
+
+        if (mod > 0f) return mod;
         return 1F + mod;
     }
 

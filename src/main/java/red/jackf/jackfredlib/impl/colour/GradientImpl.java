@@ -13,6 +13,8 @@ public class GradientImpl implements Gradient {
 
     public GradientImpl(NavigableMap<Float, Colour> frames) {
         this.frames = frames;
+        assert frames.containsKey(GradientBuilder.START);
+        assert frames.containsKey(GradientBuilder.END);
     }
 
     @Override

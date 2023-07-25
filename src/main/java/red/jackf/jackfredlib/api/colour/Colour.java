@@ -45,9 +45,22 @@ public final class Colour implements Gradient {
      * @param b Blue value of the new colour, in the range [0, 255]
      * @return Constructed colour from given components
      */
-    @Contract(pure = true)
+    @Contract(pure = true, value = "_, _, _, _ -> new")
     public static Colour fromARGB(int a, int r, int g, int b) {
         return new Colour(FastColor.ARGB32.color(a, r, g, b));
+    }
+
+    /**
+     * Constructs a new colour from the given components, and a full alpha value.
+     *
+     * @param r Red value of the new colour, in the range [0, 255]
+     * @param g Green value of the new colour, in the range [0, 255]
+     * @param b Blue value of the new colour, in the range [0, 255]
+     * @return Constructed colour from given components
+     */
+    @Contract(pure = true, value = " _, _, _ -> new")
+    public static Colour fromRGB(int r, int g, int b) {
+        return fromARGB(255, r, g, b);
     }
 
     /**
