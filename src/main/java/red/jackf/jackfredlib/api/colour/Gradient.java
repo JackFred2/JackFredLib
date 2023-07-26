@@ -1,7 +1,9 @@
 package red.jackf.jackfredlib.api.colour;
 
+import com.mojang.serialization.Codec;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import red.jackf.jackfredlib.impl.colour.GradientImpl;
 import red.jackf.jackfredlib.impl.colour.HSVUtils;
 
 import java.util.NavigableMap;
@@ -11,6 +13,11 @@ import java.util.NavigableMap;
  * <p>Transitions between colours are done using RGB lerping by default.</p>
  */
 public interface Gradient {
+    /**
+     * Codec for serializing gradient types. Gradients are converted into a map of float -> int pairs. A solid colour
+     * is serialized into a map from -42.0F to the colour.
+     */
+    Codec<Gradient> CODEC = Codec.unboundedMap(Codec.STRING.xmap(Float::parseFloat, Object::toString), Colour.CODEC).comapFlatMap(GradientImpl::decode, GradientImpl::encode);
 
     /**
      * Sample this gradient at a given point in the range [0, 1).

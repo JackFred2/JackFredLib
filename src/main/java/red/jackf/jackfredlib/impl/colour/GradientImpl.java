@@ -1,12 +1,11 @@
 package red.jackf.jackfredlib.impl.colour;
 
+import com.mojang.serialization.DataResult;
+import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.GradientBuilder;
-import red.jackf.jackfredlib.api.colour.Colour;
 
-import java.util.Collections;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class GradientImpl implements Gradient {
     private final NavigableMap<Float, Colour> frames;
@@ -100,5 +99,41 @@ public class GradientImpl implements Gradient {
 
     public static NavigableMap<Float, Colour> newPointMap() {
         return new TreeMap<>();
+    }
+
+    public static DataResult<Gradient> decode(Map<Float, Colour> pairs) {
+        if (pairs.size() == 0) return DataResult.error(() -> "Empty gradient");
+        if (pairs.size() == 1) return DataResult.success(pairs.values().stream().findFirst().get());
+        var frames = newPointMap();
+        frames.putAll(pairs);
+        return DataResult.success(new GradientImpl(frames));
+    }
+
+    public static Map<Float, Colour> encode(Gradient gradient) {
+        if (gradient instanceof Colour colour) {
+            return Map.of(-42.0F, colour);
+        } else {
+            return gradient.getPoints();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "GradientImpl{" +
+                "frames=" + frames +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GradientImpl gradient = (GradientImpl) o;
+        return Objects.equals(frames, gradient.frames);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(frames);
     }
 }

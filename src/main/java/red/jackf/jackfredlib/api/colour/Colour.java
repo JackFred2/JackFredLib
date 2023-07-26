@@ -1,5 +1,6 @@
 package red.jackf.jackfredlib.api.colour;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import red.jackf.jackfredlib.impl.colour.ColourImpl;
@@ -10,6 +11,10 @@ import red.jackf.jackfredlib.impl.colour.ColourImpl;
  * <p>Colours implement {@link Gradient} as a single-colour gradient.</p>
  */
 public interface Colour extends Gradient {
+    /**
+     * Codec for serializing a solid colour. Use this if you are directly using colours.
+     */
+    Codec<Colour> CODEC = Codec.INT.xmap(Colour::fromInt, Colour::toARGB);
 
     /**
      * <p>Create a colour from given alpha, red, green and blue colour components.</p>
