@@ -5,10 +5,13 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import red.jackf.jackfredlib.api.colour.Colours;
 import red.jackf.jackfredlib.api.colour.Gradient;
+import red.jackf.jackfredlib.api.colour.GradientBuilder;
 import red.jackf.jackfredlib.api.colour.Gradients;
+import red.jackf.jackfredlib.client.api.GradientUtils;
 
 @SuppressWarnings("SameParameterValue")
 public class ColourTestScreen extends Screen {
+    private long renderCount = 0;
     private static final Gradient RAINBOW_TEST = Gradient.of(
             Colours.RED,
             Colours.ORANGE,
@@ -53,6 +56,13 @@ public class ColourTestScreen extends Screen {
             Colours.PURPLE,
             Gradient.LinearMode.HSV_LONG);
 
+    private static final Gradient JITTER = Gradient.builder()
+            .add(0, Colours.BLACK)
+            .addCut(0.5f, Colours.BLACK, Colours.WHITE)
+            .add(GradientBuilder.END, Colours.WHITE)
+            .build()
+            .repeat(50);
+
     protected ColourTestScreen() {
         super(Component.literal("JackFredLib Test Screen"));
     }
@@ -61,9 +71,9 @@ public class ColourTestScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
-        drawGradient(graphics, 10, 40, 405, 20, mouseX, Gradients.RAINBOW);
+        GradientUtils.drawHorizontalGradient(graphics, 10, 40, 410, 20, Gradients.RAINBOW, 0f, 1f);
 
-        drawGradients(graphics, 10, 65, 200, 10, mouseX,
+        drawGradients(graphics, 10, 65, 200, 10,
                 Gradients.GAY,
                 Gradients.LESBIAN,
                 Gradients.BISEXUAL,
@@ -74,7 +84,7 @@ public class ColourTestScreen extends Screen {
                 Gradients.ACE,
                 Gradients.ARO);
 
-        drawGradients(graphics, 215, 65, 100, 10, mouseX,
+        drawGradients(graphics, 215, 65, 100, 10,
                 EDGE_TRANSITION_TEST,
                 CUT_TEST,
                 MERGE_REVERSE_TEST,
@@ -84,16 +94,19 @@ public class ColourTestScreen extends Screen {
                 HSV_SHORT_REVERSE_TEST,
                 HSV_FULL_SPECTRUM_TEST,
                 HSV_LONG_WRAP_TEST);
+
+        drawGradients(graphics, 320, 65, 100, 10, Gradients.INTERSEX.repeat(20), JITTER);
+
+        GradientUtils.drawHorizontalGradient(graphics, 320, 95, 100, 10, Gradients.ACE, 0f, 3f);
+        GradientUtils.drawHorizontalGradient(graphics, 320, 110, 100, 10, Gradients.ACE, 3f, 0f);
+
+        GradientUtils.drawVerticalGradient(graphics, 320, 125, 10, 100, Gradients.ACE, 0f, 3f);
+        GradientUtils.drawVerticalGradient(graphics, 335, 125, 10, 100, Gradients.ACE, 3f, 0f);
     }
 
-    private void drawGradients(GuiGraphics graphics, int x, int startY, int width, int height, int mouseX, Gradient... gradients) {
+    private void drawGradients(GuiGraphics graphics, int x, int startY, int width, int height, Gradient... gradients) {
+        float offset = (renderCount++ % 2400) / 2400f;
         for (int i = 0; i < gradients.length; i++)
-            drawGradient(graphics, x, startY + (height + 5) * i, width, height, mouseX, gradients[i]);
-    }
-
-    private void drawGradient(GuiGraphics graphics, int x, int y, int width, int height, int mouseX, Gradient gradient) {
-        for (int i = 0; i < width; i++) {
-            graphics.fill(x + i, y, x + i + 1, y + height, gradient.sample((float) (i - mouseX / 3) / width).toARGB());
-        }
+            GradientUtils.drawHorizontalGradient(graphics, x, startY + (height + 5) * i, width, height, gradients[i], 0f - offset, 1f - offset);
     }
 }

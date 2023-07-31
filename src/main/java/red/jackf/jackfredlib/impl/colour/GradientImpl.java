@@ -93,6 +93,20 @@ public class GradientImpl implements Gradient {
     }
 
     @Override
+    public Gradient repeat(int copies) {
+        if (copies < 1) throw new IllegalArgumentException("copies must be greater than or equal to 1");
+        if (copies == 1) return this;
+        var builder = Gradient.builder();
+        for (int i = 0; i < copies; i++) {
+            float start = (float) i / copies;
+            float end = (float) (i + 1) / copies;
+            end = Math.nextDown(end);
+            builder.addBlock(start, Math.min(end, GradientBuilder.END), this);
+        }
+        return builder.build();
+    }
+
+    @Override
     public NavigableMap<Float, Colour> getPoints() {
         return Collections.unmodifiableNavigableMap(this.frames);
     }
@@ -102,7 +116,7 @@ public class GradientImpl implements Gradient {
     }
 
     public static DataResult<Gradient> decode(Map<Float, Colour> pairs) {
-        if (pairs.size() == 0) return DataResult.error(() -> "Empty gradient");
+        if (pairs.isEmpty()) return DataResult.error(() -> "Empty gradient");
         if (pairs.size() == 1) return DataResult.success(pairs.values().stream().findFirst().get());
         var frames = newPointMap();
         frames.putAll(pairs);

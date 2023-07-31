@@ -10,8 +10,11 @@ import java.util.NavigableMap;
 
 /**
  * <p>A gradient that can be sampled for a colour at a given point. Useful for smooth transitions.</p>
- * <p>Transitions between colours are done using RGB lerping by default.</p>
+ * <p>Transitions between colours are done using RGB lerping; for HSV functionality see the <code>mode</code> parameter
+ * for {@link #linear(Colour, Colour, LinearMode)}.</p>
+ * <p>For extra client-specific utilities, see {@link red.jackf.jackfredlib.client.api.GradientUtils}</p>
  */
+@SuppressWarnings("JavadocReference")
 public interface Gradient {
     /**
      * Codec for serializing gradient types. Gradients are converted into a map of float -> int pairs. A solid colour
@@ -94,8 +97,8 @@ public interface Gradient {
      * <p>Returns a sample of this gradient between the two points, scaled up to fit the range [0, 1).</p>
      * <p>If, after wrapping to [0, 1) it is the case that '<code>end < start</code>' is true, then it is interpreted as
      * two blocks running from <code>start</code> to <code>1F</code> and from <code>0f</code> to <code>end</code>.</p>
-     * @param start Start point of the sample.
-     * @param end End point of the sample.
+     * @param start Start point of the sample, in the range [0, 1).
+     * @param end End point of the sample, in the range [0, 1).
      * @return The sliced gradient, scaled up to fit [0, 1).
      */
     Gradient slice(float start, float end);
@@ -113,6 +116,14 @@ public interface Gradient {
      * @return Squished gradient, with smooth edge transitions generated.
      */
     Gradient squish(float edgeMargin);
+
+    /**
+     * Repeats this gradient <code>copies</code> times, shrinking this one to make them fit.
+     * @param copies How many times to repeat this gradient to produce.
+     * @return A gradient composes of <code>copies</code> instances of this gradient.
+     * @throws IllegalArgumentException If copies < 1
+     */
+    Gradient repeat(int copies);
 
     /**
      * Defines how a linear gradient will be interpolated between two colours.

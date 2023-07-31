@@ -58,8 +58,11 @@ public class GradientBuilder {
             this.points.subMap(start, true, end, true).clear();
 
             var scaleFactor = end - start;
-            for (var point : gradient.getPoints().entrySet())
-                this.points.put(start + point.getKey() * scaleFactor, point.getValue());
+            for (var point : gradient.getPoints().entrySet()) {
+                var key = start + point.getKey() * scaleFactor;
+                while (this.points.containsKey(key) && key != END) key = Math.nextUp(key);
+                this.points.put(key, point.getValue());
+            }
         } else { // start > end
             var joinPoint = (END - start) / (END - start + end);
             var untilEnd = gradient.slice(START, joinPoint);
@@ -100,7 +103,7 @@ public class GradientBuilder {
      * @return The built gradient.
      */
     public Gradient build() {
-        if (this.points.size() == 0)
+        if (this.points.isEmpty())
             throw new IllegalArgumentException("Cannot construct a gradient with zero colour frames");
         else if (this.points.size() == 1) return this.points.firstEntry().getValue(); // return a solid colour
         else {

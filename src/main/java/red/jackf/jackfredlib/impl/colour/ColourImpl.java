@@ -151,6 +151,11 @@ public final class ColourImpl implements Colour {
     }
 
     @Override
+    public Gradient repeat(int copies) {
+        return this;
+    }
+
+    @Override
     @ApiStatus.Internal
     public NavigableMap<Float, Colour> getPoints() {
         var map = GradientImpl.newPointMap();
@@ -174,6 +179,6 @@ public final class ColourImpl implements Colour {
 
     @Override
     public String toString() {
-        return "Colour[0x%2X_%6X]".formatted(a(), integer & 0xFFFFFF);
+        return "Colour[0x%02X_%06X]".formatted(a(), integer & 0xFFFFFF);
     }
 }
