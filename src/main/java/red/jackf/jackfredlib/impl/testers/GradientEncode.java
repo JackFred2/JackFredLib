@@ -22,7 +22,7 @@ public class GradientEncode {
         var errors = new ArrayList<String>();
 
         encodeDecodeEquals(Gradients.RAINBOW, errors::add);
-        encodeDecodeEquals(Gradients.INTERSEX, errors::add);
+        encodeDecodeEquals(Gradients.INTERSEX_SHARP, errors::add);
         encodeDecodeEquals(Gradients.ARO, errors::add);
         encodeDecodeEquals(Colours.HOT_PINK, errors::add);
 

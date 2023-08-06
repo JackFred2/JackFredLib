@@ -12,7 +12,7 @@ public class JackFredLibClient implements ClientModInitializer {
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 				if (environment.includeIntegrated)
-					dispatcher.register(Commands.literal("openColourGui").executes(ctx -> {
+					dispatcher.register(Commands.literal("jackfredlibOpenColourScreen").executes(ctx -> {
 						Minecraft.getInstance()
 								.execute(() -> Minecraft.getInstance().setScreen(new ColourTestScreen()));
 						return 0;

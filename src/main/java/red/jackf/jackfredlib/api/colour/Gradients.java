@@ -34,9 +34,15 @@ public class Gradients {
             .add(GradientBuilder.END, Colour.fromRGB(83, 173, 250))
             .build();
 
-    public static final Gradient INTERSEX = Gradient.builder()
+    public static final Gradient INTERSEX_SHARP = Gradient.builder()
             .addCut(0.45f, Colours.YELLOW, Colours.PURPLE)
             .addCut(0.55f, Colours.PURPLE, Colours.YELLOW)
+            .build();
+
+    public static final Gradient INTERSEX_SMOOTH = Gradient.builder()
+            .add(0.425f, Colours.YELLOW)
+            .addBlock(0.45f, 0.55f, Colours.PURPLE)
+            .add(0.575f, Colours.YELLOW)
             .build();
 
     public static final Gradient NONBINARY = Gradient.of(

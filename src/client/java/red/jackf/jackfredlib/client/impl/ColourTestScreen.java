@@ -78,7 +78,8 @@ public class ColourTestScreen extends Screen {
                 Gradients.LESBIAN,
                 Gradients.BISEXUAL,
                 Gradients.PANSEXUAL,
-                Gradients.INTERSEX,
+                Gradients.INTERSEX_SHARP,
+                Gradients.INTERSEX_SMOOTH,
                 Gradients.NONBINARY,
                 Gradients.TRANS,
                 Gradients.ACE,
@@ -95,7 +96,7 @@ public class ColourTestScreen extends Screen {
                 HSV_FULL_SPECTRUM_TEST,
                 HSV_LONG_WRAP_TEST);
 
-        drawGradients(graphics, 320, 65, 100, 10, Gradients.INTERSEX.repeat(20), JITTER);
+        drawGradients(graphics, 320, 65, 100, 10, Gradients.INTERSEX_SHARP.repeat(20), JITTER);
 
         GradientUtils.drawHorizontalGradient(graphics, 320, 95, 100, 10, Gradients.ACE, 0f, 3f);
         GradientUtils.drawHorizontalGradient(graphics, 320, 110, 100, 10, Gradients.ACE, 3f, 0f);
