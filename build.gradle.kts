@@ -31,6 +31,19 @@ repositories {
 	}
 }
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+
+	withSourcesJar()
+	withJavadocJar()
+}
+
+tasks.withType<Javadoc>().configureEach {
+	include("red/jackf/jackfredlib/api/**/*.java")
+	include("red/jackf/jackfredlib/client/api/**/*.java")
+}
+
 loom {
     splitEnvironmentSourceSets()
 
@@ -78,19 +91,12 @@ tasks.withType<ProcessResources>().configureEach {
 tasks.withType<JavaCompile>().configureEach {
 	options.release.set(17)
 }
-
-java {
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-}
-
+/*
 tasks.named<Jar>("sourcesJar") {
 	dependsOn(tasks.classes)
 	archiveClassifier.set("sources")
 	from(sourceSets.main.get().allSource)
-}
+}*/
 
 tasks.jar {
 	from("LICENSE") {
@@ -102,12 +108,7 @@ tasks.jar {
 publishing {
 	publications {
 		create<MavenPublication>("mavenJava") {
-			artifact(tasks.named("sourcesJar")) {
-				builtBy(tasks.named("remapSourcesJar"))
-			}
-			afterEvaluate {
-				artifact(tasks.named("remapJar"))
-			}
+			from(components["java"]!!)
 		}
 	}
 

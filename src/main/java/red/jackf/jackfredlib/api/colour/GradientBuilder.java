@@ -40,7 +40,7 @@ public class GradientBuilder {
 
     /**
      * <p>Adds a solid block of colour or another gradient between two points, removing any existing points between the bounds.</p>
-     * <p>If, after wrapping to [0, 1) it is the case that '<code>end < start</code>' is true, then it is interpreted as two blocks
+     * <p>If, after wrapping to [0, 1) it is the case that '<code>end &lt; start</code>' is true, then it is interpreted as two blocks
      * running from <code>start</code> to <code>1f</code> and from <code>0f</code> to <code>end</code>.</p>
      *
      * @param start    Start position of the solid block

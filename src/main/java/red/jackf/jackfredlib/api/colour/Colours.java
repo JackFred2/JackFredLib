@@ -3,7 +3,7 @@ package red.jackf.jackfredlib.api.colour;
 import net.minecraft.world.item.DyeColor;
 
 /**
- * Collection of common colour values
+ * Collection of common colour values.
  */
 @SuppressWarnings("unused")
 public class Colours {
@@ -28,7 +28,7 @@ public class Colours {
     public static final Colour BLACK = Colour.fromRGB(0, 0, 0);
 
     /**
-     * Set of colours matching the colours for Minecraft's dyes, using their text colour value.
+     * Set of colours matching the colours for Minecraft's {@link DyeColor}s, using their text colour value.
      */
     public static class TextColours {
         private static Colour make(DyeColor dye) {

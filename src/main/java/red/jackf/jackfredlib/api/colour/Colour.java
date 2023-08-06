@@ -46,6 +46,7 @@ public interface Colour extends Gradient {
      *
      * <p>For more information, see <a href="https://en.wikipedia.org/wiki/HSL_and_HSV">the Wikipedia page on HSV</a>.</p>
      *
+     * @param a Alpha of the colour
      * @param h Hue of the colour
      * @param s Saturation of the colour
      * @param v Value of the colour

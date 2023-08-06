@@ -38,6 +38,7 @@ public final class ResultHolder<T> {
     /**
      * Create a <i>terminating</i> result that explicitly holds no value.
      * @return Built EMPTY result holding the given value
+     * @param <T> Type of empty result
      */
     public static <T> ResultHolder<T> empty() {
         //noinspection unchecked
@@ -47,6 +48,7 @@ public final class ResultHolder<T> {
     /**
      * Create a <i>non-terminating</i> result that indicates further processing should occur.
      * @return Built PASS result holding the given value
+     * @param <T> Type of pass result
      */
     public static <T> ResultHolder<T> pass() {
         //noinspection unchecked
