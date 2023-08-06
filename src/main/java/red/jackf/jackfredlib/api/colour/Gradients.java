@@ -20,7 +20,7 @@ public class Gradients {
             .add(0.4f, Colour.fromRGB(255, 154, 86))
             .add(0.5f, Colour.fromRGB(255, 255, 255))
             .add(0.6f, Colour.fromRGB(209, 98, 164))
-            .add(1f, Colour.fromRGB(163, 2, 98))
+            .add(GradientBuilder.END, Colour.fromRGB(163, 2, 98))
             .build();
 
     public static final Gradient BISEXUAL = Gradient.of(
