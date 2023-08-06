@@ -11,7 +11,7 @@
 		"sources": "https://github.com/JackFred2/JackFredLib",
 		"issues": "https://github.com/JackFred2/JackFredLib/issues"
 	},
-	"license": "LGPL-3.0",
+	"license": "LGPL-3.0-only",
 	"icon": "assets/jackfredlib/icon.png",
 	"environment": "*",
 	"entrypoints": {
