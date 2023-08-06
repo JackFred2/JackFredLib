@@ -58,8 +58,12 @@ dependencies {
 	})
 	modImplementation("net.fabricmc:fabric-loader:${properties["loader_version"]}")
 
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric_version"]}")
-	modImplementation("com.terraformersmc:modmenu:${findProperty("modmenu_version")}")
+	setOf(
+		"fabric-api-base",
+		"fabric-command-api-v2"
+	).forEach { modImplementation(fabricApi.module(it, properties["fabric_api_version"]!!.toString())) }
+
+	modImplementation("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 }
 
 
@@ -103,6 +107,17 @@ publishing {
 			}
 			afterEvaluate {
 				artifact(tasks.named("remapJar"))
+			}
+		}
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = URI("https://maven.pkg.github.com/JackFred2/JackFredLib")
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
 			}
 		}
 	}
