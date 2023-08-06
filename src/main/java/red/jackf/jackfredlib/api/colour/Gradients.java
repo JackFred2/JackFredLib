@@ -41,7 +41,7 @@ public class Gradients {
 
     public static final Gradient INTERSEX_SMOOTH = Gradient.builder()
             .add(0.425f, Colours.YELLOW)
-            .addBlock(0.45f, 0.55f, Colours.PURPLE)
+            .addBlock(0.475f, 0.525f, Colours.PURPLE)
             .add(0.575f, Colours.YELLOW)
             .build();
 
