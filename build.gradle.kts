@@ -13,6 +13,39 @@ base {
 	archivesName.set("${properties["archives_base_name"]}")
 }
 
+val lastTag = properties["lastTag"]?.toString()
+val newTag = properties["newTag"]?.toString()
+if (lastTag != null && newTag != null) {
+	task("generateChangelog") {
+		val prefixList = properties["changelog_filter"]!!.toString().split(",")
+		val filePath = layout.buildDirectory.file("changelogs/$lastTag..$newTag.md")
+		println("Writing to ${filePath.get()}")
+		outputs.file(filePath)
+
+		doLast {
+			val command = "git log --max-count=100 --pretty=format:\"%s\" $lastTag...$newTag"
+			val proc = Runtime.getRuntime().exec(command)
+			// println(command)
+			proc.errorStream.bufferedReader().forEachLine { println(it) }
+			val lines = mutableListOf(
+				"# ${properties["mod_name"]} $newTag",
+				"Since: $lastTag",
+				""
+			)
+			properties["github_url"]?.toString()?.also {
+				lines.add("Full changelog: ${it}/compare/$lastTag...$newTag")
+			}
+			proc.inputStream.bufferedReader().forEachLine {
+				if (prefixList.any { prefix -> it.startsWith(prefix) })
+					lines.add("  - $it")
+			}
+			proc.waitFor()
+			filePath.get().asFile.writeText(lines.joinToString("\n"))
+			println(lines)
+		}
+	}
+}
+
 repositories {
 	maven {
 		name = "ParchmentMC"
@@ -82,6 +115,7 @@ dependencies {
 
 tasks.withType<ProcessResources>().configureEach {
 	inputs.property("version", version)
+	inputs.property("mod_name", properties["mod_name"]!!)
 
 	filesMatching("fabric.mod.json") {
 		expand(inputs.properties)
@@ -91,12 +125,6 @@ tasks.withType<ProcessResources>().configureEach {
 tasks.withType<JavaCompile>().configureEach {
 	options.release.set(17)
 }
-/*
-tasks.named<Jar>("sourcesJar") {
-	dependsOn(tasks.classes)
-	archiveClassifier.set("sources")
-	from(sourceSets.main.get().allSource)
-}*/
 
 tasks.jar {
 	from("LICENSE") {
