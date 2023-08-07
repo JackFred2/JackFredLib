@@ -138,6 +138,7 @@ if (lastTag != null && newTag != null) {
 	}
 
 	tasks.named<GithubReleaseTask>("githubRelease") {
+		dependsOn(changelogTask)
 		mustRunAfter(changelogTask)
 		inputs.file(filePath)
 
@@ -151,9 +152,8 @@ if (lastTag != null && newTag != null) {
 			tasks.remapSourcesJar.get(),
 			tasks.named("javadocJar").get()
 		)
-
-		doFirst {
-			body = filePath.get().asFile.readText()
+		body = provider {
+			return@provider filePath.get().asFile.readText()
 		}
 	}
 }
