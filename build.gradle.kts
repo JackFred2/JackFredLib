@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
 import java.net.URI
 
@@ -107,7 +109,7 @@ val newTag = properties["newTag"]?.toString()
 if (lastTag != null && newTag != null) {
 	val filePath = layout.buildDirectory.file("changelogs/$lastTag..$newTag.md")
 
-	task("generateChangelog") {
+	val changelogTask = task("generateChangelog") {
 		val prefixList = properties["changelog_filter"]!!.toString().split(",")
 		println("Writing to ${filePath.get()}")
 		outputs.file(filePath)
@@ -136,6 +138,7 @@ if (lastTag != null && newTag != null) {
 	}
 
 	tasks.named<GithubReleaseTask>("githubRelease") {
+		mustRunAfter(changelogTask)
 		inputs.file(filePath)
 
 		authorization = System.getenv("GITHUB_TOKEN")
