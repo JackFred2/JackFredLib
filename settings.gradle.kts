@@ -11,3 +11,4 @@ pluginManagement {
 
 rootProject.name = "jackfredlib"
 include("api")
+include("testmod")

@@ -4,7 +4,6 @@ import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
 import java.net.URI
 
 plugins {
-	id("fabric-loom") version "1.3-SNAPSHOT"
 	id("io.github.juuxel.loom-vineflower") version "1.11.0"
 	id("com.github.breadmoirai.github-release") version "2.4.1"
 	id("org.ajoberstar.grgit") version "5.0.+"
@@ -56,14 +55,6 @@ loom {
 		create("jackfredlib") {
 			sourceSet(sourceSets["main"])
 			sourceSet(sourceSets["client"])
-		}
-	}
-
-	runConfigs {
-		configureEach {
-			val path = buildscript.sourceFile?.parentFile?.resolve("log4j2.xml")
-			path?.let { property("log4j2.configurationFile", path.path) }
-			property("jackfredlib.test", "true")
 		}
 	}
 }

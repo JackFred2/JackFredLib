@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.impl.test;
+package red.jackf.jackfredlib.testmod;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DynamicOps;

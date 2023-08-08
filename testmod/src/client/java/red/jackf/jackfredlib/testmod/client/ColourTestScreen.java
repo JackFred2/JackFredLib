@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.client.impl.test;
+package red.jackf.jackfredlib.testmod.client;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
