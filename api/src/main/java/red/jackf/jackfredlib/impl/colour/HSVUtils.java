@@ -15,7 +15,6 @@ import java.util.stream.IntStream;
  * This place is not a place of honor. <br />
  * No highly esteemed deed is commemorated here. <br />
  * Nothing valued is here.
- *
  * <hr />
  *
  * Maps Long and Short HSV gradients to a series of RGB gradients by adding a lerped point whenever the hue passes

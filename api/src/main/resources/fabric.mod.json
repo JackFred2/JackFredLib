@@ -23,7 +23,7 @@
 		]
 	},
 	"mixins": [
-		"jackfredlib.mixins.json",
+      "jackfredlib.mixins.json.d",
 		{
 			"config": "jackfredlib.client.mixins.json",
 			"environment": "client"

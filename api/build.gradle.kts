@@ -63,6 +63,7 @@ loom {
 		configureEach {
 			val path = buildscript.sourceFile?.parentFile?.resolve("log4j2.xml")
 			path?.let { property("log4j2.configurationFile", path.path) }
+			property("jackfredlib.test", "true")
 		}
 	}
 }
@@ -154,9 +155,9 @@ if (lastTag != null && newTag != null) {
 		releaseName = "${properties["mod_name"]} $newTag"
 		targetCommitish = grgit.branch.current().name
 		releaseAssets.from(
-			tasks.remapJar.get(),
-			tasks.remapSourcesJar.get(),
-			tasks.named("javadocJar").get()
+			tasks["remapJar"].outputs.files,
+			tasks["remapSourcesJar"].outputs.files,
+			tasks["javadocJar"].outputs.files,
 		)
 		body = provider {
 			return@provider filePath.get().asFile.readText()
@@ -164,15 +165,9 @@ if (lastTag != null && newTag != null) {
 	}
 }
 
-// configure the maven publication
 publishing {
-	publications {
-		create<MavenPublication>("mavenJava") {
-			from(components["java"]!!)
-		}
-	}
-
 	repositories {
+		mavenLocal()
 		maven {
 			name = "GitHubPackages"
 			url = URI("https://maven.pkg.github.com/JackFred2/JackFredLib")
@@ -180,6 +175,13 @@ publishing {
 				username = System.getenv("GITHUB_ACTOR")
 				password = System.getenv("GITHUB_TOKEN")
 			}
+		}
+	}
+
+	publications {
+		create<MavenPublication>("mavenJava") {
+			from(components["java"]!!)
+			artifactId = "jackfredlib"
 		}
 	}
 }
