@@ -129,11 +129,14 @@ if (lastTag != null && newTag != null) {
 				lines.add("")
 			}
 			proc.inputStream.bufferedReader().forEachLine {
+				println("git log: $it")
 				if (prefixList.any { prefix -> it.startsWith(prefix) })
 					lines.add("  - $it")
 			}
 			proc.waitFor()
 			val changelog = lines.joinToString("\n")
+			println("CHANGELOG FILE")
+			println(changelog)
 			filePath.get().asFile.writeText(changelog)
 		}
 	}

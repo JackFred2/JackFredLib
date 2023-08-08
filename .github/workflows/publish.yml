@@ -25,18 +25,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/loom-cache
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-
-
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -53,6 +43,9 @@ jobs:
 
       - name: Fetch tags
         run: git fetch --tags
+
+      - name: Fetch repo data
+        run: git fetch origin
 
       - name: Set up JDK
         uses: actions/setup-java@v1
