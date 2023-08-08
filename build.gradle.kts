@@ -111,7 +111,7 @@ if (lastTag != null && newTag != null) {
 
 	val changelogTask = task("generateChangelog") {
 		val prefixList = properties["changelog_filter"]!!.toString().split(",")
-		println("Writing to ${filePath.get()}")
+		println("Writing changelog to ${filePath.get()}")
 		outputs.file(filePath)
 
 		doLast {
@@ -120,8 +120,8 @@ if (lastTag != null && newTag != null) {
 			// println(command)
 			proc.errorStream.bufferedReader().forEachLine { println(it) }
 			val lines = mutableListOf(
-				"# ${properties["mod_name"]} $newTag",
-				"Since: $lastTag",
+				// "# ${properties["mod_name"]} $newTag",
+				"Previous: $lastTag",
 				""
 			)
 			properties["github_url"]?.toString()?.also {
@@ -142,10 +142,11 @@ if (lastTag != null && newTag != null) {
 		mustRunAfter(changelogTask)
 		inputs.file(filePath)
 
-		authorization = System.getenv("GITHUB_TOKEN")
+		authorization = System.getenv("GITHUB_TOKEN")?.let { "Bearer $it" }
 		owner = properties["github_owner"]!!.toString()
 		repo = properties["github_repo"]!!.toString()
 		tagName = newTag
+		releaseName = "${properties["mod_name"]} $newTag"
 		targetCommitish = grgit.branch.current().name
 		releaseAssets.from(
 			tasks.remapJar.get(),
