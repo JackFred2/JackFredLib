@@ -133,7 +133,8 @@ if (lastTag != null && newTag != null) {
 					lines.add("  - $it")
 			}
 			proc.waitFor()
-			filePath.get().asFile.writeText(lines.joinToString("\n"))
+			val changelog = lines.joinToString("\n")
+			filePath.get().asFile.writeText(changelog)
 		}
 	}
 
