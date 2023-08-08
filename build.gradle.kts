@@ -129,14 +129,15 @@ if (lastTag != null && newTag != null) {
 				lines.add("")
 			}
 			proc.inputStream.bufferedReader().forEachLine {
-				println("git log: $it")
-				if (prefixList.any { prefix -> it.startsWith(prefix) })
-					lines.add("  - $it")
+				var str = it
+				// it starts with quotes in github actions i guess https://www.youtube.com/watch?v=-O3ogWBfWI0
+				if (str.startsWith("\"")) str = str.substring(1)
+				if (str.endsWith("\"")) str = str.substring(0, str.length - 1)
+				if (prefixList.any { prefix -> str.startsWith(prefix) })
+					lines.add("  - $str")
 			}
 			proc.waitFor()
 			val changelog = lines.joinToString("\n")
-			println("CHANGELOG FILE")
-			println(changelog)
 			filePath.get().asFile.writeText(changelog)
 		}
 	}
