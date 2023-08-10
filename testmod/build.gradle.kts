@@ -1,34 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
-import java.net.URI
-
-plugins {
-    id("io.github.juuxel.loom-vineflower") version "1.11.0"
-}
-
 version = properties["mod_version"]!!
 group = properties["maven_group"]!!
 
 base {
     archivesName.set("${properties["archives_base_name"]}-testmod")
-}
-
-repositories {
-    maven {
-        name = "ParchmentMC"
-        url = URI("https://maven.parchmentmc.org")
-        content {
-            includeGroup("org.parchmentmc.data")
-        }
-    }
-    maven {
-        name = "TerraformersMC"
-        url = URI("https://maven.terraformersmc.com/releases/")
-        content {
-            includeGroup("com.terraformersmc")
-            includeGroup("dev.emi")
-        }
-    }
 }
 
 loom {
@@ -56,22 +32,11 @@ loom {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${properties["minecraft_version"]}")
-    @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${properties["parchment_version"]}@zip")
-    })
-    modImplementation("net.fabricmc:fabric-loader:${properties["loader_version"]}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric_api_version"]}")
 
-    setOf(
-        "fabric-api-base",
-        "fabric-command-api-v2"
-    ).forEach { modImplementation(fabricApi.module(it, properties["fabric_api_version"]!!.toString())) }
+    modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 
-    modImplementation("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
-
-    api(project(path=":api", configuration = "namedElements"))
+    implementation(project(path=":api", configuration = "namedElements"))
     configurations["clientImplementation"](project(":api").dependencyProject.sourceSets["client"].output)
 }
 

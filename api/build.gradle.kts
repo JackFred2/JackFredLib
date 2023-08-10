@@ -4,7 +4,6 @@ import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
 import java.net.URI
 
 plugins {
-	id("io.github.juuxel.loom-vineflower") version "1.11.0"
 	id("com.github.breadmoirai.github-release") version "2.4.1"
 	id("org.ajoberstar.grgit") version "5.0.+"
 	id("maven-publish")
@@ -15,24 +14,6 @@ group = properties["maven_group"]!!
 
 base {
 	archivesName.set("${properties["archives_base_name"]}")
-}
-
-repositories {
-	maven {
-		name = "ParchmentMC"
-		url = URI("https://maven.parchmentmc.org")
-		content {
-			includeGroup("org.parchmentmc.data")
-		}
-	}
-	maven {
-		name = "TerraformersMC"
-		url = URI("https://maven.terraformersmc.com/releases/")
-		content {
-			includeGroup("com.terraformersmc")
-			includeGroup("dev.emi")
-		}
-	}
 }
 
 java {
@@ -60,20 +41,9 @@ loom {
 }
 
 dependencies {
-	minecraft("com.mojang:minecraft:${properties["minecraft_version"]}")
-	@Suppress("UnstableApiUsage")
-	mappings(loom.layered {
-		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-${properties["parchment_version"]}@zip")
-	})
-	modImplementation("net.fabricmc:fabric-loader:${properties["loader_version"]}")
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric_api_version"]}")
 
-	setOf(
-		"fabric-api-base",
-		"fabric-command-api-v2"
-	).forEach { modImplementation(fabricApi.module(it, properties["fabric_api_version"]!!.toString())) }
-
-	modImplementation("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
+	modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 }
 
 
