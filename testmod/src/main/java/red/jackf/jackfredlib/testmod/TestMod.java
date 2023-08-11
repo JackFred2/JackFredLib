@@ -6,5 +6,6 @@ public class TestMod implements ModInitializer {
     @Override
     public void onInitialize() {
         GradientEncode.test();
+        LieTest.setup();
     }
 }

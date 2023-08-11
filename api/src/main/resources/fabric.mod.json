@@ -14,6 +14,10 @@
   "license": "LGPL-3.0-only",
   "icon": "assets/jackfredlib/icon.png",
   "environment": "*",
+  "mixins": [
+    "jackfredlib.mixins.json"
+  ],
+  "accessWidener": "jackfredlib.accesswidener",
   "entrypoints": {
     "main": [
       "red.jackf.jackfredlib.impl.JackFredLib"

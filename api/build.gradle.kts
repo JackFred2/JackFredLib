@@ -38,6 +38,8 @@ loom {
 			sourceSet(sourceSets["client"])
 		}
 	}
+
+	accessWidenerPath.set(file("src/main/resources/jackfredlib.accesswidener"))
 }
 
 dependencies {
