@@ -4,9 +4,9 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.GradientBuilder;
-import red.jackf.jackfredlib.api.colour.Colour;
 
 import java.util.NavigableMap;
 import java.util.Objects;

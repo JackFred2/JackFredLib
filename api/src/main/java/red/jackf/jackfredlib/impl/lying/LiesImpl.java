@@ -6,13 +6,16 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
+import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
+import red.jackf.jackfredlib.impl.JackFredLib;
 
 import java.util.Optional;
 
 public class LiesImpl implements Lies {
+    public static final Logger LOGGER = JackFredLib.getLogger("Lies");
     public static final LiesImpl INSTANCE = new LiesImpl();
 
     private final Multimap<GameProfile, ActiveLie<EntityLie>> activeEntityLies = ArrayListMultimap.create();

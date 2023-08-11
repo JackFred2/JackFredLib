@@ -5,7 +5,6 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.nbt.NbtOps;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import red.jackf.jackfredlib.api.colour.Colours;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.Gradients;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GradientEncode {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JackFredLib.class.getCanonicalName() + "/Test");
+    private static final Logger LOGGER = JackFredLib.getLogger("Test");
 
     public static void test() {
         var errors = new ArrayList<String>();

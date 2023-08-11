@@ -1,6 +1,7 @@
 package red.jackf.jackfredlib.testmod;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.Items;
+import red.jackf.jackfredlib.api.lying.Debris;
 import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 
@@ -49,7 +51,7 @@ public class LieTest {
             if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
                 var handStack = player.getItemInHand(hand);
                 if (handStack.is(Items.DIAMOND_AXE)) {
-                    Lies.INSTANCE.addEntity(serverPlayer, EntityLie.builder(makeSlime(serverLevel, hitResult.getBlockPos().offset(hitResult.getDirection()
+                    var lie = Lies.INSTANCE.addEntity(serverPlayer, EntityLie.builder(makeSlime(serverLevel, hitResult.getBlockPos().offset(hitResult.getDirection()
                             .getNormal())))
                             .onLeftClick(activeLie -> {
                                 activeLie.player().sendSystemMessage(Component.literal("left clicked"));
@@ -59,6 +61,7 @@ public class LieTest {
                                     activeLie.player().sendSystemMessage(Component.literal("right clicked"));
                             }))
                             .build());
+                    Debris.INSTANCE.schedule(lie, 10 * SharedConstants.TICKS_PER_SECOND);
                 }
             }
             return InteractionResult.PASS;
