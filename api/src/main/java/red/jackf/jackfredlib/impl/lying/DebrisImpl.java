@@ -39,13 +39,17 @@ public class DebrisImpl implements Debris {
     }
 
     @Override
-    public void schedule(ActiveLie<?> lie, long lifetime) {
+    public void schedule(ActiveLie<?> lie, long lifetimeTicks) {
         if (this.server == null) {
             LOGGER.warn("Tried to use debris service when not in-game");
             return;
         }
-        var targetTime = this.server.overworld().getGameTime() + lifetime;
-        LOGGER.debug("Scheduling lie for removal at " + targetTime);
+        var targetTime = this.server.overworld().getGameTime() + lifetimeTicks;
+        if (scheduled.values().remove(lie)) {
+            LOGGER.debug("Updating target time for lie removal to " + targetTime);
+        } else {
+            LOGGER.debug("Scheduling lie for removal at " + targetTime);
+        }
         scheduled.put(targetTime, lie);
     }
 

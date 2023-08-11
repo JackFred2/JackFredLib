@@ -12,13 +12,11 @@ public final class EntityLieImpl implements EntityLie {
     private final Entity entity;
     private final LeftClickCallback leftClickCallback;
     private final RightClickCallback rightClickCallback;
-    private final PositionalRightClickCallback positionalRightClickCallback;
 
-    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback, PositionalRightClickCallback positionalRightClickCallback) {
+    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback) {
         this.entity = entity;
         this.leftClickCallback = leftClickCallback;
         this.rightClickCallback = rightClickCallback;
-        this.positionalRightClickCallback = positionalRightClickCallback;
     }
 
     public Entity entity() {
@@ -26,21 +24,20 @@ public final class EntityLieImpl implements EntityLie {
     }
 
     @Override
-    public void onLeftClick(ActiveLie<EntityLie> activeEntityLie) {
-        if (leftClickCallback != null)
-            leftClickCallback.onLeftClick(activeEntityLie);
+    public void onLeftClick(ActiveLie<EntityLie> activeEntityLie, boolean shiftDown) {
+        if (leftClickCallback != null) {
+            var from = activeEntityLie.player().getEyePosition();
+            var to = from.add(activeEntityLie.player().getLookAngle().scale(6));
+            var collisionPoint = activeEntityLie.lie().entity().getBoundingBox().clip(from, to);
+            collisionPoint.ifPresent(hit ->
+                leftClickCallback.onLeftClick(activeEntityLie, shiftDown, hit.subtract(activeEntityLie.lie().entity().position())));
+        }
     }
 
     @Override
-    public void onRightClick(ActiveLie<EntityLie> activeEntityLie, InteractionHand hand) {
+    public void onRightClick(ActiveLie<EntityLie> activeEntityLie, boolean shiftDown, InteractionHand hand, Vec3 relativeToEntity) {
         if (rightClickCallback != null)
-            rightClickCallback.onRightClick(activeEntityLie, hand);
-    }
-
-    @Override
-    public void onPositionalRightClick(ActiveLie<EntityLie> activeEntityLie, InteractionHand hand, Vec3 relativeToEntity) {
-        if (positionalRightClickCallback != null)
-            positionalRightClickCallback.onPositionalRightClick(activeEntityLie, hand, relativeToEntity);
+            rightClickCallback.onRightClick(activeEntityLie, shiftDown, hand, relativeToEntity);
     }
 
     @Override

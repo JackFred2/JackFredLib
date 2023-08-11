@@ -53,12 +53,12 @@ public class LieTest {
                 if (handStack.is(Items.DIAMOND_AXE)) {
                     var lie = Lies.INSTANCE.addEntity(serverPlayer, EntityLie.builder(makeSlime(serverLevel, hitResult.getBlockPos().offset(hitResult.getDirection()
                             .getNormal())))
-                            .onLeftClick(activeLie -> {
-                                activeLie.player().sendSystemMessage(Component.literal("left clicked"));
-                                activeLie.fade();
-                            }).onRightClick(((activeLie, hand1) -> {
+                            .onLeftClick((activeLie, shiftDown, pos) -> {
+                                activeLie.player().sendSystemMessage(Component.literal("left clicked " + pos));
+                                if (shiftDown) activeLie.fade();
+                            }).onRightClick(((activeLie, shiftDown, hand1, pos) -> {
                                 if (hand1 == InteractionHand.MAIN_HAND)
-                                    activeLie.player().sendSystemMessage(Component.literal("right clicked"));
+                                    activeLie.player().sendSystemMessage(Component.literal("right clicked" + pos));
                             }))
                             .build());
                     Debris.INSTANCE.schedule(lie, 10 * SharedConstants.TICKS_PER_SECOND);

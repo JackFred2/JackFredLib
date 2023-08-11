@@ -29,19 +29,18 @@ public class ServerGamePacketListenerImplMixin {
                 @Override
                 public void onAttack() {
                     LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
-                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onLeftClick(activeEntityLie));
+                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onLeftClick(activeEntityLie, packet.isUsingSecondaryAction()));
                 }
 
                 @Override
                 public void onInteraction(InteractionHand hand) {
-                    LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
-                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onRightClick(activeEntityLie, hand));
+
                 }
 
                 @Override
                 public void onInteraction(InteractionHand hand, Vec3 interactionLocation) {
                     LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
-                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onPositionalRightClick(activeEntityLie, hand, interactionLocation));
+                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onRightClick(activeEntityLie, packet.isUsingSecondaryAction(), hand, interactionLocation));
                 }
             });
         }
