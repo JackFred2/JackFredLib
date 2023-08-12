@@ -39,9 +39,9 @@ public class LieTest {
             var x = pos.getX() + 0.5;
             var y = pos.getY() + 0.5 - entity.getBbHeight() / 2;
             var z = pos.getZ() + 0.5;
-            entity.setPos(x, y, z);
+            entity.moveTo(x, y, z);
             entity.setGlowingTag(true);
-            entity.setInvisible(false);
+            entity.setInvisible(true);
         }
         return entity;
     }
@@ -59,9 +59,12 @@ public class LieTest {
                             }).onRightClick(((activeLie, shiftDown, hand1, pos) -> {
                                 if (hand1 == InteractionHand.MAIN_HAND)
                                     activeLie.player().sendSystemMessage(Component.literal("right clicked" + pos));
-                            }))
+                            })).onTick(activeLie -> {
+                                var entity = activeLie.lie().entity();
+                                entity.setPos(entity.position().add(0, 0.025, 0));
+                            })
                             .build());
-                    Debris.INSTANCE.schedule(lie, 10 * SharedConstants.TICKS_PER_SECOND);
+                    Debris.INSTANCE.schedule(lie, 20 * SharedConstants.TICKS_PER_SECOND);
                 }
             }
             return InteractionResult.PASS;

@@ -33,6 +33,7 @@ public interface EntityLie extends Lie {
         private final Entity entity;
         private LeftClickCallback leftClickCallback = null;
         private RightClickCallback rightClickCallback = null;
+        private TickCallback tickCallback = null;
 
         public Builder(Entity entity) {
             this.entity = entity;
@@ -61,11 +62,21 @@ public interface EntityLie extends Lie {
         }
 
         /**
+         * Adds a handler which is run for every tick this lie exists.
+         * @param callback Callback to be run every tick while not faded.
+         * @return this entity lie builder
+         */
+        public Builder onTick(TickCallback callback) {
+            this.tickCallback = callback;
+            return this;
+        }
+
+        /**
          * Create a new entity lie from this builder.
          * @return The built entity lie.
          */
         public EntityLie build() {
-            return new EntityLieImpl(entity, leftClickCallback, rightClickCallback);
+            return new EntityLieImpl(entity, leftClickCallback, rightClickCallback, tickCallback);
         }
     }
 
@@ -99,6 +110,18 @@ public interface EntityLie extends Lie {
     }
 
     /**
+     * Callback ran every tick for this entity lie while not faded.
+     */
+    interface TickCallback {
+        /**
+         * Called every tick this entity lie is active
+         * @param activeLie Active lie instance that is being ticked. Contains methods for fading, and access to the base
+         *                  lie.
+         */
+        void onTick(ActiveLie<EntityLie> activeLie);
+    }
+
+    /**
      * Run this entity lie's left click callback, if present.
      * @param activeEntityLie The active lie from which this was triggered. Contains methods to fade this lie and access
      *                        the interacting player.
@@ -115,4 +138,7 @@ public interface EntityLie extends Lie {
      */
     @ApiStatus.Internal
     void onRightClick(ActiveLie<EntityLie> activeEntityLie, boolean shiftDown, InteractionHand hand, Vec3 relativeToEntity);
+
+    @ApiStatus.Internal
+    void onTick(ActiveLie<EntityLie> activeEntityLie);
 }

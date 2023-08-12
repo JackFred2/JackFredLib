@@ -8,6 +8,7 @@ import org.jetbrains.annotations.ApiStatus;
  * multiple players safely.
  */
 public interface Lie {
+
     /**
      * Remove this lie from a player's client. Should not be called directly, as it does not correctly update tracking
      * in {@link red.jackf.jackfredlib.impl.lying.LiesImpl}
@@ -15,4 +16,11 @@ public interface Lie {
      */
     @ApiStatus.Internal
     void fade(ServerPlayer player);
+
+    /**
+     * Called when this lie is sent to a new player. Used to set up update hooks if needed.
+     * @param player Player being set up with this lie
+     */
+    @ApiStatus.Internal
+    default void setup(ServerPlayer player) {}
 }

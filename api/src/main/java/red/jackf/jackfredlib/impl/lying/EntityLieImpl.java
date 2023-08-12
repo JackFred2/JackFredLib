@@ -1,22 +1,37 @@
 package red.jackf.jackfredlib.impl.lying;
 
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class EntityLieImpl implements EntityLie {
     private final Entity entity;
+    private final ServerEntity serverEntity;
+    private final List<ServerGamePacketListenerImpl> connections = new ArrayList<>();
     private final LeftClickCallback leftClickCallback;
     private final RightClickCallback rightClickCallback;
+    private final TickCallback tickCallback;
 
-    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback) {
+    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback, TickCallback tickCallback) {
         this.entity = entity;
+        this.serverEntity = new ServerEntity((ServerLevel) entity.level(),
+                entity,
+                entity.getType().updateInterval(),
+                entity.getType().trackDeltas(),
+                packet -> connections.forEach(c -> c.send(packet)));
         this.leftClickCallback = leftClickCallback;
         this.rightClickCallback = rightClickCallback;
+        this.tickCallback = tickCallback;
     }
 
     public Entity entity() {
@@ -43,5 +58,18 @@ public final class EntityLieImpl implements EntityLie {
     @Override
     public void fade(ServerPlayer player) {
         player.connection.send(new ClientboundRemoveEntitiesPacket(entity.getId()));
+        connections.remove(player.connection);
+    }
+
+    @Override
+    public void setup(ServerPlayer player) {
+        connections.add(player.connection);
+    }
+
+    @Override
+    public void onTick(ActiveLie<EntityLie> activeEntityLie) {
+        this.serverEntity.sendChanges();
+        if (tickCallback != null)
+            tickCallback.onTick(activeEntityLie);
     }
 }
