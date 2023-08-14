@@ -27,6 +27,12 @@ java {
 tasks.withType<Javadoc>().configureEach {
 	include("red/jackf/jackfredlib/api/**/*.java")
 	include("red/jackf/jackfredlib/client/api/**/*.java")
+
+	options.showFromPublic()
+
+	(options as StandardJavadocDocletOptions).tags(
+		"apiNote:a:API Note:"
+	)
 }
 
 loom {

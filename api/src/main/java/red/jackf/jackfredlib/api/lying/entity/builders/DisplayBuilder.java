@@ -49,8 +49,10 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     /**
      * <p>Changes how a display entity is 'billboarded' regarding a player's camera.</p>
      *
-     * <p>The following modes and their explanations are:</p>
      * <table>
+     *     <caption>
+     *         Types of modes and their descriptions
+     *     </caption>
      *     <tr>
      *         <td>{@link BillboardConstraints#FIXED}</td><td>Does not move with the player camera.</td>
  *         </tr>

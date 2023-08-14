@@ -6,6 +6,9 @@ import red.jackf.jackfredlib.impl.lying.DebrisImpl;
  * Service that allows you to forget lies after a set period automatically.
  */
 public interface Debris {
+    /**
+     * Instance of the Debris manager. Use this to schedule fading.
+     */
     Debris INSTANCE = DebrisImpl.INSTANCE;
 
     /**

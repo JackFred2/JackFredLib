@@ -29,13 +29,16 @@ public interface EntityLie extends Lie {
         return new Builder(entity);
     }
 
+    /**
+     * Builder for an entity lie.
+     */
     class Builder {
         private final Entity entity;
         private LeftClickCallback leftClickCallback = null;
         private RightClickCallback rightClickCallback = null;
         private TickCallback tickCallback = null;
 
-        public Builder(Entity entity) {
+        private Builder(Entity entity) {
             this.entity = entity;
         }
 
@@ -103,6 +106,7 @@ public interface EntityLie extends Lie {
          * Called when this entity lie is right-clicked. <code>relativeToEntity</code> is read from the packet.
          * @param activeLie Active lie instance that was triggered. Contains methods to fade this lie and access the player.
          * @param shiftDown Whether the player was shifting when right-clicking this lie. Read from the packet.
+         * @param hand Which hand was used when interacting with this entity.
          * @param relativeToEntity Position relative to the fake entity's {@link Entity#position()} that was interacted
          *                         with. Useful for position-specific menus.
          */
@@ -135,10 +139,16 @@ public interface EntityLie extends Lie {
      * @param activeEntityLie The active lie from which this was triggered. Contains methods to fade this lie and access
      *                        the interacting player.
      * @param shiftDown Whether the player was shifting when interacting.
+     * @param hand Which hand the player was using on this interaction
+     * @param relativeToEntity Position relative to the entity's {@link Entity#position()} that was interacted at
      */
     @ApiStatus.Internal
     void onRightClick(ActiveLie<EntityLie> activeEntityLie, boolean shiftDown, InteractionHand hand, Vec3 relativeToEntity);
 
+    /**
+     * Run this entity lie's tick callback, if present. This is called for every player that is seeing this lie.
+     * @param activeEntityLie The active lie that this tick callback was from.
+     */
     @ApiStatus.Internal
     void onTick(ActiveLie<EntityLie> activeEntityLie);
 }
