@@ -2,8 +2,9 @@
 
 Collection of common utilities for my Minecraft mods, and where I'm figuring out gradle/CI. Currently includes:
 
-- Gradient/colour toolkit
 - Tri-state value holder for Fabric API's events.
+- Gradient/colour toolkit
+- API for sending fake entities (and more in the future) to the client.
 
 Feel free to use yourself (via GitHub Package Registry).
 
