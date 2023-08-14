@@ -56,7 +56,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Publish to GitHub Package Registry and GitHub Release
-        run: ./gradlew build generateChangelog publish githubRelease -PlastTag="${{ github.event.inputs.lastTag }}" -PnewTag="${{ github.event.inputs.newTag }}"
+        run: ./gradlew api:build api:generateChangelog api:publish api:githubRelease -PlastTag="${{ github.event.inputs.lastTag }}" -PnewTag="${{ github.event.inputs.newTag }}"
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
