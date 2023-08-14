@@ -21,8 +21,9 @@ public final class EntityLieImpl implements EntityLie {
     private final LeftClickCallback leftClickCallback;
     private final RightClickCallback rightClickCallback;
     private final TickCallback tickCallback;
+    private final FadeCallback fadeCallback;
 
-    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback, TickCallback tickCallback) {
+    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback, TickCallback tickCallback, FadeCallback fadeCallback) {
         this.entity = entity;
         this.serverEntity = new ServerEntity((ServerLevel) entity.level(),
                 entity,
@@ -32,6 +33,7 @@ public final class EntityLieImpl implements EntityLie {
         this.leftClickCallback = leftClickCallback;
         this.rightClickCallback = rightClickCallback;
         this.tickCallback = tickCallback;
+        this.fadeCallback = fadeCallback;
     }
 
     public Entity entity() {
@@ -56,9 +58,11 @@ public final class EntityLieImpl implements EntityLie {
     }
 
     @Override
-    public void fade(ServerPlayer player) {
-        player.connection.send(new ClientboundRemoveEntitiesPacket(entity.getId()));
-        connections.remove(player.connection);
+    public void fade(ActiveLie<EntityLie> activeLie) {
+        activeLie.player().connection.send(new ClientboundRemoveEntitiesPacket(entity.getId()));
+        connections.remove(activeLie.player().connection);
+        if (fadeCallback != null)
+            fadeCallback.onFade(activeLie);
     }
 
     @Override

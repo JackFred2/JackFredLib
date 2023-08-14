@@ -13,7 +13,7 @@ import red.jackf.jackfredlib.impl.lying.EntityLieImpl;
  * with positional
  *
  */
-public interface EntityLie extends Lie {
+public interface EntityLie extends Lie<EntityLie> {
     /**
      * Fake entity that this lie is displaying.
      * @return Fake entity that this lie is displaying.
@@ -37,6 +37,7 @@ public interface EntityLie extends Lie {
         private LeftClickCallback leftClickCallback = null;
         private RightClickCallback rightClickCallback = null;
         private TickCallback tickCallback = null;
+        private FadeCallback fadeCallback = null;
 
         private Builder(Entity entity) {
             this.entity = entity;
@@ -75,11 +76,21 @@ public interface EntityLie extends Lie {
         }
 
         /**
+         * Adds a handler which is run when this lie is faded from a player.
+         * @param callback Callback to be run when faded.
+         * @return this entity lie builder
+         */
+        public Builder onFade(FadeCallback callback) {
+            this.fadeCallback = callback;
+            return this;
+        }
+
+        /**
          * Create a new entity lie from this builder.
          * @return The built entity lie.
          */
         public EntityLie build() {
-            return new EntityLieImpl(entity, leftClickCallback, rightClickCallback, tickCallback);
+            return new EntityLieImpl(entity, leftClickCallback, rightClickCallback, tickCallback, fadeCallback);
         }
     }
 
@@ -123,6 +134,18 @@ public interface EntityLie extends Lie {
          *                  lie.
          */
         void onTick(ActiveLie<EntityLie> activeLie);
+    }
+
+    /**
+     * Callback ran when an active lie is faded
+     */
+    interface FadeCallback {
+        /**
+         * Called when a lie is faded. Do not call {@link EntityLie#fade(ActiveLie)} for the same lie; this will lead
+         * to a stack overflow.
+         * @param activeLie Lie which is being faded
+         */
+        void onFade(ActiveLie<EntityLie> activeLie);
     }
 
     /**

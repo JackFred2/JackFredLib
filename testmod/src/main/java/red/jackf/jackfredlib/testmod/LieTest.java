@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.testmod;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.SharedConstants;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -22,6 +23,7 @@ public class LieTest {
                             EntityLie.builder(EntityPresets.highlight(serverLevel, hitResult.getBlockPos(), Colour.fromInt(0xFFBADA55), 0.5f))
                                     .onLeftClick((activeLie, shiftDown, relativeToEntity) -> activeLie.fade())
                                     .onRightClick((activeLie, shiftDown, hand1, relativeToEntity) -> activeLie.fade())
+                                    .onFade(activeLie -> activeLie.player().sendSystemMessage(Component.literal("faded")))
                                     .build());
                     Debris.INSTANCE.schedule(lie, 20 * SharedConstants.TICKS_PER_SECOND);
                 }
