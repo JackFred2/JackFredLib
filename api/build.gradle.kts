@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
+import red.jackf.GenerateChangelogTask
 import java.net.URI
 
 plugins {
@@ -49,7 +50,7 @@ loom {
 }
 
 dependencies {
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric_api_version"]}")
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
 
 	modLocalRuntime("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 }
@@ -74,54 +75,24 @@ tasks.jar {
 	}
 }
 
-val lastTag = properties["lastTag"]?.toString()
-val newTag = properties["newTag"]?.toString()
-if (lastTag != null && newTag != null) {
-	val filePath = layout.buildDirectory.file("changelogs/$lastTag..$newTag.md")
-
-	val changelogTask = task("generateChangelog") {
-		val prefixList = properties["changelog_filter"]!!.toString().split(",")
-		println("Writing changelog to ${filePath.get()}")
-		outputs.file(filePath)
-
-		doLast {
-			val command = "git log --max-count=100 --pretty=format:\"%s\" $lastTag...$newTag"
-			val proc = Runtime.getRuntime().exec(command)
-			// println(command)
-			proc.errorStream.bufferedReader().forEachLine { println(it) }
-			val lines = mutableListOf(
-				// "# ${properties["mod_name"]} $newTag",
-				"Previous: $lastTag",
-				""
-			)
-			properties["github_url"]?.toString()?.also {
-				lines.add("Full changelog: ${it}/compare/$lastTag...$newTag")
-				lines.add("")
-			}
-			proc.inputStream.bufferedReader().forEachLine {
-				var str = it
-				// it starts with quotes in github actions i guess https://www.youtube.com/watch?v=-O3ogWBfWI0
-				if (str.startsWith("\"")) str = str.substring(1)
-				if (str.endsWith("\"")) str = str.substring(0, str.length - 1)
-				if (prefixList.any { prefix -> str.startsWith(prefix) })
-					lines.add("  - $str")
-			}
-			proc.waitFor()
-			val changelog = lines.joinToString("\n")
-			filePath.get().asFile.writeText(changelog)
-		}
+val lastTagVal = properties["lastTag"]?.toString()
+val newTagVal = properties["newTag"]?.toString()
+if (lastTagVal != null && newTagVal != null) {
+	val generateChangelogTask = tasks.register<GenerateChangelogTask>("generateChangelog") {
+		lastTag.set(lastTagVal)
+		newTag.set(newTagVal)
+		githubUrl.set(properties["github_url"]!!.toString())
+		prefixFilters.set(properties["changelog_filter"]!!.toString().split(","))
 	}
 
 	tasks.named<GithubReleaseTask>("githubRelease") {
-		dependsOn(changelogTask)
-		mustRunAfter(changelogTask)
-		inputs.file(filePath)
+		dependsOn(generateChangelogTask)
 
 		authorization = System.getenv("GITHUB_TOKEN")?.let { "Bearer $it" }
 		owner = properties["github_owner"]!!.toString()
 		repo = properties["github_repo"]!!.toString()
-		tagName = newTag
-		releaseName = "${properties["mod_name"]} $newTag"
+		tagName = newTagVal
+		releaseName = "${properties["mod_name"]} $newTagVal"
 		targetCommitish = grgit.branch.current().name
 		releaseAssets.from(
 			tasks["remapJar"].outputs.files,
@@ -129,7 +100,7 @@ if (lastTag != null && newTag != null) {
 			tasks["javadocJar"].outputs.files,
 		)
 		body = provider {
-			return@provider filePath.get().asFile.readText()
+			return@provider generateChangelogTask.get().changelogFile.get().asFile.readText()
 		}
 	}
 }

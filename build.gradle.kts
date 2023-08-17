@@ -1,4 +1,5 @@
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
+import red.jackf.UpdateDependenciesTask
 import java.net.URI
 
 plugins {
@@ -41,4 +42,9 @@ subprojects {
         })
         add("modImplementation", "net.fabricmc:fabric-loader:${properties["loader_version"]}")
     }
+}
+
+tasks.register<UpdateDependenciesTask>("updateModDependencies") {
+    mcVersion.set(properties["minecraft_version"]!!.toString())
+    loader.set("fabric")
 }
