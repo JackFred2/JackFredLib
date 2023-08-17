@@ -9,10 +9,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3f;
 
 /**
- * Builder to create a Block Display entity.
+ * <p>Builder to create a Block Display entity, which displays a block state.</p>
  *
- * @apiNote Some block states which use a block entity to render, such as chests, will ignore any block state properties
- * when rendering. This is a vanilla limitation.
+ * <p>Note: The position of this entity is on the lower coordinate corner of the displayed block; use {@link #scaleAndCenter(float)}
+ * to update the transform to center on the actual position.</p>
+ * <p>Note: Some block states which use a block entity to render, such as chests, will ignore any block state properties
+ * when rendering. This is a vanilla limitation.</p>
  * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Display</a>
  */
 public class BlockDisplayBuilder extends DisplayBuilder<Display.BlockDisplay, BlockDisplayBuilder> {

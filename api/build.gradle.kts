@@ -32,7 +32,8 @@ tasks.withType<Javadoc>().configureEach {
 	options.showFromPublic()
 
 	(options as StandardJavadocDocletOptions).tags(
-		"apiNote:a:API Note:"
+		"apiNote:a:API Note:",
+		"implNote:a:Implementation Note:"
 	)
 }
 

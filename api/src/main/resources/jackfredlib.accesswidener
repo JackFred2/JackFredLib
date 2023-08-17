@@ -10,3 +10,5 @@ accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/m
 accessible method net/minecraft/world/entity/Display$TextDisplay setFlags (B)V
 accessible method net/minecraft/world/entity/Display$TextDisplay getFlags ()B
 accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
+accessible method net/minecraft/world/entity/Display$ItemDisplay setItemStack (Lnet/minecraft/world/item/ItemStack;)V
+accessible method net/minecraft/world/entity/Display$ItemDisplay setItemTransform (Lnet/minecraft/world/item/ItemDisplayContext;)V

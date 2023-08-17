@@ -13,6 +13,7 @@ import static net.minecraft.world.entity.Display.*;
 
 /**
  * Entity builder with additional options for display entities.
+ *
  * @param <E> Entity type being built, extending {@link Display}
  * @param <B> Class of this builder
  * @see BuilderBase
@@ -25,8 +26,9 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     /**
      * Adds a glowing outline to the display entity with a specific colour. This colour overrides a team colour, if
      * applicable. No effect on Text Displays.
+     *
      * @param shouldGlow Whether this display entity should glow.
-     * @param colour What colour this display entity should glow, in ARGB format.
+     * @param colour     What colour this display entity should glow, in ARGB format.
      * @return This builder
      */
     public B glowing(boolean shouldGlow, int colour) {
@@ -37,10 +39,11 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     /**
      * Adds a glowing outline to the display entity with a specific colour. This colour overrides a team colour, if
      * applicable. No effect on Text Displays.
+     *
      * @param shouldGlow Whether this display entity should glow.
-     * @param colour What colour this display entity should glow, in ARGB format.
-     * @see Colour
+     * @param colour     What colour this display entity should glow, in ARGB format.
      * @return This builder
+     * @see Colour
      */
     public B glowing(boolean shouldGlow, Colour colour) {
         return this.glowing(shouldGlow, colour.toARGB());
@@ -55,13 +58,13 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      *     </caption>
      *     <tr>
      *         <td>{@link BillboardConstraints#FIXED}</td><td>Does not move with the player camera.</td>
- *         </tr>
+     *         </tr>
      *     <tr>
      *         <td>{@link BillboardConstraints#CENTER}</td><td>Moves to always be flat against the player camera.</td>
- *         </tr>
+     *         </tr>
      *     <tr>
      *         <td>{@link BillboardConstraints#VERTICAL}</td><td>Rotates around the Y to face the player's camera.</td>
- *         </tr>
+     *         </tr>
      *     <tr>
      *         <td>{@link BillboardConstraints#HORIZONTAL}</td><td>Rotates up and down to match the player camera.</td>
      *     </tr>
@@ -78,12 +81,12 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     /**
      * Sets this display entity's transform matrix. The components are applied in reverse parameter order.
      *
-     * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Displays</a>
-     * @param translation Translation for the transformation. Applied fourth.
-     * @param leftRotation Left rotation for the transformation. Applied third.
-     * @param scale Scale for the transformation. Applied second.
+     * @param translation   Translation for the transformation. Applied fourth.
+     * @param leftRotation  Left rotation for the transformation. Applied third.
+     * @param scale         Scale for the transformation. Applied second.
      * @param rightRotation Right rotation for the transformation. Applied first.
      * @return This builder
+     * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Displays</a>
      */
     public B transform(Vector3f translation, Quaternionf leftRotation, Vector3f scale, Quaternionf rightRotation) {
         this.entity.setTransformation(new Transformation(
@@ -97,6 +100,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
 
     /**
      * Sets this display entity's translation.
+     *
      * @param translation Translation to set the display's to
      * @return This builder
      */
@@ -113,6 +117,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
 
     /**
      * Adds to this display entity's translation.
+     *
      * @param translation Translation to add to the display's existing
      * @return This builder
      */
@@ -129,6 +134,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
 
     /**
      * Sets this display entity's left rotation.
+     *
      * @param leftRotation Rotation to use
      * @return This builder
      */
@@ -145,6 +151,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
 
     /**
      * Sets this display entity's scale.
+     *
      * @param scale Scale to use
      * @return This builder
      */
@@ -161,6 +168,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
 
     /**
      * Sets this display entity's right rotation.
+     *
      * @param rightRotation Rotation to use
      * @return This builder
      */
