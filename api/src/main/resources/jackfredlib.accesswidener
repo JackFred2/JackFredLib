@@ -2,16 +2,24 @@ accessWidener	v1	named
 
 # Lying API
 accessible field net/minecraft/network/protocol/game/ServerboundInteractPacket entityId I
+
 accessible method net/minecraft/world/entity/Display setBillboardConstraints (Lnet/minecraft/world/entity/Display$BillboardConstraints;)V
 accessible method net/minecraft/world/entity/Display setGlowColorOverride (I)V
 accessible method net/minecraft/world/entity/Display createTransformation (Lnet/minecraft/network/syncher/SynchedEntityData;)Lcom/mojang/math/Transformation;
 accessible method net/minecraft/world/entity/Display setTransformation (Lcom/mojang/math/Transformation;)V
+accessible method net/minecraft/world/entity/Display setBrightnessOverride (Lnet/minecraft/util/Brightness;)V
+accessible method net/minecraft/world/entity/Display setViewRange (F)V
+accessible method net/minecraft/world/entity/Display setShadowRadius (F)V
+accessible method net/minecraft/world/entity/Display setShadowStrength (F)V
+
 accessible method net/minecraft/world/entity/Display$TextDisplay setText (Lnet/minecraft/network/chat/Component;)V
 accessible method net/minecraft/world/entity/Display$TextDisplay setBackgroundColor (I)V
 accessible method net/minecraft/world/entity/Display$TextDisplay setTextOpacity (B)V
 accessible method net/minecraft/world/entity/Display$TextDisplay setLineWidth (I)V
 accessible method net/minecraft/world/entity/Display$TextDisplay setFlags (B)V
 accessible method net/minecraft/world/entity/Display$TextDisplay getFlags ()B
+
 accessible method net/minecraft/world/entity/Display$BlockDisplay setBlockState (Lnet/minecraft/world/level/block/state/BlockState;)V
+
 accessible method net/minecraft/world/entity/Display$ItemDisplay setItemStack (Lnet/minecraft/world/item/ItemStack;)V
 accessible method net/minecraft/world/entity/Display$ItemDisplay setItemTransform (Lnet/minecraft/world/item/ItemDisplayContext;)V

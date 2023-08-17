@@ -2,6 +2,8 @@ package red.jackf.jackfredlib.api.lying.entity.builders;
 
 import com.mojang.math.Transformation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Brightness;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.ApiStatus;
@@ -70,11 +72,67 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      *     </tr>
      * </table>
      *
-     * @param billboardMode How a display entity is billboarded. Defaults to {@link BillboardConstraints#FIXED}
+     * @implNote Default: {@link BillboardConstraints#FIXED}
+     * @param billboardMode How a display entity is billboarded.
      * @return This builder
      */
     public B billboard(BillboardConstraints billboardMode) {
         this.entity.setBillboardConstraints(billboardMode);
+        return self();
+    }
+
+    /**
+     * <p>Sets a brightness override for this display entity.</p>
+     *
+     * @implNote Default: No override, meaning the display entity takes the light level from its current world position
+     * @param block Block light to use when rendering, in the range [0, 15]
+     * @param sky Sky light level to use when rendering, in the range [0, 15]
+     * @return This entity builder
+     */
+    public B brightness(int block, int sky) {
+        this.entity.setBrightnessOverride(new Brightness(Mth.clamp(block, 0, 15), Mth.clamp(sky, 0, 15)));
+        return self();
+    }
+
+    /**
+     * <p>Sets the view range modifier for this display entity. This results in an approximate range of
+     * <code>64 * modifier * clientEntityRenderMultiplier</code> for rendering this display.</p>
+     *
+     * @implNote Default: 1.0
+     * @param modifier View ranger modifier for this entity.
+     * @return This entity builder
+     */
+    public B viewRangeModifier(float modifier) {
+        this.entity.setViewRange(modifier);
+        return self();
+    }
+
+    /**
+     * <p>Sets the radius of the shadow on the floor below this display entity.</p>
+     *
+     * <p>Does not normally appear for text displays. To enable them, see {@link TextDisplayBuilder#hasShadow(boolean)}</p>
+     *
+     * @implNote Default: 0 (no shadow).
+     * @param shadowRadius Radius of the shadow for this display entity, in the range [0, 64].
+     * @return This entity builder
+     */
+    public B shadowRadius(float shadowRadius) {
+        this.entity.setShadowRadius(Mth.clamp(shadowRadius, 0, 64));
+        return self();
+    }
+
+    /**
+     * <p>Sets the opacity of the shadow for this display entity, if given a radius (and in the case of a Text Display
+     * enabled). Acts as a multiplier for the standard shadow, which is also scaled by distance to the floor.</p>
+     *
+     * <p>Does not normally appear for text displays. To enable them, see {@link TextDisplayBuilder#hasShadow(boolean)}</p>
+     *
+     * @implNote Default: 1
+     * @param shadowStrength Shadow strength multiplier for this display entity.
+     * @return This builder
+     */
+    public B shadowStrength(float shadowStrength) {
+        this.entity.setShadowStrength(shadowStrength);
         return self();
     }
 
