@@ -1,12 +1,18 @@
 package red.jackf.jackfredlib.api.lying.entity.builders;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 
 /**
  * Collection of builders to help create entities with lie-useful properties.
  */
 public class EntityBuilders {
     private EntityBuilders() {}
+
+    public static <E extends Entity> GenericBuilder<E> generic(EntityType<E> type, ServerLevel level) {
+        return new GenericBuilder<>(type, level);
+    }
 
     /**
      * Create a new builder for a <a href="https://minecraft.fandom.com/wiki/Display">Block Display Entity</a>.

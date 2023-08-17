@@ -24,7 +24,6 @@ import red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public class LieTest {
     public static void setup() {

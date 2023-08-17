@@ -20,7 +20,7 @@ import static net.minecraft.world.entity.Display.*;
  * @param <B> Class of this builder
  * @see BuilderBase
  */
-public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder<E, B>> extends GenericBuilder<E, B> {
+public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder<E, B>> extends BuilderBase<E, B> {
     protected DisplayBuilder(EntityType<E> type, ServerLevel level) {
         super(type, level);
     }
