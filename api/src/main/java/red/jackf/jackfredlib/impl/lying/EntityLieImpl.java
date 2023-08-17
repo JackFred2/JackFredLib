@@ -14,16 +14,16 @@ import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class EntityLieImpl implements EntityLie {
-    private final Entity entity;
+public final class EntityLieImpl<E extends Entity> implements EntityLie<E> {
+    private final E entity;
     private final ServerEntity serverEntity;
     private final List<ServerGamePacketListenerImpl> connections = new ArrayList<>();
-    private final LeftClickCallback leftClickCallback;
-    private final RightClickCallback rightClickCallback;
-    private final TickCallback tickCallback;
-    private final FadeCallback fadeCallback;
+    private final LeftClickCallback<E> leftClickCallback;
+    private final RightClickCallback<E> rightClickCallback;
+    private final TickCallback<E> tickCallback;
+    private final FadeCallback<E> fadeCallback;
 
-    public EntityLieImpl(Entity entity, LeftClickCallback leftClickCallback, RightClickCallback rightClickCallback, TickCallback tickCallback, FadeCallback fadeCallback) {
+    public EntityLieImpl(E entity, LeftClickCallback<E> leftClickCallback, RightClickCallback<E> rightClickCallback, TickCallback<E> tickCallback, FadeCallback<E> fadeCallback) {
         this.entity = entity;
         this.serverEntity = new ServerEntity((ServerLevel) entity.level(),
                 entity,
@@ -36,12 +36,12 @@ public final class EntityLieImpl implements EntityLie {
         this.fadeCallback = fadeCallback;
     }
 
-    public Entity entity() {
+    public E entity() {
         return entity;
     }
 
     @Override
-    public void onLeftClick(ActiveLie<EntityLie> activeEntityLie, boolean shiftDown) {
+    public void onLeftClick(ActiveLie<EntityLie<E>> activeEntityLie, boolean shiftDown) {
         if (leftClickCallback != null) {
             var from = activeEntityLie.player().getEyePosition();
             var to = from.add(activeEntityLie.player().getLookAngle().scale(6));
@@ -52,13 +52,13 @@ public final class EntityLieImpl implements EntityLie {
     }
 
     @Override
-    public void onRightClick(ActiveLie<EntityLie> activeEntityLie, boolean shiftDown, InteractionHand hand, Vec3 relativeToEntity) {
+    public void onRightClick(ActiveLie<EntityLie<E>> activeEntityLie, boolean shiftDown, InteractionHand hand, Vec3 relativeToEntity) {
         if (rightClickCallback != null)
             rightClickCallback.onRightClick(activeEntityLie, shiftDown, hand, relativeToEntity);
     }
 
     @Override
-    public void fade(ActiveLie<EntityLie> activeLie) {
+    public void fade(ActiveLie<EntityLie<E>> activeLie) {
         activeLie.player().connection.send(new ClientboundRemoveEntitiesPacket(entity.getId()));
         connections.remove(activeLie.player().connection);
         if (fadeCallback != null)
@@ -71,7 +71,7 @@ public final class EntityLieImpl implements EntityLie {
     }
 
     @Override
-    public void onTick(ActiveLie<EntityLie> activeEntityLie) {
+    public void onTick(ActiveLie<EntityLie<E>> activeEntityLie) {
         this.serverEntity.sendChanges();
         if (tickCallback != null)
             tickCallback.onTick(activeEntityLie);

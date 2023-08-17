@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -23,11 +24,11 @@ public class LiesImpl implements Lies {
     public static final Logger LOGGER = JackFredLib.getLogger("Lies");
     public static final LiesImpl INSTANCE = new LiesImpl();
 
-    private final Multimap<GameProfile, ActiveLie<EntityLie>> activeEntityLies = ArrayListMultimap.create();
+    private final Multimap<GameProfile, ActiveEntityLie<? extends Entity>> activeEntityLies = ArrayListMultimap.create();
 
     @Override
-    public ActiveLie<EntityLie> addEntity(ServerPlayer player, EntityLie entityLie) {
-        var active = new ActiveLie<>(player, entityLie);
+    public <E extends Entity> ActiveLie<EntityLie<E>> addEntity(ServerPlayer player, EntityLie<E> entityLie) {
+        var active = new ActiveEntityLie<>(player, entityLie);
         activeEntityLies.put(player.getGameProfile(), active);
 
         var entity = entityLie.entity();
@@ -59,18 +60,18 @@ public class LiesImpl implements Lies {
         return active;
     }
 
-    public Optional<ActiveLie<EntityLie>> getEntityLieFromId(ServerPlayer player, int entityId) {
+    public Optional<ActiveEntityLie<? extends Entity>> getEntityLieFromId(ServerPlayer player, int entityId) {
         return activeEntityLies.get(player.getGameProfile())
                 .stream()
                 .filter(active -> active.lie().entity().getId() == entityId)
                 .findFirst();
     }
 
-    public void remove(ActiveLie<?> activeLie) {
+    public void removeEntity(ActiveEntityLie<?> activeLie) {
         activeEntityLies.get(activeLie.player().getGameProfile()).remove(activeLie);
     }
 
     public void tick() {
-        activeEntityLies.values().forEach(active -> active.lie().onTick(active));
+        activeEntityLies.values().forEach(GenericsUtils::tickEntity);
     }
 }

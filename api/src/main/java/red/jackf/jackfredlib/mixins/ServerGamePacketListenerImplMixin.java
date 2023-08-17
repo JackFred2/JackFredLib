@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import red.jackf.jackfredlib.impl.lying.GenericsUtils;
 import red.jackf.jackfredlib.impl.lying.LiesImpl;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -29,18 +30,18 @@ public class ServerGamePacketListenerImplMixin {
                 @Override
                 public void onAttack() {
                     LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
-                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onLeftClick(activeEntityLie, packet.isUsingSecondaryAction()));
+                            .ifPresent(activeEntityLie -> GenericsUtils.leftClickEntity(activeEntityLie, packet.isUsingSecondaryAction()));
                 }
 
                 @Override
                 public void onInteraction(InteractionHand hand) {
-
+                    // no op, handle right clicks in onInteraction(InteractionHand, Vec3)
                 }
 
                 @Override
                 public void onInteraction(InteractionHand hand, Vec3 interactionLocation) {
                     LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
-                            .ifPresent(activeEntityLie -> activeEntityLie.lie().onRightClick(activeEntityLie, packet.isUsingSecondaryAction(), hand, interactionLocation));
+                            .ifPresent(activeEntityLie -> GenericsUtils.rightClickEntity(activeEntityLie, packet.isUsingSecondaryAction(), hand, interactionLocation));
                 }
             });
         }

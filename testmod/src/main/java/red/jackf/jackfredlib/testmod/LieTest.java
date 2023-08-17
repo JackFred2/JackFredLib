@@ -8,12 +8,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.lying.Debris;
 import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 import red.jackf.jackfredlib.api.lying.entity.EntityPresets;
+import red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +40,7 @@ public class LieTest {
         });
     }
 
-    private static final Map<Item, BiFunction<ServerLevel, BlockPos, EntityLie>> ENTITY_LIES = new HashMap<>();
+    private static final Map<Item, BiFunction<ServerLevel, BlockPos, EntityLie<?>>> ENTITY_LIES = new HashMap<>();
 
     private static void setupHooks() {
         ENTITY_LIES.put(Items.DIAMOND_AXE, (level, pos) -> {
@@ -47,5 +51,16 @@ public class LieTest {
                     .onFade(activeLie -> activeLie.player().sendSystemMessage(Component.literal("faded")))
                     .build();
         });
+        ENTITY_LIES.put(Items.GOLDEN_AXE, ((level, pos) -> {
+            var entity = EntityBuilders.itemDisplay(level)
+                    .stack(new ItemStack(Items.DIAMOND_PICKAXE))
+                    .displayContext(ItemDisplayContext.GROUND)
+                    .positionCentered(pos)
+                    .scale(new Vector3f(1.5f, 1.5f, 1.5f))
+                    .build();
+            return EntityLie.builder(entity)
+                    .onTick(active -> active.lie().entity().setYRot(active.lie().entity().getYRot() + 3f))
+                    .build();
+        }));
     }
 }

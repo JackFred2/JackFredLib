@@ -7,7 +7,7 @@ import red.jackf.jackfredlib.impl.lying.LiesImpl;
 /**
  * Represents an active lie being shown to a given player.
  */
-public final class ActiveLie<L extends Lie<L>> {
+public abstract class ActiveLie<L extends Lie<L>> {
     private final ServerPlayer player;
     private final L lie;
     private boolean faded = false;
@@ -27,12 +27,12 @@ public final class ActiveLie<L extends Lie<L>> {
     /**
      * Fade this lie. Removes this lie from tracking, and from the given player's client.
      */
-    public void fade() {
+    public final void fade() {
         if (this.faded) return;
+        this.faded = true;
         LiesImpl.LOGGER.debug("Fading lie for {}", player.getName());
         this.lie.fade(this);
-        LiesImpl.INSTANCE.remove(this);
-        this.faded = true;
+        this.removeFromLie();
     }
 
     /**
@@ -58,4 +58,7 @@ public final class ActiveLie<L extends Lie<L>> {
     public L lie() {
         return lie;
     }
+
+    @ApiStatus.Internal
+    protected abstract void removeFromLie();
 }
