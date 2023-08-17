@@ -28,6 +28,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<Display.ItemDisplay, Item
 
     /**
      * Changes how the item stack is displayed.
+     * @implNote Default: {@link ItemDisplayContext#NONE}
      * @param context Context to display the item stack with.
      * @return This entity Builder
      */

@@ -105,7 +105,10 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
     }
 
     /**
+     *
      * <p>Rotates this entity to face the given position.</p>
+     * <p><b>Make sure to call this after the position has been set</b></p>
+     *
      * @param target Position for this entity to look at
      * @return This builder
      */
@@ -116,6 +119,9 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
 
     /**
      * <p>Rotates this entity to face the given entity. Uses the other entity's {@link Entity#getEyePosition()}.</p>
+     *
+     * <p><b>Make sure to call this after the position has been set</b></p>
+     *
      * @param target Position for this entity to look at
      * @return This builder
      */

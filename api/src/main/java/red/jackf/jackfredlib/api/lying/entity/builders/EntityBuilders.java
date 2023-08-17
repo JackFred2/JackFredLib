@@ -16,6 +16,7 @@ public class EntityBuilders {
     public static BlockDisplayBuilder blockDisplay(ServerLevel level) {
         return new BlockDisplayBuilder(level);
     }
+
     /**
      * Create a new builder for an <a href="https://minecraft.fandom.com/wiki/Display">Item Display Entity</a>.
      * @param level Level to create the entity in
@@ -23,5 +24,14 @@ public class EntityBuilders {
      */
     public static ItemDisplayBuilder itemDisplay(ServerLevel level) {
         return new ItemDisplayBuilder(level);
+    }
+
+    /**
+     * Create a new builder for an <a href="https://minecraft.fandom.com/wiki/Display">Text Display Entity</a>.
+     * @param level Level to create the entity in
+     * @return Builder for an text display entity
+     */
+    public static TextDisplayBuilder textDisplay(ServerLevel level) {
+        return new TextDisplayBuilder(level);
     }
 }
