@@ -16,5 +16,7 @@ public class TestModClient implements ClientModInitializer {
                     return 0;
                 }));
         });
+
+        ToastTest.setup();
     }
 }
