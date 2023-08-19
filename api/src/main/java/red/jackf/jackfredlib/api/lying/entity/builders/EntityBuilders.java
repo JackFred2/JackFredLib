@@ -10,6 +10,14 @@ import net.minecraft.world.entity.EntityType;
 public class EntityBuilders {
     private EntityBuilders() {}
 
+    /**
+     * Create a new builder for an arbitrary entity, if no other matches.
+     *
+     * @param type Type of the entity to create a builder for
+     * @param level Level to create this entity in
+     * @return A build for a generic entity
+     * @param <E> Class of the entity being built
+     */
     public static <E extends Entity> GenericBuilder<E> generic(EntityType<E> type, ServerLevel level) {
         return new GenericBuilder<>(type, level);
     }

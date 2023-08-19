@@ -26,6 +26,7 @@ public class GradientUtils {
      * @param y Y coordinate of the top left corner of the gradient to draw
      * @param width Width of the gradient to draw
      * @param height Height of the gradient to draw
+     * @param gradient Gradient to sample from.
      * @param gradientStart Point of the gradient to start sampling at.
      * @param gradientEnd Point of the gradient to end sampling at.
      */
@@ -60,6 +61,7 @@ public class GradientUtils {
      * @param y Y coordinate of the top left corner of the gradient to draw
      * @param width Width of the gradient to draw
      * @param height Height of the gradient to draw
+     * @param gradient Gradient to sample from.
      * @param gradientStart Point of the gradient to start sampling at.
      * @param gradientEnd Point of the gradient to end sampling at.
      */

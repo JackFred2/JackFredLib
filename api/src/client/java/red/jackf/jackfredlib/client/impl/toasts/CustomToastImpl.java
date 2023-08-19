@@ -50,7 +50,7 @@ public class CustomToastImpl implements CustomToast {
         setMessage(messages);
     }
 
-    public void setTitle(Component title) {
+    public void setTitle(@NotNull Component title) {
         this.title = title;
     }
 

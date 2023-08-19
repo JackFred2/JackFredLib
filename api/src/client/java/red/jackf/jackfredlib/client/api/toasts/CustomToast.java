@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.client.api.toasts;
 
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -31,7 +32,12 @@ public interface CustomToast extends Toast {
      */
     void setImage(@Nullable ImageSpec image);
 
-    void setTitle(Component title);
+    /**
+     * Set the title of this toast.
+     *
+     * @param title Title to display at the top of the toast.
+     */
+    void setTitle(@NotNull Component title);
 
     /**
      * Sets the message(s) of this toast.
