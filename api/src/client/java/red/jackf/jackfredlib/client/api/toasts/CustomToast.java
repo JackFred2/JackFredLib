@@ -7,6 +7,14 @@ public interface CustomToast extends Toast {
 
     void refresh();
 
+    void setProgress(float progress);
+
+    float getProgress();
+
+    long getVisibleTimeStart();
+
+    long getVisibleTime();
+
     static ToastBuilder builder(ToastFormat format, Component title) {
         return new ToastBuilder(format, title);
     }

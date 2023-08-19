@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.client.api.toasts.CustomToast;
 import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
+import red.jackf.jackfredlib.client.api.toasts.ToastBuilder;
 import red.jackf.jackfredlib.client.api.toasts.ToastFormat;
 
 import java.util.ArrayList;
@@ -26,11 +27,28 @@ public class CustomToastImpl implements CustomToast {
     private Component title;
     private final List<FormattedCharSequence> messageLines = new ArrayList<>();
     private @Nullable ImageSpec image;
+    private final VisibilityChecker visibiltyFunction;
+    private final ToastBuilder.ProgressPuller progressPuller;
+    private final boolean rainbowProgress;
 
-    public CustomToastImpl(ToastFormat format, Component title, List<Component> messages, @Nullable ImageSpec image) {
+    private long visibleTimeStart = -1;
+    private long visibleTime = -1;
+    private long progressCompleteTime = -1;
+    private float progress = 0;
+
+    public CustomToastImpl(ToastFormat format,
+                           Component title,
+                           List<Component> messages,
+                           @Nullable ImageSpec image,
+                           VisibilityChecker visibiltyFunction,
+                           ToastBuilder.ProgressPuller progressPuller,
+                           boolean rainbowProgress) {
         this.format = format;
         this.title = title;
         this.image = image;
+        this.visibiltyFunction = visibiltyFunction;
+        this.progressPuller = progressPuller;
+        this.rainbowProgress = rainbowProgress;
         setMessage(messages);
     }
 
@@ -72,6 +90,13 @@ public class CustomToastImpl implements CustomToast {
 
     @Override
     public @NotNull Visibility render(GuiGraphics graphics, ToastComponent component, long timeVisible) {
+        var newProgress = this.progressPuller.pull(this);
+        newProgress.ifPresent(this::setProgress);
+
+        visibleTime = timeVisible;
+        if (visibleTimeStart == -1L) visibleTimeStart = timeVisible;
+        if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
+
         graphics.blitNineSliced(format.image(),
                 0,
                 0,
@@ -111,7 +136,15 @@ public class CustomToastImpl implements CustomToast {
             }
         }
 
-        return timeVisible > 5000L ? Visibility.HIDE : Visibility.SHOW;
+        var progressBarWidth = width() - 2 * 3;
+        var progressBarY = height() - 5;
+        if (this.progress != 0f) {
+            int colour = rainbowProgress ? 0xFF_000000 | Mth.hsvToRgb(progress / 3f, 1f, 1f) : format.progressBarColour();
+
+            graphics.fill(3, progressBarY, 3 + (int) (progressBarWidth * progress), progressBarY + 2, colour);
+        }
+
+        return visibiltyFunction.check(this);
     }
 
     @Override
@@ -121,6 +154,32 @@ public class CustomToastImpl implements CustomToast {
 
     @Override
     public void refresh() {
+        this.visibleTimeStart = -1;
+        this.visibleTime = -1;
+    }
 
+    public float getProgress() {
+        return progress;
+    }
+
+    public void setProgress(float progress) {
+        this.progress = Mth.clamp(progress, 0F, 1F);
+        if (this.progress < 1f) this.progressCompleteTime = -1;
+    }
+
+    public long getProgressCompleteTime() {
+        return progressCompleteTime;
+    }
+
+    public long getVisibleTimeStart() {
+        return visibleTimeStart;
+    }
+
+    public long getVisibleTime() {
+        return visibleTime;
+    }
+
+    public interface VisibilityChecker {
+        Visibility check(CustomToastImpl customToast);
     }
 }
