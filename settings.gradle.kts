@@ -11,4 +11,5 @@ pluginManagement {
 
 rootProject.name = "jackfredlib"
 include("api")
-include("testmod")
+if (!System.getenv().containsKey("CI"))
+	include("testmod")

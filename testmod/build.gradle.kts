@@ -20,7 +20,7 @@ loom {
     runConfigs.register("testClient") {
         client()
         ideConfigGenerated(true)
-        name = "Run Test Client"
+        //name.set("Run Test Client")
     }
 
     runConfigs {

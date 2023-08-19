@@ -3,7 +3,7 @@ import red.jackf.UpdateDependenciesTask
 import java.net.URI
 
 plugins {
-    id("fabric-loom") version "1.3-SNAPSHOT" apply false
+    id("fabric-loom") version "1.2.7" apply false
     id("io.github.juuxel.loom-vineflower") version "1.11.0" apply false
 }
 
