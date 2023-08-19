@@ -14,7 +14,7 @@ public record ToastFormat(ResourceLocation image,
                           int messageColour,
                           int progressBarColour) {
     /**
-     * Dark gray background with rounded corners. Used with advancement toasts.
+     * Dark gray background with rounded corners. Used for advancement unlocks.
      */
     public static final ToastFormat DARK = new ToastFormat(Toast.TEXTURE, 0, 6, 6, 0xFF_FFFF00, 0xFF_FFFFFF, 0xFF_FFFF00);
     /**

@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.client.api.toasts.CustomToast;
 import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
-import red.jackf.jackfredlib.client.api.toasts.ToastBuilder;
 import red.jackf.jackfredlib.client.api.toasts.ToastFormat;
 
 import java.util.ArrayList;
@@ -18,9 +17,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class CustomToastImpl implements CustomToast {
-    private static final int MAX_WIDTH = 240;
     private static final int DEFAULT_PADDING = 6;
-    private static final int IMAGE_SIZE = 20;
+    public static final int IMAGE_SIZE = 20;
     private final Object token = new Object();
 
     private final ToastFormat format;
@@ -28,7 +26,7 @@ public class CustomToastImpl implements CustomToast {
     private final List<FormattedCharSequence> messageLines = new ArrayList<>();
     private @Nullable ImageSpec image;
     private final VisibilityChecker visibiltyFunction;
-    private final ToastBuilder.ProgressPuller progressPuller;
+    private final CustomToastBuilderImpl.ProgressPuller progressPuller;
     private final boolean rainbowProgress;
 
     private long visibleTimeStart = -1;
@@ -41,7 +39,7 @@ public class CustomToastImpl implements CustomToast {
                            List<Component> messages,
                            @Nullable ImageSpec image,
                            VisibilityChecker visibiltyFunction,
-                           ToastBuilder.ProgressPuller progressPuller,
+                           CustomToastBuilderImpl.ProgressPuller progressPuller,
                            boolean rainbowProgress) {
         this.format = format;
         this.title = title;
@@ -167,16 +165,12 @@ public class CustomToastImpl implements CustomToast {
         if (this.progress < 1f) this.progressCompleteTime = -1;
     }
 
-    public long getProgressCompleteTime() {
-        return progressCompleteTime;
+    public long getTimeSinceProgressComplete() {
+        return progress == 1f ? visibleTime - progressCompleteTime : -1;
     }
 
-    public long getVisibleTimeStart() {
-        return visibleTimeStart;
-    }
-
-    public long getVisibleTime() {
-        return visibleTime;
+    public long getTimeVisible() {
+        return visibleTime - visibleTimeStart;
     }
 
     public interface VisibilityChecker {

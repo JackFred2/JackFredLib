@@ -5,6 +5,7 @@ Collection of common utilities for my Minecraft mods, and where I'm figuring out
 - Tri-state value holder for Fabric API's events.
 - Gradient/colour toolkit
 - API for sending fake entities (and more in the future) to the client.
+- API for easily creating custom [toasts](https://en.wikipedia.org/wiki/Pop-up_notification), with progress bars and images.
 
 Feel free to use yourself (via GitHub Package Registry).
 
