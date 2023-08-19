@@ -25,18 +25,6 @@ java {
 	withJavadocJar()
 }
 
-tasks.withType<Javadoc>().configureEach {
-	include("red/jackf/jackfredlib/api/**/*.java")
-	include("red/jackf/jackfredlib/client/api/**/*.java")
-
-	options.showFromPublic()
-
-	(options as StandardJavadocDocletOptions).tags(
-		"apiNote:a:API Note:",
-		"implNote:a:Implementation Note:"
-	)
-}
-
 loom {
     splitEnvironmentSourceSets()
 
@@ -48,6 +36,22 @@ loom {
 	}
 
 	accessWidenerPath.set(file("src/main/resources/jackfredlib.accesswidener"))
+}
+
+tasks.withType<Javadoc>().configureEach {
+	options.showFromPublic()
+
+	source += sourceSets["client"]!!.allJava
+	classpath += sourceSets["client"]!!.compileClasspath
+	classpath += sourceSets["client"]!!.output
+
+	include("red/jackf/jackfredlib/api/**/*.java")
+	include("red/jackf/jackfredlib/client/api/**/*.java")
+
+	(options as StandardJavadocDocletOptions).tags(
+		"apiNote:a:API Note:",
+		"implNote:a:Implementation Note:"
+	)
 }
 
 dependencies {
