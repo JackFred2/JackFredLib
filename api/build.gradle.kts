@@ -58,6 +58,8 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
 
 	modLocalRuntime("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
+
+	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
 }
 
 

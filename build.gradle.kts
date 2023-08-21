@@ -27,11 +27,18 @@ subprojects {
                 includeGroup("dev.emi")
             }
         }
+        repositories {
+            maven {
+                name = "JitPack"
+                url = URI("https://jitpack.io")
+                content {
+                    includeGroupByRegex("com.github.llamalad7.*")
+                }
+            }
+        }
     }
 
     val loom = project.extensions.getByType(LoomGradleExtensionAPI::class)
-
-
 
     dependencies {
         add("minecraft", "com.mojang:minecraft:${properties["minecraft_version"]}")

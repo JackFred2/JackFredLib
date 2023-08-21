@@ -7,5 +7,6 @@ public class TestMod implements ModInitializer {
     public void onInitialize() {
         GradientEncode.test();
         LieTest.setup();
+        RepeatableArgumentsTest.setup();
     }
 }

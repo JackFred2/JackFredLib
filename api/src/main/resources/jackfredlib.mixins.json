@@ -4,7 +4,8 @@
   "package": "red.jackf.jackfredlib.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ServerGamePacketListenerImplMixin"
+    "lying.ServerGamePacketListenerImplMixin",
+    "extrasourcedata.CommandSourceStackMixin"
   ],
   "client": [
   ],

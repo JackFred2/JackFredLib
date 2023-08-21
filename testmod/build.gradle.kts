@@ -38,6 +38,8 @@ dependencies {
 
     implementation(project(path=":api", configuration = "namedElements"))
     configurations["clientImplementation"](project(":api").dependencyProject.sourceSets["client"].output)
+
+    modRuntimeOnly("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")
 }
 
 tasks.withType<ProcessResources>().configureEach {
