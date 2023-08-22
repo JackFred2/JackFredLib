@@ -4,7 +4,7 @@ import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import net.minecraft.resources.ResourceLocation;
-import red.jackf.jackfredlib.api.extrasourcedata.ExtraSourceData;
+import red.jackf.jackfredlib.api.extracommandsourcedata.ExtraSourceData;
 
 import java.util.Map;
 

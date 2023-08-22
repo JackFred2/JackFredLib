@@ -10,7 +10,7 @@ import red.jackf.jackfredlib.impl.lying.LiesImpl;
 
 public class JackFredLib implements ModInitializer {
 	public static Logger getLogger(String suffix) {
-		return LoggerFactory.getLogger(JackFredLib.class.getName() + "/" + suffix);
+		return LoggerFactory.getLogger(JackFredLib.class.getName() + (!suffix.isEmpty() ? "/" + suffix : ""));
 	}
     public static final Logger LOGGER = getLogger("");
 

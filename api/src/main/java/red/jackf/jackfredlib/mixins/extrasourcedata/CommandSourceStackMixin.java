@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import red.jackf.jackfredlib.api.extrasourcedata.ExtraSourceData;
+import red.jackf.jackfredlib.api.extracommandsourcedata.ExtraSourceData;
 import red.jackf.jackfredlib.impl.extrasourcedata.JFLibCommandSourceStackDuck;
 
 import java.util.HashMap;

@@ -9,8 +9,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import red.jackf.jackfredlib.api.extrasourcedata.ESD;
-import red.jackf.jackfredlib.api.extrasourcedata.ExtraSourceData;
+import red.jackf.jackfredlib.api.extracommandsourcedata.ESD;
+import red.jackf.jackfredlib.api.extracommandsourcedata.ExtraSourceData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,26 +30,27 @@ public class RepeatableArgumentsTest {
             LiteralCommandNode<CommandSourceStack> root = dispatcher.register(literal("repeatableArgs"));
 
             dispatcher.register(literal("repeatableArgs").then(
-                literal("arg1").then(
-                        argument("arg1", IntegerArgumentType.integer())
-                                .redirect(root, ctx -> ESD.withCustom(ctx, DEFINITION, multiArg ->
-                                    multiArg.arg1s.add(ctx.getArgument("arg1", Integer.class))
-                                ))
-            )).then(
-                literal("arg2").then(
-                        argument("arg2", StringArgumentType.word())
-                                .redirect(root, ctx -> ESD.withCustom(ctx, DEFINITION, multiArg ->
-                                    multiArg.arg2s.add(ctx.getArgument("arg2", String.class))
-                                ))
-            )).then(
-                literal("go").executes(RepeatableArgumentsTest::execute)
+                    literal("arg1").then(
+                            argument("arg1", IntegerArgumentType.integer())
+                                    .redirect(root, ctx -> ESD.withCustom(ctx, DEFINITION, multiArg ->
+                                            multiArg.arg1s.add(ctx.getArgument("arg1", Integer.class))
+                                    ))
+                    )).then(
+                    literal("arg2").then(
+                            argument("arg2", StringArgumentType.word())
+                                    .redirect(root, ctx -> ESD.withCustom(ctx, DEFINITION, multiArg ->
+                                            multiArg.arg2s.add(ctx.getArgument("arg2", String.class))
+                                    ))
+                    )).then(
+                    literal("go").executes(RepeatableArgumentsTest::execute)
             ));
         });
     }
 
     private static int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         var custom = ESD.getCustom(ctx, DEFINITION);
-        ctx.getSource().getPlayerOrException().sendSystemMessage(Component.literal("arg1: " + custom.arg1s + ", arg2: " + custom.arg2s));
+        ctx.getSource().getPlayerOrException()
+                .sendSystemMessage(Component.literal("arg1: " + custom.arg1s + ", arg2: " + custom.arg2s));
         return 0;
     }
 
