@@ -59,7 +59,10 @@ dependencies {
 
 	modLocalRuntime("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 
-	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
+	// different configurations from the mixin extras README to remove from
+	listOf("include", "compileOnly", "localRuntime", "annotationProcessor").forEach {
+		add(it, "com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")
+	}
 }
 
 

@@ -1,7 +1,6 @@
 /**
- * Toolkit for adding arbitrary data to Minecraft's {@link net.minecraft.commands.CommandSourceStack}. This allows for
- * some features such as repeatable arguments.
- * <p>
+ * <p>Toolkit for adding arbitrary data to Minecraft's {@link net.minecraft.commands.CommandSourceStack}. This allows for
+ * some features such as repeatable arguments.</p>
  * <h2>Getting Started</h2>
  * To get started, create a new class which will hold your data:
  * <pre>
