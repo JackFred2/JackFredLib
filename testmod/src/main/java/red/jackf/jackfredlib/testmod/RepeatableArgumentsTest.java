@@ -30,16 +30,16 @@ public class RepeatableArgumentsTest {
             LiteralCommandNode<CommandSourceStack> root = dispatcher.register(literal("repeatableArgs"));
 
             dispatcher.register(literal("repeatableArgs").then(
-                    literal("arg1").then(
-                            argument("arg1", IntegerArgumentType.integer())
+                    literal("int").then(
+                            argument("int", IntegerArgumentType.integer())
                                     .redirect(root, ctx -> ESD.withCustom(ctx, DEFINITION, multiArg ->
-                                            multiArg.arg1s.add(ctx.getArgument("arg1", Integer.class))
+                                            multiArg.ints.add(ctx.getArgument("int", Integer.class))
                                     ))
                     )).then(
-                    literal("arg2").then(
-                            argument("arg2", StringArgumentType.word())
+                    literal("str").then(
+                            argument("str", StringArgumentType.word())
                                     .redirect(root, ctx -> ESD.withCustom(ctx, DEFINITION, multiArg ->
-                                            multiArg.arg2s.add(ctx.getArgument("arg2", String.class))
+                                            multiArg.strs.add(ctx.getArgument("str", String.class))
                                     ))
                     )).then(
                     literal("go").executes(RepeatableArgumentsTest::execute)
@@ -50,20 +50,20 @@ public class RepeatableArgumentsTest {
     private static int execute(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         var custom = ESD.getCustom(ctx, DEFINITION);
         ctx.getSource().getPlayerOrException()
-                .sendSystemMessage(Component.literal("arg1: " + custom.arg1s + ", arg2: " + custom.arg2s));
+                .sendSystemMessage(Component.literal("ints: " + custom.ints + ", strs: " + custom.strs));
         return 0;
     }
 
     private static class MutliArgData implements ExtraSourceData<MutliArgData> {
-        private final List<Integer> arg1s = new ArrayList<>();
-        private final List<String> arg2s = new ArrayList<>();
+        private final List<Integer> ints = new ArrayList<>();
+        private final List<String> strs = new ArrayList<>();
 
         public MutliArgData() {
         }
 
         public MutliArgData(MutliArgData other) {
-            this.arg1s.addAll(other.arg1s);
-            this.arg2s.addAll(other.arg2s);
+            this.ints.addAll(other.ints);
+            this.strs.addAll(other.strs);
         }
 
         @Override
@@ -74,8 +74,8 @@ public class RepeatableArgumentsTest {
         @Override
         public String toString() {
             return "MutliArgData{" +
-                    "arg1s=" + arg1s +
-                    ", arg2s=" + arg2s +
+                    "ints=" + ints +
+                    ", strs=" + strs +
                     '}';
         }
     }
