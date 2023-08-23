@@ -25,10 +25,35 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      # check variable has correct format
+      - name: Check valid newTag
+        if: ${{ startsWith(github.events.inputs.newTag, "v") }}
+        run: exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      # tag preconditions
+      - name: Check existing lastTag
+        run: |
+          if git show-ref --tags --verify --quiet "refs/tags/${{ github.events.inputs.lastTag }}"; then
+            echo "lastTag exists"
+            exit 0
+          else
+            echo "lastTag doesn't exist, failing"
+            exit 1
+          fi
+      - name: Check newTag doesn't exist
+        run: |
+          if git show-ref --tags --verify --quiet "refs/tags/${{ github.events.inputs.newTag }}"; then
+            echo "newTag already exists, failing"
+            exit 1
+          else
+            echo "newTag doesn't exist"
+            exit 0
+          fi
 
       - name: Create version tag
         uses: actions/github-script@v6
