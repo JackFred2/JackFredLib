@@ -26,7 +26,7 @@ jobs:
 
     steps:
       # check variable has correct format
-      - name: Check valid newTag
+      - name: Fail on invalid tag format
         if: ${{ !startsWith(github.event.inputs.newTag, 'v') }}
         run: exit 1
 
