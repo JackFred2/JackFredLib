@@ -27,7 +27,7 @@ jobs:
     steps:
       # check variable has correct format
       - name: Check valid newTag
-        if: ${{ startsWith(github.events.inputs.newTag, "v") }}
+        if: ${{ startsWith(github.events.inputs.newTag, 'v') }}
         run: exit 1
 
       - name: Checkout repository
