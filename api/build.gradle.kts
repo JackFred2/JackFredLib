@@ -60,7 +60,7 @@ dependencies {
 	modLocalRuntime("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 
 	// different configurations from the mixin extras README to remove from maven pom
-	include(compileOnly(modLocalRuntime(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)!!)
+	include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
 }
 
 
