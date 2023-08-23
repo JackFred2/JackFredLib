@@ -27,7 +27,7 @@ jobs:
     steps:
       # check variable has correct format
       - name: Check valid newTag
-        if: ${{ startsWith(github.events.inputs.newTag, 'v') }}
+        if: ${{ !startsWith(github.event.inputs.newTag, 'v') }}
         run: exit 1
 
       - name: Checkout repository
@@ -38,7 +38,7 @@ jobs:
       # tag preconditions
       - name: Check existing lastTag
         run: |
-          if git show-ref --tags --verify --quiet "refs/tags/${{ github.events.inputs.lastTag }}"; then
+          if git show-ref --tags --verify --quiet "refs/tags/${{ github.event.inputs.lastTag }}"; then
             echo "lastTag exists"
             exit 0
           else
@@ -47,7 +47,7 @@ jobs:
           fi
       - name: Check newTag doesn't exist
         run: |
-          if git show-ref --tags --verify --quiet "refs/tags/${{ github.events.inputs.newTag }}"; then
+          if git show-ref --tags --verify --quiet "refs/tags/${{ github.event.inputs.newTag }}"; then
             echo "newTag already exists, failing"
             exit 1
           else
