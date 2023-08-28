@@ -6,6 +6,7 @@ import java.net.URI
 plugins {
     id("fabric-loom") version "1.2.7" apply false
     id("io.github.juuxel.loom-vineflower") version "1.11.0" apply false
+    id("maven-publish")
 }
 
 fun Project.getSourceSet(name: String) = this.extensions.getByType(SourceSetContainer::class)[name]
@@ -68,20 +69,38 @@ allprojects {
         }
     }
 
-    val loom = project.extensions.getByType(LoomGradleExtensionAPI::class)
-
-    loom.splitEnvironmentSourceSets()
-
-    loom.runConfigs.configureEach {
-        this.isIdeConfigGenerated = false
+    project.extensions.configure<JavaPluginExtension> {
+        withSourcesJar()
     }
 
-    loom.mods {
-        create(project.name) {
-            sourceSet(project.getSourceSet("main"))
-            sourceSet(project.getSourceSet("client"))
+    tasks.withType<Javadoc>().configureEach {
+        options.showFromPublic()
+
+        include("red/jackf/jackfredlib/api/**/*.java")
+        include("red/jackf/jackfredlib/client/api/**/*.java")
+
+        (options as StandardJavadocDocletOptions).tags(
+            "apiNote:a:API Note:",
+            "implNote:a:Implementation Note:"
+        )
+    }
+
+    project.extensions.configure<LoomGradleExtensionAPI> {
+        splitEnvironmentSourceSets()
+
+        runConfigs.configureEach {
+            this.isIdeConfigGenerated = false
+        }
+
+        mods {
+            create(project.name) {
+                sourceSet(project.getSourceSet("main"))
+                sourceSet(project.getSourceSet("client"))
+            }
         }
     }
+
+    val loom = project.extensions.getByType<LoomGradleExtensionAPI>()
 
     dependencies {
         add("minecraft", "com.mojang:minecraft:${properties["minecraft_version"]}")
@@ -133,6 +152,39 @@ tasks.getByName<RemapJarTask>("remapJar") {
         }
     }
 }
+
+extensions.configure<LoomGradleExtensionAPI> {
+    accessWidenerPath = file("jackfredlib-lying/src/main/resources/jackfredlib-lying.accesswidener")
+}
+
+tasks.withType<Javadoc>().configureEach {
+    options.showFromPublic()
+
+    subprojects.forEach {
+        if (it.name == "jackfredlib-testmod") return@forEach
+
+        source(it.getSourceSet("main").allJava)
+        source(it.getSourceSet("client").allJava)
+    }
+
+    include("red/jackf/jackfredlib/api/**/*.java")
+    include("red/jackf/jackfredlib/client/api/**/*.java")
+
+    classpath = files(getSourceSet("main").compileClasspath, getSourceSet("client").compileClasspath)
+
+    (options as StandardJavadocDocletOptions).tags(
+        "apiNote:a:API Note:",
+        "implNote:a:Implementation Note:"
+    )
+}
+
+val javadocTask = tasks.register<Jar>("javadocJar") {
+    dependsOn("javadoc")
+    from(tasks.getByName<Javadoc>("javadoc").destinationDir)
+    archiveClassifier = "fatjavadoc"
+}
+
+tasks.getByName("build").dependsOn(javadocTask)
 
 tasks.register<UpdateDependenciesTask>("updateModDependencies") {
     mcVersion.set(properties["minecraft_version"]!!.toString())
