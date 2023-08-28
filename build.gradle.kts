@@ -72,8 +72,8 @@ allprojects {
 
     loom.splitEnvironmentSourceSets()
 
-    loom.runConfigs {
-
+    loom.runConfigs.configureEach {
+        this.isIdeConfigGenerated = false
     }
 
     loom.mods {
