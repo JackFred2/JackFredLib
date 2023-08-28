@@ -12,7 +12,7 @@
     "issues": "https://github.com/JackFred2/JackFredLib/issues"
   },
   "license": "LGPL-3.0-only",
-  "icon": "assets/jackfredlib/icon.png",
+  "icon": "assets/jackfredlib-lying/icon.png",
   "environment": "*",
   "mixins": [
     "jackfredlib-lying.mixins.json"
@@ -35,6 +35,7 @@
       "badges": [
         "library"
       ],
+      "parent": "jackfredlib",
       "update_checker": false
     }
   }

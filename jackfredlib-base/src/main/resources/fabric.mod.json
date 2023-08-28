@@ -12,7 +12,7 @@
     "issues": "https://github.com/JackFred2/JackFredLib/issues"
   },
   "license": "LGPL-3.0-only",
-  "icon": "assets/jackfredlib/icon.png",
+  "icon": "assets/jackfredlib-base/icon.png",
   "environment": "*",
   "depends": {
     "java": ">=17"
@@ -22,6 +22,7 @@
       "badges": [
         "library"
       ],
+      "parent": "jackfredlib",
       "update_checker": false
     }
   }

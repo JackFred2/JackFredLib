@@ -12,13 +12,14 @@
     "issues": "https://github.com/JackFred2/JackFredLib/issues"
   },
   "license": "LGPL-3.0-only",
-  "icon": "assets/jackfredlib/icon.png",
+  "icon": "assets/jackfredlib-toasts/icon.png",
   "environment": "client",
   "custom": {
     "modmenu": {
       "badges": [
         "library"
       ],
+      "parent": "jackfredlib",
       "update_checker": false
     }
   }
