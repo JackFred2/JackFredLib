@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "jackfredlib-colour",
   "version": "${version}",
-  "name": "JackFredLib Colour",
+  "name": "JackFredLib: Colour",
   "description": "A set of colour and gradient-related utilities.",
   "authors": [
     "JackFred"

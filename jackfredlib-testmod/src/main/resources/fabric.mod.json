@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "jackfredlib-testmod",
   "version": "${version}",
-  "name": "${mod_name}-testmod",
+  "name": "JackFredLib Test Mod",
   "description": "Test mod for JackFredLib. Should only see this in a dev environment",
   "authors": [
     "JackFred"

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "jackfredlib-toasts",
   "version": "${version}",
-  "name": "JackFredLib Toasts",
+  "name": "JackFredLib: Toasts",
   "description": "Library for adding custom toasts, with progress bars and image support.",
   "authors": [
     "JackFred"

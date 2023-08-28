@@ -72,6 +72,10 @@ allprojects {
 
     loom.splitEnvironmentSourceSets()
 
+    loom.runConfigs {
+
+    }
+
     loom.mods {
         create(project.name) {
             sourceSet(project.getSourceSet("main"))

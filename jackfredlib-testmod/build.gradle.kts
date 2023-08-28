@@ -17,24 +17,15 @@ loom {
     log4jConfigs.from(rootProject.file("log4j2.xml"))
 }
 
-@Suppress("UNCHECKED_CAST")
-val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit
-
-moduleDependencies(project, listOf("jackfredlib-base", "jackfredlib-colour", "jackfredlib-lying", "jackfredlib-toasts", "jackfredlib-extracommandsourcedata"))
-
-
 dependencies {
+    add("api", project(path=rootProject.path, configuration = "namedElements"))
+    rootProject.allprojects.forEach {
+        if (it.name == "jackfredlib-testmod") return@forEach
+        add("clientImplementation", it.extensions.getByType(SourceSetContainer::class)["client"].output)
+    }
+
     modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
     modRuntimeOnly("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")
-}
-
-tasks.withType<ProcessResources>().configureEach {
-    inputs.property("version", version)
-    inputs.property("mod_name", properties["mod_name"]!!)
-
-    filesMatching("fabric.mod.json") {
-        expand(inputs.properties)
-    }
 }
 
 tasks.withType<JavaCompile>().configureEach {
