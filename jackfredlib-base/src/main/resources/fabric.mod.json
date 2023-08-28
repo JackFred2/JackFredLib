@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib-base",
+  "version": "${version}",
+  "name": "JackFredLib Base",
+  "description": "Base library for JackFredLib; contains memoization utils and a three-state holder for events.",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib/icon.png",
+  "environment": "*",
+  "depends": {
+    "java": ">=17"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "update_checker": false
+    }
+  }
+}

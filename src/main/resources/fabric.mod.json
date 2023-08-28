@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib",
+  "version": "${version}",
+  "name": "JackFredLib",
+  "description": "Common code and hooks for JackFred's mods.",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib/icon.png",
+  "environment": "*",
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "update_checker": false
+    }
+  }
+}

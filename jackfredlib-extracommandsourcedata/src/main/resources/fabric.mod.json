@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib-extracommandsourcedata",
+  "version": "${version}",
+  "name": "JackFredLib Extra Command Source Data",
+  "description": "Provides hooks to add extra CommandSourceStack data when running commands.",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib/icon.png",
+  "environment": "*",
+  "depends": {
+    "java": ">=17",
+    "minecraft": "~1.20.1"
+  },
+  "mixins": [
+    "jackfredlib-extracommandsourcedata.mixins.json"
+  ],
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "update_checker": false
+    }
+  }
+}
