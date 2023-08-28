@@ -7,6 +7,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import red.jackf.jackfredlib.mixins.lying.BlockDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.TextDisplayAccessor;
 
 /**
  * Collection of common utilities for manipulating entities.
@@ -20,7 +22,7 @@ public class EntityUtils {
      * @param text Text to give this display
      */
     public static void setDisplayText(Display.TextDisplay display, Component text) {
-        display.setText(text);
+        ((TextDisplayAccessor) display).callSetText(text);
     }
 
     /**
@@ -29,7 +31,7 @@ public class EntityUtils {
      * @param state Block state to give this display
      */
     public static void setDisplayBlockState(Display.BlockDisplay display, BlockState state) {
-        display.setBlockState(state);
+        ((BlockDisplayAccessor) display).callSetBlockState(state);
     }
 
     /**

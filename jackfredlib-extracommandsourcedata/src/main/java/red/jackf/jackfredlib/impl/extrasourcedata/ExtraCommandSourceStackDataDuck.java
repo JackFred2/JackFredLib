@@ -8,7 +8,7 @@ import red.jackf.jackfredlib.api.extracommandsourcedata.ExtraSourceData;
 
 import java.util.Map;
 
-public interface JFLibCommandSourceStackDuck {
+public interface ExtraCommandSourceStackDataDuck {
     Dynamic2CommandExceptionType INVALID_DATA_TYPE = new Dynamic2CommandExceptionType((expected, actual) ->
             new LiteralMessage("Invalid extra data class requested; expected %s but got %s".formatted(expected, actual)));
 

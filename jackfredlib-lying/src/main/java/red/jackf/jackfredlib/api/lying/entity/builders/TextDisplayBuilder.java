@@ -7,6 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import red.jackf.jackfredlib.api.colour.Colour;
+import red.jackf.jackfredlib.mixins.lying.TextDisplayAccessor;
 
 /**
  * Builder to create a text display, which shows a {@link net.minecraft.network.chat.Component}.
@@ -24,7 +25,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder text(Component text) {
-        this.entity.setText(text);
+        ((TextDisplayAccessor) this.entity).callSetText(text);
         return self();
     }
 
@@ -37,10 +38,10 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder textAlign(Display.TextDisplay.Align align) {
-        byte flags = (byte) (this.entity.getFlags() & 0b00111);
+        byte flags = (byte) (((TextDisplayAccessor) this.entity).callGetFlags() & 0b00111);
         if (align == Display.TextDisplay.Align.LEFT) flags |= Display.TextDisplay.FLAG_ALIGN_LEFT;
         else if (align == Display.TextDisplay.Align.RIGHT) flags |= Display.TextDisplay.FLAG_ALIGN_RIGHT;
-        this.entity.setFlags(flags);
+        ((TextDisplayAccessor) this.entity).callSetFlags(flags);
         return self();
     }
 
@@ -53,7 +54,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder lineWidth(int width) {
-        this.entity.setLineWidth(width);
+        ((TextDisplayAccessor) this.entity).callSetLineWidth(width);
         return self();
     }
 
@@ -69,7 +70,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder textOpacity(int opacity) {
-        this.entity.setTextOpacity((byte) Mth.clamp(opacity, 0, 255));
+        ((TextDisplayAccessor) this.entity).callSetTextOpacity((byte) Mth.clamp(opacity, 0, 255));
         return self();
     }
 
@@ -84,7 +85,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder backgroundColour(int argb) {
-        this.entity.setBackgroundColor(argb);
+        ((TextDisplayAccessor) this.entity).callSetBackgroundColor(argb);
         return self();
     }
 
@@ -130,7 +131,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder useDefaultBackground(boolean useDefaultBackground) {
-        this.entity.setFlags(withFlag(this.entity.getFlags(), Display.TextDisplay.FLAG_USE_DEFAULT_BACKGROUND, useDefaultBackground));
+        ((TextDisplayAccessor) this.entity).callSetFlags(withFlag(((TextDisplayAccessor) this.entity).callGetFlags(), Display.TextDisplay.FLAG_USE_DEFAULT_BACKGROUND, useDefaultBackground));
         return self();
     }
 
@@ -146,7 +147,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder seeThrough(boolean seeThrough) {
-        this.entity.setFlags(withFlag(this.entity.getFlags(), Display.TextDisplay.FLAG_SEE_THROUGH, seeThrough));
+        ((TextDisplayAccessor) this.entity).callSetFlags(withFlag(((TextDisplayAccessor) this.entity).callGetFlags(), Display.TextDisplay.FLAG_SEE_THROUGH, seeThrough));
         return self();
     }
 
@@ -158,7 +159,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder hasShadow(boolean hasShadow) {
-        this.entity.setFlags(withFlag(this.entity.getFlags(), Display.TextDisplay.FLAG_SHADOW, hasShadow));
+        ((TextDisplayAccessor) this.entity).callSetFlags(withFlag(((TextDisplayAccessor) this.entity).callGetFlags(), Display.TextDisplay.FLAG_SHADOW, hasShadow));
         return self();
     }
 

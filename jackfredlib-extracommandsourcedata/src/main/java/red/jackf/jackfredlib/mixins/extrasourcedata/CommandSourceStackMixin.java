@@ -8,13 +8,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import red.jackf.jackfredlib.api.extracommandsourcedata.ExtraSourceData;
-import red.jackf.jackfredlib.impl.extrasourcedata.JFLibCommandSourceStackDuck;
+import red.jackf.jackfredlib.impl.extrasourcedata.ExtraCommandSourceStackDataDuck;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(CommandSourceStack.class)
-public class CommandSourceStackMixin implements JFLibCommandSourceStackDuck {
+public class CommandSourceStackMixin implements ExtraCommandSourceStackDataDuck {
     @Unique
     private final Map<ResourceLocation, ExtraSourceData<?>> extraData = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class CommandSourceStackMixin implements JFLibCommandSourceStackDuck {
             "withReturnValueConsumer"
     }, at = @At("RETURN"))
     private CommandSourceStack copyExtraData(CommandSourceStack orig) {
-        ((JFLibCommandSourceStackDuck) orig).jackfredlib$setData(this.extraData);
+        ((ExtraCommandSourceStackDataDuck) orig).jackfredlib$setData(this.extraData);
         return orig;
     }
 

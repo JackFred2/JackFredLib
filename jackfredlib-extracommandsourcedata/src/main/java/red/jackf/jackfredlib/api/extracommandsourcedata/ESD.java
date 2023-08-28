@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import red.jackf.jackfredlib.impl.extrasourcedata.CommandSourceStackUtils;
-import red.jackf.jackfredlib.impl.extrasourcedata.JFLibCommandSourceStackDuck;
+import red.jackf.jackfredlib.impl.extrasourcedata.ExtraCommandSourceStackDataDuck;
 
 import java.util.function.Consumer;
 
@@ -69,7 +69,7 @@ public class ESD {
      */
     public static <T extends ExtraSourceData<T>> T getCustom(CommandSourceStack source,
                                                              ExtraSourceData.Definition<T> definition) throws CommandSyntaxException {
-        return ((JFLibCommandSourceStackDuck) source).jackfredlib$getData(definition);
+        return ((ExtraCommandSourceStackDataDuck) source).jackfredlib$getData(definition);
     }
 
 

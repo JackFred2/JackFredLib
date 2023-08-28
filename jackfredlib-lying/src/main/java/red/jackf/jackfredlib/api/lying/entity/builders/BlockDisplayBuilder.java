@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3f;
+import red.jackf.jackfredlib.mixins.lying.BlockDisplayAccessor;
 
 /**
  * <p>Builder to create a Block Display entity, which displays a block state.</p>
@@ -29,7 +30,7 @@ public class BlockDisplayBuilder extends DisplayBuilder<Display.BlockDisplay, Bl
      * @return This builder
      */
     public BlockDisplayBuilder state(BlockState state) {
-        this.entity.setBlockState(state);
+        ((BlockDisplayAccessor) this.entity).callSetBlockState(state);
         return self();
     }
 

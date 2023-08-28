@@ -153,10 +153,6 @@ tasks.getByName<RemapJarTask>("remapJar") {
     }
 }
 
-extensions.configure<LoomGradleExtensionAPI> {
-    accessWidenerPath = file("jackfredlib-lying/src/main/resources/jackfredlib-lying.accesswidener")
-}
-
 tasks.withType<Javadoc>().configureEach {
     options.showFromPublic()
 

@@ -17,7 +17,6 @@
   "mixins": [
     "jackfredlib-lying.mixins.json"
   ],
-  "accessWidener": "jackfredlib-lying.accesswidener",
   "entrypoints": {
     "main": [
       "red.jackf.jackfredlib.impl.lying.Entrypoint"

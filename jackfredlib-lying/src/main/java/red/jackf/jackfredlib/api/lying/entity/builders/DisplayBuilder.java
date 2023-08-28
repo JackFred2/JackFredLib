@@ -10,6 +10,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
+import red.jackf.jackfredlib.mixins.lying.DisplayAccessor;
 
 import static net.minecraft.world.entity.Display.*;
 
@@ -34,7 +35,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B glowing(boolean shouldGlow, int colour) {
-        this.entity.setGlowColorOverride(colour);
+        ((DisplayAccessor) this.entity).callSetGlowColorOverride(colour);
         return this.glowing(shouldGlow);
     }
 
@@ -77,7 +78,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B billboard(BillboardConstraints billboardMode) {
-        this.entity.setBillboardConstraints(billboardMode);
+        ((DisplayAccessor) this.entity).callSetBillboardConstraints(billboardMode);
         return self();
     }
 
@@ -90,7 +91,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This entity builder
      */
     public B brightness(int block, int sky) {
-        this.entity.setBrightnessOverride(new Brightness(Mth.clamp(block, 0, 15), Mth.clamp(sky, 0, 15)));
+        ((DisplayAccessor) this.entity).callSetBrightnessOverride(new Brightness(Mth.clamp(block, 0, 15), Mth.clamp(sky, 0, 15)));
         return self();
     }
 
@@ -103,7 +104,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This entity builder
      */
     public B viewRangeModifier(float modifier) {
-        this.entity.setViewRange(modifier);
+        ((DisplayAccessor) this.entity).callSetViewRange(modifier);
         return self();
     }
 
@@ -117,7 +118,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This entity builder
      */
     public B shadowRadius(float shadowRadius) {
-        this.entity.setShadowRadius(Mth.clamp(shadowRadius, 0, 64));
+        ((DisplayAccessor) this.entity).callSetShadowRadius(Mth.clamp(shadowRadius, 0, 64));
         return self();
     }
 
@@ -132,7 +133,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B shadowStrength(float shadowStrength) {
-        this.entity.setShadowStrength(shadowStrength);
+        ((DisplayAccessor) this.entity).callSetShadowStrength(shadowStrength);
         return self();
     }
 
@@ -147,7 +148,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Displays</a>
      */
     public B transform(Vector3f translation, Quaternionf leftRotation, Vector3f scale, Quaternionf rightRotation) {
-        this.entity.setTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
                 translation,
                 leftRotation,
                 scale,
@@ -164,7 +165,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B setTranslation(Vector3f translation) {
         var transform = getTransformation();
-        this.entity.setTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
                 translation,
                 transform.getLeftRotation(),
                 transform.getScale(),
@@ -181,7 +182,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B addTranslation(Vector3f translation) {
         var transform = getTransformation();
-        this.entity.setTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
                 transform.getTranslation().add(translation),
                 transform.getLeftRotation(),
                 transform.getScale(),
@@ -198,7 +199,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B leftRotation(Quaternionf leftRotation) {
         var transform = getTransformation();
-        this.entity.setTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
                 transform.getTranslation(),
                 leftRotation,
                 transform.getScale(),
@@ -215,7 +216,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B scale(Vector3f scale) {
         var transform = getTransformation();
-        this.entity.setTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
                 transform.getTranslation(),
                 transform.getLeftRotation(),
                 scale,
@@ -232,7 +233,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B rightRotation(Quaternionf rightRotation) {
         var transform = getTransformation();
-        this.entity.setTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
                 transform.getTranslation(),
                 transform.getLeftRotation(),
                 transform.getScale(),
@@ -242,7 +243,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     }
 
     protected Transformation getTransformation() {
-        return Display.createTransformation(this.entity.getEntityData());
+        return DisplayAccessor.callCreateTransformation(this.entity.getEntityData());
     }
 
     @Override

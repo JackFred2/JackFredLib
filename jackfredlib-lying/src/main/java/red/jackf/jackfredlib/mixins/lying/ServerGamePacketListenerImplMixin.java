@@ -16,6 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import red.jackf.jackfredlib.impl.lying.GenericsUtils;
 import red.jackf.jackfredlib.impl.lying.LiesImpl;
 
+/**
+ * <p>Used to intercept interaction events on fake entities in the lying module.</p>
+ * <p>See {@link red.jackf.jackfredlib.api.lying.entity.EntityLie.Builder}</p>
+ */
 @Mixin(ServerGamePacketListenerImpl.class)
 public class ServerGamePacketListenerImplMixin {
     @Shadow public ServerPlayer player;
@@ -29,7 +33,7 @@ public class ServerGamePacketListenerImplMixin {
 
                 @Override
                 public void onAttack() {
-                    LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
+                    LiesImpl.INSTANCE.getEntityLieFromId(player, ((ServerboundInteractPacketAccessor) packet).getEntityId())
                             .ifPresent(activeEntityLie -> GenericsUtils.leftClickEntity(activeEntityLie, packet.isUsingSecondaryAction()));
                 }
 
@@ -40,7 +44,7 @@ public class ServerGamePacketListenerImplMixin {
 
                 @Override
                 public void onInteraction(InteractionHand hand, Vec3 interactionLocation) {
-                    LiesImpl.INSTANCE.getEntityLieFromId(player, packet.entityId)
+                    LiesImpl.INSTANCE.getEntityLieFromId(player, ((ServerboundInteractPacketAccessor) packet).getEntityId())
                             .ifPresent(activeEntityLie -> GenericsUtils.rightClickEntity(activeEntityLie, packet.isUsingSecondaryAction(), hand, interactionLocation));
                 }
             });

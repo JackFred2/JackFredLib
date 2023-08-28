@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import red.jackf.jackfredlib.mixins.lying.ItemDisplayAccessor;
 
 /**
  * Builder to create an Item Display, which shows an {@link net.minecraft.world.item.ItemStack}.
@@ -22,7 +23,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<Display.ItemDisplay, Item
      * @return This entity builder
      */
     public ItemDisplayBuilder stack(ItemStack stack) {
-        this.entity.setItemStack(stack);
+        ((ItemDisplayAccessor) this.entity).callSetItemStack(stack);
         return self();
     }
 
@@ -33,7 +34,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<Display.ItemDisplay, Item
      * @return This entity Builder
      */
     public ItemDisplayBuilder displayContext(ItemDisplayContext context) {
-        this.entity.setItemTransform(context);
+        ((ItemDisplayAccessor) this.entity).callSetItemTransform(context);
         return self();
     }
 
