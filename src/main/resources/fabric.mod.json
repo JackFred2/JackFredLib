@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib/icon.png",
+  "environment": "*",
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "update_checker": false
+    }
+  }
+}

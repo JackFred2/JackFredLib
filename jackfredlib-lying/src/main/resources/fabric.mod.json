@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib-lying",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib-lying/icon.png",
+  "environment": "*",
+  "mixins": [
+    "jackfredlib-lying.mixins.json"
+  ],
+  "entrypoints": {
+    "main": [
+      "red.jackf.jackfredlib.impl.lying.Entrypoint"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api-base": "*",
+    "jackfredlib-colour": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "parent": "jackfredlib",
+      "update_checker": false
+    }
+  }
+}

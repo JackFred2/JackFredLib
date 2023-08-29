@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib-testmod",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
+  "authors": [
+    "JackFred"
+  ],
+  "license": "SOUL-TRANSFER-AGREEMENT",
+  "icon": "assets/jackfredlib-testmod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "red.jackf.jackfredlib.testmod.TestMod"
+    ],
+    "client": [
+      "red.jackf.jackfredlib.testmod.client.TestModClient"
+    ]
+  }
+}

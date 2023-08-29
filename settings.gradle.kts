@@ -10,6 +10,13 @@ pluginManagement {
 }
 
 rootProject.name = "jackfredlib"
-include("api")
+include("jackfredlib-base")
+
+include("jackfredlib-colour")
+include("jackfredlib-extracommandsourcedata")
+include("jackfredlib-lying")
+include("jackfredlib-toasts")
+
+
 if (!System.getenv().containsKey("CI"))
-	include("testmod")
+	include("jackfredlib-testmod")
