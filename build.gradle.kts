@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import net.fabricmc.loom.task.RemapJarTask
@@ -98,7 +100,6 @@ allprojects {
 
     dependencies {
         add("minecraft", "com.mojang:minecraft:${properties["minecraft_version"]}")
-        @Suppress("UnstableApiUsage")
         add("mappings", loom.layered {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${properties["parchment_version"]}@zip")
@@ -112,6 +113,12 @@ allprojects {
 
         filesMatching("fabric.mod.json") {
             expand(inputs.properties)
+        }
+    }
+
+    tasks.named<Jar>("jar") {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${this@allprojects.name}" }
         }
     }
 }
