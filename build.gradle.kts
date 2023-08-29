@@ -40,13 +40,17 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
     // TODO: publishing
 }
 
-// Shortcut for adding mixin extras as a dependency
+// Shortcut for adding mixin extras as a dependency. As of 2023/08/29, this is only the extra command source stack data module
 extra["usesMixinExtras"] = fun(dependencies: DependencyHandler) {
     dependencies.add("include",
         dependencies.add("implementation",
             dependencies.add("annotationProcessor",
                 "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
 }
+
+////////////////////////////
+// PROJECT CONFIGURATIONS //
+////////////////////////////
 
 version = properties["mod_version"]!!
 
@@ -59,23 +63,6 @@ allprojects {
 
     apply(plugin="fabric-loom")
     apply(plugin="io.github.juuxel.loom-vineflower")
-
-    repositories {
-        maven {
-            name = "ParchmentMC"
-            url = URI("https://maven.parchmentmc.org")
-            content {
-                includeGroup("org.parchmentmc.data")
-            }
-        }
-        maven {
-            name = "JitPack"
-            url = URI("https://jitpack.io")
-            content {
-                includeGroupByRegex("com.github.llamalad7.*")
-            }
-        }
-    }
 
     project.extensions.configure<JavaPluginExtension> {
         withSourcesJar()
@@ -95,6 +82,26 @@ allprojects {
             }
         }
     }
+    /////////////////////////
+    // GLOBAL DEPENDENCIES //
+    /////////////////////////
+
+    repositories {
+        maven {
+            name = "ParchmentMC"
+            url = URI("https://maven.parchmentmc.org")
+            content {
+                includeGroup("org.parchmentmc.data")
+            }
+        }
+        maven {
+            name = "JitPack"
+            url = URI("https://jitpack.io")
+            content {
+                includeGroupByRegex("com.github.llamalad7.*")
+            }
+        }
+    }
 
     val loom = project.extensions.getByType<LoomGradleExtensionAPI>()
 
@@ -107,6 +114,10 @@ allprojects {
         add("modImplementation", "net.fabricmc:fabric-loader:${properties["loader_version"]}")
         add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
     }
+
+    ///////////////
+    // PACKAGING //
+    ///////////////
 
     tasks.withType<ProcessResources>().configureEach {
         inputs.property("version", version)
