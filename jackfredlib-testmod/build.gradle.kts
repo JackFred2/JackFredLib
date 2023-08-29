@@ -2,10 +2,6 @@
 
 import java.net.URI
 
-
-version = properties["mod_version"]!!
-group = properties["maven_group"]!!
-
 base {
     archivesName.set("${properties["archives_base_name"]}-testmod")
 }

@@ -52,14 +52,9 @@ extra["usesMixinExtras"] = fun(dependencies: DependencyHandler) {
 // PROJECT CONFIGURATIONS //
 ////////////////////////////
 
-version = properties["mod_version"]!!
-
-subprojects {
-    version = properties["${this.name}_version"] ?: properties["mod_version"]!!
-}
-
 allprojects {
-    group = "red.jackf.jackfredlib"
+    version = properties["module_version"]!!
+    group = properties["maven_group"]!!
 
     apply(plugin="fabric-loom")
     apply(plugin="io.github.juuxel.loom-vineflower")
@@ -120,7 +115,9 @@ allprojects {
     ///////////////
 
     tasks.withType<ProcessResources>().configureEach {
-        inputs.property("version", version)
+        inputs.property("module_version", version)
+        inputs.property("module_name", properties["module_name"]!!)
+        inputs.property("module_description", properties["module_description"]!!)
 
         filesMatching("fabric.mod.json") {
             expand(inputs.properties)

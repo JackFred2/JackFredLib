@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "jackfredlib-lying",
-  "version": "${version}",
-  "name": "JackFredLib: Lying",
-  "description": "Toolkit for sending fake data to the client from the server side.",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
   "authors": [
     "JackFred"
   ],

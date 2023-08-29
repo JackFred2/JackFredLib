@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "jackfredlib-base",
-  "version": "${version}",
-  "name": "JackFredLib: Base",
-  "description": "Base library for JackFredLib; contains memoization utils and a three-state holder for events.",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
   "authors": [
     "JackFred"
   ],

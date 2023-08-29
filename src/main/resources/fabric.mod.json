@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "jackfredlib",
-  "version": "${version}",
-  "name": "JackFredLib",
-  "description": "Common code and hooks for JackFred's mods.",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
   "authors": [
     "JackFred"
   ],
