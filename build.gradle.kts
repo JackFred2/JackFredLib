@@ -9,9 +9,13 @@ plugins {
     id("maven-publish")
 }
 
+///////////////////
+// PROJECT UTILS //
+///////////////////
+
 fun Project.getSourceSet(name: String) = this.extensions.getByType(SourceSetContainer::class)[name]
 
-// Adapted from Fabric API
+// Adapted from Fabric API; helper for depending on other modules
 extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
     val deps = depNames.map { project.dependencies.project(path = ":$it", configuration = "namedElements") }
     val clientOutputs =
@@ -28,6 +32,14 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
     }
 
     // TODO: publishing
+}
+
+// Shortcut for adding mixin extras as a dependency
+extra["usesMixinExtras"] = fun(dependencies: DependencyHandler) {
+    dependencies.add("include",
+        dependencies.add("implementation",
+            dependencies.add("annotationProcessor",
+                "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
 }
 
 version = properties["mod_version"]!!
@@ -51,38 +63,16 @@ allprojects {
             }
         }
         maven {
-            name = "TerraformersMC"
-            url = URI("https://maven.terraformersmc.com/releases/")
+            name = "JitPack"
+            url = URI("https://jitpack.io")
             content {
-                includeGroup("com.terraformersmc")
-                includeGroup("dev.emi")
-            }
-        }
-        repositories {
-            maven {
-                name = "JitPack"
-                url = URI("https://jitpack.io")
-                content {
-                    includeGroupByRegex("com.github.llamalad7.*")
-                }
+                includeGroupByRegex("com.github.llamalad7.*")
             }
         }
     }
 
     project.extensions.configure<JavaPluginExtension> {
         withSourcesJar()
-    }
-
-    tasks.withType<Javadoc>().configureEach {
-        options.showFromPublic()
-
-        include("red/jackf/jackfredlib/api/**/*.java")
-        include("red/jackf/jackfredlib/client/api/**/*.java")
-
-        (options as StandardJavadocDocletOptions).tags(
-            "apiNote:a:API Note:",
-            "implNote:a:Implementation Note:"
-        )
     }
 
     project.extensions.configure<LoomGradleExtensionAPI> {
@@ -111,10 +101,6 @@ allprojects {
         })
         add("modImplementation", "net.fabricmc:fabric-loader:${properties["loader_version"]}")
         add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
-
-        add("include",
-            add("implementation",
-                add("annotationProcessor", "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
     }
 
     tasks.withType<ProcessResources>().configureEach {
@@ -125,6 +111,10 @@ allprojects {
         }
     }
 }
+
+////////////////////////
+// PACKAGING MAIN JAR //
+////////////////////////
 
 dependencies {
     afterEvaluate {
@@ -153,6 +143,10 @@ tasks.getByName<RemapJarTask>("remapJar") {
     }
 }
 
+/////////////
+// JAVADOC //
+/////////////
+
 tasks.withType<Javadoc>().configureEach {
     options.showFromPublic()
 
@@ -174,13 +168,52 @@ tasks.withType<Javadoc>().configureEach {
     )
 }
 
-val javadocTask = tasks.register<Jar>("javadocJar") {
+val javadocJarTask = tasks.register<Jar>("javadocJar") {
     dependsOn("javadoc")
     from(tasks.getByName<Javadoc>("javadoc").destinationDir)
     archiveClassifier = "fatjavadoc"
 }
 
-tasks.getByName("build").dependsOn(javadocTask)
+tasks.getByName("build").dependsOn(javadocJarTask)
+
+////////////////
+// PUBLISHING //
+////////////////
+
+fun setupRepositories(repos: RepositoryHandler) {
+    repos.mavenLocal()
+}
+
+// Main
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+            artifact(javadocJarTask)
+            artifactId = "jackfredlib"
+        }
+    }
+
+    setupRepositories(repositories)
+}
+
+// Modules
+subprojects {
+    if (name == "jackfredlib-testmod") return@subprojects
+
+    apply(plugin = "maven-publish")
+
+    publishing {
+        publications {
+            create<MavenPublication>("mavenJava") {
+                from(components["java"])
+                artifactId = this@subprojects.name
+            }
+        }
+
+        setupRepositories(repositories)
+    }
+}
 
 tasks.register<UpdateDependenciesTask>("updateModDependencies") {
     mcVersion.set(properties["minecraft_version"]!!.toString())

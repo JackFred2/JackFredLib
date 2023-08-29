@@ -1,8 +1,8 @@
+@file:Suppress("UNCHECKED_CAST")
+
 base {
     archivesName.set("jackfredlib-extracommandsourcedata")
 }
 
-@Suppress("UNCHECKED_CAST")
-val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit
-
-moduleDependencies(project, listOf("jackfredlib-base"))
+(rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit)(project, listOf("jackfredlib-base"))
+(rootProject.extra["usesMixinExtras"] as ((DependencyHandler) -> Unit))(dependencies)

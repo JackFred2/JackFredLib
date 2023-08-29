@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+import java.net.URI
+
+
 version = properties["mod_version"]!!
 group = properties["maven_group"]!!
 
@@ -11,10 +14,21 @@ loom {
     runConfigs.register("testClient") {
         client()
         ideConfigGenerated(true)
-        //name.set("Run Test Client")
+        name("Test Mod Client")
     }
 
     log4jConfigs.from(rootProject.file("log4j2.xml"))
+}
+
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = URI("https://maven.terraformersmc.com/releases/")
+        content {
+            includeGroup("com.terraformersmc")
+            includeGroup("dev.emi")
+        }
+    }
 }
 
 dependencies {
