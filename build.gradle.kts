@@ -21,6 +21,8 @@ plugins {
 
 fun Project.getSourceSet(name: String) = this.extensions.getByType(SourceSetContainer::class)[name]
 
+operator fun Any?.unaryPlus() = this!!.toString()
+
 // Adapted from Fabric API; helper for depending on other modules
 extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
     val deps = depNames.map { project.dependencies.project(path = ":$it", configuration = "namedElements") }
@@ -116,8 +118,8 @@ allprojects {
 
     tasks.withType<ProcessResources>().configureEach {
         inputs.property("module_version", version)
-        inputs.property("module_name", properties["module_name"]!!)
-        inputs.property("module_description", properties["module_description"]!!)
+        inputs.property("module_name", +properties["module_name"])
+        inputs.property("module_description", +properties["module_description"])
 
         filesMatching("fabric.mod.json") {
             expand(inputs.properties)
@@ -203,30 +205,44 @@ fun setupRepositories(repos: RepositoryHandler) {
     repos.mavenLocal()
 }
 
-// Main
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifact(javadocJarTask)
-            artifactId = "jackfredlib"
-        }
-    }
-
-    setupRepositories(repositories)
-}
-
 // Modules
-subprojects {
-    if (name == "jackfredlib-testmod") return@subprojects
+allprojects {
+    if (name == "jackfredlib-testmod") return@allprojects
 
     apply(plugin = "maven-publish")
+
+    val propertiesHandle = properties
 
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
+                artifactId = this@allprojects.name
+
                 from(components["java"])
-                artifactId = this@subprojects.name
+                if (this@allprojects.parent == null) artifact(javadocJarTask)
+
+                pom {
+                    name = +propertiesHandle["module_name"]
+                    description = +propertiesHandle["module_description"]
+                    url = +propertiesHandle["github_url"]
+                    licenses {
+                        license {
+                            name = "LGPL-3.0"
+                            url = "https://opensource.org/license/lgpl-3-0/"
+                        }
+                    }
+                    developers {
+                        developer {
+                            url = "https://jackf.red"
+                            name = "JackFred2"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:git://github.com/JackFred2/JackFredLib.git"
+                        developerConnection = "scm:git:git://github.com/JackFred2/JackFredLib.git"
+                        url = +propertiesHandle["github_url"]
+                    }
+                }
             }
         }
 

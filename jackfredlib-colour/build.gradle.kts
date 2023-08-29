@@ -5,4 +5,4 @@ base {
 @Suppress("UNCHECKED_CAST")
 val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit
 
-moduleDependencies(project, listOf("jackfredlib-base"))
+moduleDependencies(project, listOf())
