@@ -1,11 +1,15 @@
+import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import net.fabricmc.loom.task.RemapJarTask
+import red.jackf.GenerateChangelogTask
 import red.jackf.UpdateDependenciesTask
 import java.net.URI
 
 plugins {
     id("fabric-loom") version "1.2.7" apply false
     id("io.github.juuxel.loom-vineflower") version "1.11.0" apply false
+    id("com.github.breadmoirai.github-release") version "2.4.1"
+    id("org.ajoberstar.grgit") version "5.0.+"
     id("maven-publish")
 }
 
@@ -214,6 +218,41 @@ subprojects {
         setupRepositories(repositories)
     }
 }
+
+// Github Release
+val lastTagVal = properties["lastTag"]?.toString()
+val newTagVal = properties["newTag"]?.toString()
+if (lastTagVal != null && newTagVal != null) {
+    val generateChangelogTask = tasks.register<GenerateChangelogTask>("generateChangelog") {
+        lastTag.set(lastTagVal)
+        newTag.set(newTagVal)
+        githubUrl.set(properties["github_url"]!!.toString())
+        prefixFilters.set(properties["changelog_filter"]!!.toString().split(","))
+    }
+
+    tasks.named<GithubReleaseTask>("githubRelease") {
+        dependsOn(generateChangelogTask)
+
+        authorization = System.getenv("GITHUB_TOKEN")?.let { "Bearer $it" }
+        owner = properties["github_owner"]!!.toString()
+        repo = properties["github_repo"]!!.toString()
+        tagName = newTagVal
+        releaseName = "${properties["mod_name"]} $newTagVal"
+        targetCommitish = grgit.branch.current().name
+        releaseAssets.from(
+            tasks["remapJar"].outputs.files,
+            tasks["remapSourcesJar"].outputs.files,
+            tasks["javadocJar"].outputs.files,
+        )
+        body = provider {
+            return@provider generateChangelogTask.get().changelogFile.get().asFile.readText()
+        }
+    }
+}
+
+//////////
+// MISC //
+//////////
 
 tasks.register<UpdateDependenciesTask>("updateModDependencies") {
     mcVersion.set(properties["minecraft_version"]!!.toString())
