@@ -203,12 +203,21 @@ tasks.getByName("build").dependsOn(javadocJarTask)
 
 fun setupRepositories(repos: RepositoryHandler) {
     repos.mavenLocal()
+    /*
     repos.maven {
         name = "GitHubPackages_JackFredLib"
         url = URI("https://maven.pkg.github.com/JackFred2/JackFredLib")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = System.getenv("GITHUB_TOKEN")
+        }
+    }*/
+    repos.maven {
+        name = "JackFred Maven"
+        url = URI("https://maven.jackf.red/releases")
+        credentials {
+            username = System.getenv("JACKFRED_MAVEN_USER")
+            password = System.getenv("JACKFRED_MAVEN_PASS")
         }
     }
 }
