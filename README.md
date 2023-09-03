@@ -12,7 +12,7 @@ Feel free to use yourself (via GitHub Package Registry).
 
 ## Usage:
 
-See the [maven](https://maven.jackf.red/#/releases).
+See the [maven](https://maven.jackf.red/#/releases) as well as the [javadoc](https://maven.jackf.red/javadoc/releases/red/jackf/jackfredlib/jackfredlib/latest).
 
 ## IntelliJ Import Error
 
