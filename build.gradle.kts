@@ -213,7 +213,7 @@ fun setupRepositories(repos: RepositoryHandler) {
         }
     }*/
     repos.maven {
-        name = "JackFred Maven"
+        name = "JackFred-Maven"
         url = URI("https://maven.jackf.red/releases")
         credentials {
             username = System.getenv("JACKFRED_MAVEN_USER")
