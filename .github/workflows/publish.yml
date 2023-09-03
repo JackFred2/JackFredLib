@@ -83,8 +83,8 @@ jobs:
       - name: Publish to GitHub Package Registry and GitHub Release
         run: ./gradlew build generateChangelog publish githubRelease -PlastTag="${{ github.event.inputs.lastTag }}" -PnewTag="${{ github.event.inputs.newTag }}"
         env:
-          # GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JACKFRED_MAVEN_USER: ${{ secrets.JACKFRED_MAVEN_USER }}
           JACKFRED_MAVEN_PASS: ${{ secrets.JACKFRED_MAVEN_PASS }}
 

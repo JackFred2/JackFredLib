@@ -192,7 +192,7 @@ tasks.withType<Javadoc>().configureEach {
 val javadocJarTask = tasks.register<Jar>("javadocJar") {
     dependsOn("javadoc")
     from(tasks.getByName<Javadoc>("javadoc").destinationDir)
-    archiveClassifier = "fatjavadoc"
+    archiveClassifier = "javadoc"
 }
 
 tasks.getByName("build").dependsOn(javadocJarTask)
