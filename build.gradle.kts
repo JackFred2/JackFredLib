@@ -5,7 +5,6 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import net.fabricmc.loom.task.RemapJarTask
 import red.jackf.GenerateChangelogTask
 import red.jackf.UpdateDependenciesTask
-import java.net.URI
 
 plugins {
     id("fabric-loom") version "1.2.7" apply false
@@ -84,14 +83,14 @@ allprojects {
     repositories {
         maven {
             name = "ParchmentMC"
-            url = URI("https://maven.parchmentmc.org")
+            url = uri("https://maven.parchmentmc.org")
             content {
                 includeGroup("org.parchmentmc.data")
             }
         }
         maven {
             name = "JitPack"
-            url = URI("https://jitpack.io")
+            url = uri("https://jitpack.io")
             content {
                 includeGroupByRegex("com.github.llamalad7.*")
             }
@@ -213,7 +212,7 @@ fun setupRepositories(repos: RepositoryHandler) {
     /*
     repos.maven {
         name = "GitHubPackages_JackFredLib"
-        url = URI("https://maven.pkg.github.com/JackFred2/JackFredLib")
+        url = uri("https://maven.pkg.github.com/JackFred2/JackFredLib")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
             password = System.getenv("GITHUB_TOKEN")
@@ -221,7 +220,7 @@ fun setupRepositories(repos: RepositoryHandler) {
     }*/
     repos.maven {
         name = "JackFred-Maven"
-        url = URI("https://maven.jackf.red/releases")
+        url = uri("https://maven.jackf.red/releases")
         credentials {
             username = System.getenv("JACKFRED_MAVEN_USER")
             password = System.getenv("JACKFRED_MAVEN_PASS")
