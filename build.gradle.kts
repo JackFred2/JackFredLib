@@ -38,8 +38,6 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
             add("clientImplementation", it)
         }
     }
-
-    // TODO: publishing
 }
 
 // Shortcut for adding mixin extras as a dependency. As of 2023/08/29, this is only the extra command source stack data module
@@ -156,8 +154,10 @@ subprojects.forEach {
 
     tasks.getByName<RemapJarTask>("remapJar").dependsOn("${it.path}:remapJar")
 
-    tasks.withType<ProcessResources> {
-        this.
+    it.tasks.getByName<ProcessResources>("processResources") {
+        from(rootProject.file("src/main/resources/assets/jackfredlib/icon.png")) {
+            into("assets/jackfredlib")
+        }
     }
 }
 
