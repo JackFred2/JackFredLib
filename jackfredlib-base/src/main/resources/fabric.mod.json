@@ -22,7 +22,13 @@
       "badges": [
         "library"
       ],
-      "parent": "jackfredlib",
+      "parent": {
+        "id": "jackfredlib",
+        "name": "${root_module_name}",
+        "description": "${root_module_description}",
+        "icon": "assets/jackfredlib/icon.png",
+        "badges": ["library"]
+      },
       "update_checker": false
     }
   }

@@ -121,6 +121,9 @@ allprojects {
         inputs.property("module_name", +properties["module_name"])
         inputs.property("module_description", +properties["module_description"])
 
+        inputs.property("root_module_name", +rootProject.properties["module_name"])
+        inputs.property("root_module_description", +rootProject.properties["module_description"])
+
         filesMatching("fabric.mod.json") {
             expand(inputs.properties)
         }
@@ -152,6 +155,10 @@ subprojects.forEach {
     if (it.name == "jackfredlib-testmod") return@forEach
 
     tasks.getByName<RemapJarTask>("remapJar").dependsOn("${it.path}:remapJar")
+
+    tasks.withType<ProcessResources> {
+        this.
+    }
 }
 
 tasks.getByName<RemapJarTask>("remapJar") {
