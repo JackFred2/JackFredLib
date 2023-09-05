@@ -4,5 +4,8 @@ base {
     archivesName.set("jackfredlib-extracommandsourcedata")
 }
 
-(rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit)(project, listOf("jackfredlib-base"))
-(rootProject.extra["usesMixinExtras"] as ((DependencyHandler) -> Unit))(dependencies)
+val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit
+val usesMixinExtras = rootProject.extra["usesMixinExtras"] as (DependencyHandler) -> Unit
+
+moduleDependencies(project, listOf())
+usesMixinExtras(dependencies)
