@@ -52,7 +52,7 @@ extra["usesMixinExtras"] = fun(dependencies: DependencyHandler) {
 ////////////////////////////
 
 allprojects {
-    version = properties["module_version"]!!
+    version = "${+properties["module_version"]}+${+properties["minecraft_version"]}"
     group = properties["maven_group"]!!
 
     apply(plugin="fabric-loom")
