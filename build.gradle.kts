@@ -7,7 +7,7 @@ import red.jackf.GenerateChangelogTask
 import red.jackf.UpdateDependenciesTask
 
 plugins {
-    id("fabric-loom") version "1.2.7" apply false
+    id("fabric-loom") version "1.3-SNAPSHOT" apply false
     id("io.github.juuxel.loom-vineflower") version "1.11.0" apply false
     id("com.github.breadmoirai.github-release") version "2.4.1"
     id("org.ajoberstar.grgit") version "5.0.+"
