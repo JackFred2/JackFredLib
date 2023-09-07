@@ -16,37 +16,36 @@ import java.util.Map;
 @Mixin(CommandSourceStack.class)
 public class CommandSourceStackMixin implements ExtraCommandSourceStackDataDuck {
     @Unique
-    private final Map<ResourceLocation, ExtraSourceData<?>> extraData = new HashMap<>();
+    private final Map<ResourceLocation, ExtraSourceData<?>> jflibExtraData = new HashMap<>();
 
     @ModifyReturnValue(method = {
             "withSource",
             "withEntity",
             "withPosition",
             "withRotation",
-            "withCallback",
+            "withCallback(Lcom/mojang/brigadier/ResultConsumer;)Lnet/minecraft/commands/CommandSourceStack;",
             "withSuppressedOutput",
             "withPermission",
             "withMaximumPermission",
             "withAnchor",
             "withLevel",
             "withSigningContext",
-            "withChatMessageChainer",
             "withReturnValueConsumer"
     }, at = @At("RETURN"))
-    private CommandSourceStack copyExtraData(CommandSourceStack orig) {
-        ((ExtraCommandSourceStackDataDuck) orig).jackfredlib$setData(this.extraData);
+    private CommandSourceStack jackfredlib$copyExtraData(CommandSourceStack orig) {
+        ((ExtraCommandSourceStackDataDuck) orig).jackfredlib$setData(this.jflibExtraData);
         return orig;
     }
 
     @Override
     public void jackfredlib$setData(Map<ResourceLocation, ExtraSourceData<?>> data) {
-        this.extraData.clear();
-        data.forEach((key, value) -> this.extraData.put(key, value.copy()));
+        this.jflibExtraData.clear();
+        data.forEach((key, value) -> this.jflibExtraData.put(key, value.copy()));
     }
 
     @Override
     public <T extends ExtraSourceData<T>> T jackfredlib$getData(ExtraSourceData.Definition<T> definition) throws CommandSyntaxException {
-        var data = extraData.computeIfAbsent(definition.id(), k -> definition.factory().get());
+        var data = jflibExtraData.computeIfAbsent(definition.id(), k -> definition.factory().get());
         if (definition.clazz().isInstance(data)) //noinspection unchecked
             return (T) data;
         else

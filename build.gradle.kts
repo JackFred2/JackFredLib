@@ -1,15 +1,16 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "RedundantNullableReturnType")
 
 import com.github.breadmoirai.githubreleaseplugin.GithubReleaseTask
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import net.fabricmc.loom.task.RemapJarTask
+import org.ajoberstar.grgit.Grgit
 import red.jackf.GenerateChangelogTask
 import red.jackf.UpdateDependenciesTask
 
 plugins {
     id("fabric-loom") version "1.3-SNAPSHOT" apply false
     id("io.github.juuxel.loom-vineflower") version "1.11.0" apply false
-    id("com.github.breadmoirai.github-release") version "2.4.1"
+    id("com.github.breadmoirai.github-release") version "2.4.1" apply false
     id("org.ajoberstar.grgit") version "5.0.+"
     id("maven-publish")
 }
@@ -17,6 +18,9 @@ plugins {
 ///////////////////
 // PROJECT UTILS //
 ///////////////////
+
+// make it nullable because it's able to be null(!)
+val grgit: Grgit? = project.grgit
 
 fun Project.getSourceSet(name: String) = this.extensions.getByType(SourceSetContainer::class)[name]
 
@@ -51,12 +55,26 @@ extra["usesMixinExtras"] = fun(dependencies: DependencyHandler) {
 // PROJECT CONFIGURATIONS //
 ////////////////////////////
 
+val lastTagVal = properties["lastTag"]?.toString()
+val newTagVal = properties["newTag"]?.toString()
+val canPublish = lastTagVal != null && newTagVal != null && grgit != null
+
+println("Can publish: $canPublish")
+
+fun getVersionSuffix(): String {
+    return grgit?.branch?.current()?.name ?: "nogit"
+}
+
 allprojects {
-    version = "${+properties["module_version"]}+${+properties["minecraft_version"]}"
+    version = "${+properties["module_version"]}+${getVersionSuffix()}"
     group = properties["maven_group"]!!
 
     apply(plugin="fabric-loom")
     apply(plugin="io.github.juuxel.loom-vineflower")
+
+    tasks.withType<JavaCompile> {
+        options.compilerArgs.add("-Xlint:unchecked")
+    }
 
     project.extensions.configure<JavaPluginExtension> {
         withSourcesJar()
@@ -230,6 +248,7 @@ fun setupRepositories(repos: RepositoryHandler) {
 
 // Modules
 allprojects {
+    if (!canPublish) return@allprojects
     if (name == "jackfredlib-testmod") return@allprojects
 
     apply(plugin = "maven-publish")
@@ -274,9 +293,9 @@ allprojects {
 }
 
 // Github Release
-val lastTagVal = properties["lastTag"]?.toString()
-val newTagVal = properties["newTag"]?.toString()
-if (lastTagVal != null && newTagVal != null) {
+if (canPublish) {
+    apply(plugin = "com.github.breadmoirai.github-release")
+
     val generateChangelogTask = tasks.register<GenerateChangelogTask>("generateChangelog") {
         lastTag.set(lastTagVal)
         newTag.set(newTagVal)
@@ -292,7 +311,7 @@ if (lastTagVal != null && newTagVal != null) {
         repo = properties["github_repo"]!!.toString()
         tagName = newTagVal
         releaseName = "${properties["mod_name"]} $newTagVal"
-        targetCommitish = grgit.branch.current().name
+        targetCommitish = grgit!!.branch.current().name
         releaseAssets.from(
             tasks["remapJar"].outputs.files,
             tasks["remapSourcesJar"].outputs.files,
