@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.testmod.client;
 
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -71,10 +72,10 @@ public class ToastTest {
                 TALL_ALERT.get().setProgress(0f);
                 Toasts.INSTANCE.send(TALL_ALERT.get());
             } else if (stack.is(Items.WOODEN_PICKAXE)) {
-                var randomMod = new ArrayList<>(FabricLoader.getInstance().getAllMods());
-                String randomId = randomMod.get((int) (Math.random() * randomMod.size())).getMetadata().getId();
-                // get a random mod and send it with a random length message
-                Toasts.INSTANCE.sendFromMod(randomId, literal("x ".repeat((int) (Math.random() * 30))));
+                var mods = new ArrayList<>(FabricLoader.getInstance().getAllMods());
+                var mod = mods.get((int) (Math.random() * mods.size()));
+                // get a random mod and send it's name and desc
+                Toasts.INSTANCE.sendFromMod(mod.getMetadata().getId(), Component.nullToEmpty(mod.getMetadata().getDescription()));
             }
             return InteractionResultHolder.pass(ItemStack.EMPTY);
         });
