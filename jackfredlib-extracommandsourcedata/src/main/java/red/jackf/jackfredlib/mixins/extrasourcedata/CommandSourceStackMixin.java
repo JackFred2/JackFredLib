@@ -46,8 +46,8 @@ public class CommandSourceStackMixin implements ExtraCommandSourceStackDataDuck 
     @Override
     public <T extends ExtraSourceData<T>> T jackfredlib$getData(ExtraSourceData.Definition<T> definition) throws CommandSyntaxException {
         var data = jflibExtraData.computeIfAbsent(definition.id(), k -> definition.factory().get());
-        if (definition.clazz().isInstance(data)) //noinspection unchecked
-            return (T) data;
+        if (definition.clazz().isInstance(data))
+            return definition.clazz().cast(data);
         else
             throw INVALID_DATA_TYPE.create(definition.clazz(), data.getClass());
     }
