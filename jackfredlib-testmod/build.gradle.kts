@@ -7,6 +7,10 @@ base {
 }
 
 loom {
+    runConfigs.forEach {
+        it.isIdeConfigGenerated = false
+    }
+
     runConfigs.register("testClient") {
         client()
         ideConfigGenerated(true)
