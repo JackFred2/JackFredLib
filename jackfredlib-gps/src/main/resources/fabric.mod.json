@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib-gps",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib-gps/icon.png",
+  "environment": "*",
+  "depends": {
+    "minecraft": ">=1.20.2",
+    "jackfredlib-base": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "parent": {
+        "id": "jackfredlib",
+        "name": "${root_module_name}",
+        "description": "${root_module_description}",
+        "icon": "assets/jackfredlib/icon.png",
+        "badges": ["library"]
+      },
+      "update_checker": false
+    }
+  }
+}

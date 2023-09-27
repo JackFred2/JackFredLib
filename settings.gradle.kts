@@ -14,6 +14,7 @@ include("jackfredlib-base")
 
 include("jackfredlib-colour")
 include("jackfredlib-extracommandsourcedata")
+include("jackfredlib-gps")
 include("jackfredlib-lying")
 include("jackfredlib-toasts")
 
