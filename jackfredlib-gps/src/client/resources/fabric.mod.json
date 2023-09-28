@@ -18,6 +18,9 @@
     "minecraft": ">=1.20.2",
     "jackfredlib-base": "*"
   },
+  "mixins": [
+    "jackfredlib-gps.mixins.json"
+  ],
   "custom": {
     "modmenu": {
       "badges": [

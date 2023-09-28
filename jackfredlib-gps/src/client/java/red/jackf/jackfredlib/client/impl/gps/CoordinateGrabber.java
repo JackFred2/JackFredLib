@@ -32,7 +32,7 @@ public class CoordinateGrabber {
             MinecraftServer server = mc.getSingleplayerServer();
             return Optional.of(new Coordinate.Singleplayer(
                     "singleplayer/" + Sanitizer.sanitize(((MinecraftServerAccessor) server).getStorageSource().getLevelId()),
-                    I18n.get("menu.singleplayer") + ": " + server.name(),
+                    I18n.get("menu.singleplayer") + ": " + server.getWorldData().getLevelName(),
                     ((MinecraftServerAccessor) server).getStorageSource().getLevelId()
             ));
         }
