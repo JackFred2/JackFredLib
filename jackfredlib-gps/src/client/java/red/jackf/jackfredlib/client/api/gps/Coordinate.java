@@ -1,6 +1,6 @@
-package red.jackf.jackfredlib.api;
+package red.jackf.jackfredlib.client.api.gps;
 
-import red.jackf.jackfredlib.impl.CoordinateGrabber;
+import red.jackf.jackfredlib.client.impl.gps.CoordinateGrabber;
 
 import java.util.Optional;
 

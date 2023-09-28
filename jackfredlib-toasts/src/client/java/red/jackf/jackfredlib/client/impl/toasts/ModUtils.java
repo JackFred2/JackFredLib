@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
-import red.jackf.jackfredlib.impl.LogUtil;
+import red.jackf.jackfredlib.impl.base.LogUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

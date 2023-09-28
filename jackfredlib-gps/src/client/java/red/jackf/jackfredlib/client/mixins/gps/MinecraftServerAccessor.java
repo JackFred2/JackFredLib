@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.mixins.gps;
+package red.jackf.jackfredlib.client.mixins.gps;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelStorageSource;

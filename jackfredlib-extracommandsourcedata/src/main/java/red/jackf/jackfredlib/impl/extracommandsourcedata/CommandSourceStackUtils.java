@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.impl.extrasourcedata;
+package red.jackf.jackfredlib.impl.extracommandsourcedata;
 
 import net.minecraft.commands.CommandSourceStack;
 

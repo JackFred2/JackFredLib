@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
-import red.jackf.jackfredlib.api.Coordinate;
+import red.jackf.jackfredlib.client.api.gps.Coordinate;
 
 public class TestModClient implements ClientModInitializer {
     @Override

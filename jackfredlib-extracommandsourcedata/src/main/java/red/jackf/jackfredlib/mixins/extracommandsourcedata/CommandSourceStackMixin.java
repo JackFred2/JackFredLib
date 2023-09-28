@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.mixins.extrasourcedata;
+package red.jackf.jackfredlib.mixins.extracommandsourcedata;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import red.jackf.jackfredlib.api.extracommandsourcedata.ExtraSourceData;
-import red.jackf.jackfredlib.impl.extrasourcedata.ExtraCommandSourceStackDataDuck;
+import red.jackf.jackfredlib.impl.extracommandsourcedata.ExtraCommandSourceStackDataDuck;
 
 import java.util.HashMap;
 import java.util.Map;

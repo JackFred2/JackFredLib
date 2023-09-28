@@ -4,8 +4,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
-import red.jackf.jackfredlib.impl.extrasourcedata.CommandSourceStackUtils;
-import red.jackf.jackfredlib.impl.extrasourcedata.ExtraCommandSourceStackDataDuck;
+import red.jackf.jackfredlib.impl.extracommandsourcedata.CommandSourceStackUtils;
+import red.jackf.jackfredlib.impl.extracommandsourcedata.ExtraCommandSourceStackDataDuck;
 
 import java.util.function.Consumer;
 

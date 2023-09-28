@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.impl.extrasourcedata;
+package red.jackf.jackfredlib.impl.extracommandsourcedata;
 
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;

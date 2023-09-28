@@ -4,9 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
+import red.jackf.jackfredlib.api.base.Memoizer;
 import red.jackf.jackfredlib.client.impl.toasts.CustomToastBuilderImpl;
 import red.jackf.jackfredlib.client.impl.toasts.ModUtils;
-import red.jackf.jackfredlib.impl.LogUtil;
+import red.jackf.jackfredlib.impl.base.LogUtil;
 
 /**
  * <p>Helper class for creating 'toasts' - notifications at the top right of the screen. Use this class via {@link #INSTANCE}.</p>
@@ -28,7 +29,7 @@ public class Toasts {
      *
      * @param toast Toast to send to the player. It's duration or progress will be refreshed.
      * @see CustomToastBuilderImpl
-     * @see red.jackf.jackfredlib.api.Memoizer
+     * @see Memoizer
      */
     public void send(CustomToast toast) {
         var existing = toasts.getToast(toast.getClass(), toast.getToken());

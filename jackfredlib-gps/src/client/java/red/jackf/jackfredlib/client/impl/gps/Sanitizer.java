@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.impl;
+package red.jackf.jackfredlib.client.impl.gps;
 
 import net.minecraft.SharedConstants;
 

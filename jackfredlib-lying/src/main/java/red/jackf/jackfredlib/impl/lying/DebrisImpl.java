@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.Debris;
-import red.jackf.jackfredlib.impl.LogUtil;
+import red.jackf.jackfredlib.impl.base.LogUtil;
 
 public class DebrisImpl implements Debris {
     private static final Logger LOGGER = LogUtil.getLogger("Lies/Debris");

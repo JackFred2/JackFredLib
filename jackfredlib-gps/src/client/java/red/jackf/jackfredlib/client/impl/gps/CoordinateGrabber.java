@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.impl;
+package red.jackf.jackfredlib.client.impl.gps;
 
 import com.mojang.realmsclient.dto.RealmsServer;
 import net.minecraft.client.Minecraft;
@@ -7,8 +7,8 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang3.StringUtils;
-import red.jackf.jackfredlib.api.Coordinate;
-import red.jackf.jackfredlib.mixins.gps.MinecraftServerAccessor;
+import red.jackf.jackfredlib.client.api.gps.Coordinate;
+import red.jackf.jackfredlib.client.mixins.gps.MinecraftServerAccessor;
 
 import java.util.Locale;
 import java.util.Optional;

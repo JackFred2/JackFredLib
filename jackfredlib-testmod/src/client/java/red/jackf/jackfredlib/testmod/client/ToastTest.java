@@ -8,7 +8,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import red.jackf.jackfredlib.api.Memoizer;
+import red.jackf.jackfredlib.api.base.Memoizer;
 import red.jackf.jackfredlib.client.api.toasts.*;
 
 import java.util.ArrayList;

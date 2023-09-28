@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.colour.Colours;
 import red.jackf.jackfredlib.api.colour.Gradient;
 import red.jackf.jackfredlib.api.colour.Gradients;
-import red.jackf.jackfredlib.impl.LogUtil;
+import red.jackf.jackfredlib.impl.base.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;

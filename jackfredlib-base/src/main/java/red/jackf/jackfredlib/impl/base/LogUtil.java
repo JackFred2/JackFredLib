@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.impl;
+package red.jackf.jackfredlib.impl.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

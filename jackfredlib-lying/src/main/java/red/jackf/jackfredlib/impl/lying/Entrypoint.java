@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import org.slf4j.Logger;
-import red.jackf.jackfredlib.impl.LogUtil;
+import red.jackf.jackfredlib.impl.base.LogUtil;
 
 public class Entrypoint implements ModInitializer {
     public static final Logger LOGGER = LogUtil.getLogger("Lies");

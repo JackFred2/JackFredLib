@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
-import red.jackf.jackfredlib.impl.LogUtil;
+import red.jackf.jackfredlib.impl.base.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Optional;

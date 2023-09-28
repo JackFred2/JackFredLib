@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.api;
+package red.jackf.jackfredlib.api.base;
 
 import org.jetbrains.annotations.Nullable;
 

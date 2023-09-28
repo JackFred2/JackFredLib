@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.mixins.gps;
+package red.jackf.jackfredlib.client.mixins.gps;
 
 import com.mojang.realmsclient.dto.RealmsServer;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import red.jackf.jackfredlib.impl.CoordinateGrabber;
+import red.jackf.jackfredlib.client.impl.gps.CoordinateGrabber;
 
 @Mixin(RealmsConnect.class)
 public class RealmsConnectMixin {
