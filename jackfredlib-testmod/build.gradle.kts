@@ -47,8 +47,6 @@ dependencies {
 
     modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
     modRuntimeOnly("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")
-    modRuntimeOnly("maven.modrinth:auth-me:RiTU8rGC")
-    modRuntimeOnly("maven.modrinth:cloth-config:LnfolBYb")
 }
 
 tasks.withType<JavaCompile>().configureEach {
