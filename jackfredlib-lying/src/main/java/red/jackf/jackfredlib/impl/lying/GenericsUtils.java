@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.impl.lying;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import red.jackf.jackfredlib.impl.lying.entity.ActiveEntityLie;
 
 public class GenericsUtils {
     private GenericsUtils() {}

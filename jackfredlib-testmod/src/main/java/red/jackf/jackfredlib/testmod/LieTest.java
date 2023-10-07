@@ -1,6 +1,7 @@
 package red.jackf.jackfredlib.testmod;
 
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 import red.jackf.jackfredlib.api.lying.entity.EntityPresets;
 import red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders;
+import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,6 +80,17 @@ public class LieTest {
                    .textAlign(Display.TextDisplay.Align.LEFT)
                    .build();
            return EntityLie.builder(text).build();
+        });
+
+        UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
+            if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+                var handStack = player.getItemInHand(hand);
+                if (handStack.is(Items.GLOW_INK_SAC)) {
+                    var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.of(entity, ChatFormatting.AQUA));
+                    Debris.INSTANCE.schedule(lie, 10 * SharedConstants.TICKS_PER_SECOND);
+                }
+            }
+            return InteractionResult.PASS;
         });
     }
 }

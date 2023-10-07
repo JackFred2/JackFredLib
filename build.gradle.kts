@@ -42,14 +42,6 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
     }
 }
 
-// Shortcut for adding mixin extras as a dependency. As of 2023/08/29, this is only the extra command source stack data module
-extra["usesMixinExtras"] = fun(dependencies: DependencyHandler) {
-    dependencies.add("include",
-        dependencies.add("implementation",
-            dependencies.add("annotationProcessor",
-                "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
-}
-
 ////////////////////////////
 // PROJECT CONFIGURATIONS //
 ////////////////////////////
@@ -123,6 +115,11 @@ allprojects {
         })
         add("modImplementation", "net.fabricmc:fabric-loader:${properties["loader_version"]}")
         add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
+
+        add("include",
+            add("implementation",
+                add("annotationProcessor",
+                    "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
     }
 
     ///////////////

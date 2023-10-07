@@ -1,6 +1,5 @@
-package red.jackf.jackfredlib.impl.lying;
+package red.jackf.jackfredlib.impl.lying.entity;
 
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -59,8 +58,8 @@ public final class EntityLieImpl<E extends Entity> implements EntityLie<E> {
 
     @Override
     public void fade(ActiveLie<EntityLie<E>> activeLie) {
-        activeLie.player().connection.send(new ClientboundRemoveEntitiesPacket(entity.getId()));
         connections.remove(activeLie.player().connection);
+        this.serverEntity.removePairing(activeLie.player());
         if (fadeCallback != null)
             fadeCallback.onFade(activeLie);
     }
@@ -68,6 +67,7 @@ public final class EntityLieImpl<E extends Entity> implements EntityLie<E> {
     @Override
     public void setup(ServerPlayer player) {
         connections.add(player.connection);
+        this.serverEntity.addPairing(player);
     }
 
     @Override

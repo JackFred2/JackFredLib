@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.api.lying;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
+import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
 import red.jackf.jackfredlib.impl.lying.LiesImpl;
 
 /**
@@ -22,4 +23,6 @@ public interface Lies {
      * @param <E> Type of entity this EntityLie is based around
      */
     <E extends Entity> ActiveLie<EntityLie<E>> addEntity(ServerPlayer player, EntityLie<E> entityLie);
+
+    ActiveLie<EntityGlowLie> addEntityGlow(ServerPlayer player, EntityGlowLie entityGlowLie);
 }
