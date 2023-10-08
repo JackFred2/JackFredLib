@@ -15,7 +15,7 @@ public class ChunkMapTrackedEntityMixin {
 
     @WrapOperation(method = "broadcast(Lnet/minecraft/network/protocol/Packet;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerConnection;send(Lnet/minecraft/network/protocol/Packet;)V"))
-    private void jackfredlib$modifyDataPacket(
+    private static void jackfredlib$modifyDataPacket(
             ServerPlayerConnection connection,
             Packet<?> packet,
             Operation<Void> original) {

@@ -89,7 +89,7 @@ public class LieTest {
                     var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.builder(entity)
                             .colour(ChatFormatting.AQUA)
                             .build());
-                    Debris.INSTANCE.schedule(lie, 20 * SharedConstants.TICKS_PER_SECOND);
+                    Debris.INSTANCE.schedule(lie, 40 * SharedConstants.TICKS_PER_SECOND);
                 }
             }
             return InteractionResult.PASS;

@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import red.jackf.jackfredlib.impl.base.LogUtil;
 
 public class Entrypoint implements ModInitializer {
-    public static final Logger LOGGER = LogUtil.getLogger("Lies");
+    public static final Logger LOGGER = LogUtil.getLogger("Lying Module");
 
 	@Override
 	public void onInitialize() {

@@ -30,7 +30,7 @@ public abstract class ActiveLie<L extends Lie<L>> {
     public final void fade() {
         if (this.faded) return;
         this.faded = true;
-        LiesImpl.LOGGER.debug("Fading lie for {}", player.getName());
+        LiesImpl.LOGGER.debug("Fading lie for {}", player.getName().getString());
         this.lie.fade(this);
         this.removeFromLie();
     }

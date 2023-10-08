@@ -7,6 +7,8 @@ base {
 }
 
 loom {
+    log4jConfigs.from(rootProject.file("log4j2.xml"))
+
     runConfigs.forEach {
         it.isIdeConfigGenerated = false
     }
@@ -16,8 +18,6 @@ loom {
         ideConfigGenerated(true)
         name("Test Mod Client")
     }
-
-    log4jConfigs.from(rootProject.file("log4j2.xml"))
 }
 
 repositories {

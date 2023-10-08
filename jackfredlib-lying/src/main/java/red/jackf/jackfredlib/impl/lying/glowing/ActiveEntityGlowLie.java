@@ -7,7 +7,6 @@ import net.minecraft.world.entity.Entity;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
-import red.jackf.jackfredlib.impl.lying.Entrypoint;
 import red.jackf.jackfredlib.impl.lying.LiesImpl;
 
 import java.util.ArrayList;
@@ -25,18 +24,28 @@ public class ActiveEntityGlowLie extends ActiveLie<EntityGlowLie> {
     }
 
     public ClientboundSetEntityDataPacket modifyPacket(ClientboundSetEntityDataPacket original) {
-        List<SynchedEntityData.DataValue<?>> copy = new ArrayList<>(original.packedItems().size());
+        List<SynchedEntityData.DataValue<?>> copy = new ArrayList<>(original.packedItems().size() + 1);
+        boolean hasAddedGlowing = false;
         for (SynchedEntityData.DataValue<?> packedItem : original.packedItems()) {
             if (packedItem.id() == Entity.DATA_SHARED_FLAGS_ID.getId()) {
-                byte value = (byte) packedItem.value();
-                value |= 1 << Entity.FLAG_GLOWING;
-                copy.add(new SynchedEntityData.DataValue<>(packedItem.id(), Entity.DATA_SHARED_FLAGS_ID.getSerializer(), value));
-                Entrypoint.LOGGER.debug("adding glow to packet");
+                hasAddedGlowing = true;
+                copy.add(new SynchedEntityData.DataValue<>(Entity.DATA_SHARED_FLAGS_ID.getId(),
+                                                           Entity.DATA_SHARED_FLAGS_ID.getSerializer(),
+                                                           forceGlowing((byte) packedItem.value())));
             } else {
                 copy.add(packedItem);
             }
         }
+        if (!hasAddedGlowing) {
+            copy.add(new SynchedEntityData.DataValue<>(Entity.DATA_SHARED_FLAGS_ID.getId(),
+                                              Entity.DATA_SHARED_FLAGS_ID.getSerializer(),
+                                              forceGlowing(lie().entity().getEntityData().get(Entity.DATA_SHARED_FLAGS_ID))));
+        }
         return new ClientboundSetEntityDataPacket(original.id(), copy);
+    }
+
+    private static byte forceGlowing(byte in) {
+        return (byte) (in | 1 << Entity.FLAG_GLOWING);
     }
 
     @Override
