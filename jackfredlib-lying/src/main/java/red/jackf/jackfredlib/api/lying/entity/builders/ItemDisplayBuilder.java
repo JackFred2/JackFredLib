@@ -5,7 +5,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import red.jackf.jackfredlib.mixins.lying.ItemDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.ItemDisplayAccessor;
 
 /**
  * Builder to create an Item Display, which shows an {@link net.minecraft.world.item.ItemStack}.

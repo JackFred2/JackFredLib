@@ -63,11 +63,20 @@ public class LiesImpl implements Lies {
         var active = new ActiveEntityGlowLie(player, entityGlowLie);
         activeEntityGlowLies.put(player.getGameProfile(), active);
 
+        active.lie().setup(player);
+
         return active;
     }
 
     public Optional<ActiveEntityLie<? extends Entity>> getEntityLieFromId(ServerPlayer player, int entityId) {
         return activeEntityLies.get(player.getGameProfile())
+                .stream()
+                .filter(active -> active.lie().entity().getId() == entityId)
+                .findFirst();
+    }
+
+    public Optional<ActiveEntityGlowLie> getEntityGlowLieFromId(ServerPlayer player, int entityId) {
+        return activeEntityGlowLies.get(player.getGameProfile())
                 .stream()
                 .filter(active -> active.lie().entity().getId() == entityId)
                 .findFirst();
@@ -82,6 +91,6 @@ public class LiesImpl implements Lies {
     }
 
     public void tick() {
-        activeEntityLies.values().forEach(GenericsUtils::tickEntity);
+        activeEntityLies.values().forEach(GenericsUtils::tickEntityLie);
     }
 }

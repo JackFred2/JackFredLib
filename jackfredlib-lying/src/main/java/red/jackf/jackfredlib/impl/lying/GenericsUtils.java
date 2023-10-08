@@ -16,7 +16,7 @@ public class GenericsUtils {
         activeEntityLie.lie().onRightClick(activeEntityLie, usingSecondaryAction, hand, interactionLocation);
     }
 
-    static <E extends Entity> void tickEntity(ActiveEntityLie<E> activeEntityLie) {
-        activeEntityLie.lie().onTick(activeEntityLie);
+    static <E extends Entity> void tickEntityLie(ActiveEntityLie<E> activeLie) {
+        activeLie.lie().onTick(activeLie);
     }
 }

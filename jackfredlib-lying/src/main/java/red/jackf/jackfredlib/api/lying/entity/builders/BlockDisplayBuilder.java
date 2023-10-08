@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3f;
-import red.jackf.jackfredlib.mixins.lying.BlockDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
 
 /**
  * <p>Builder to create a Block Display entity, which displays a block state.</p>

@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.mixins.lying;
+package red.jackf.jackfredlib.mixins.lying.entity;
 
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.level.block.state.BlockState;

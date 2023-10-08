@@ -22,6 +22,7 @@
       "red.jackf.jackfredlib.impl.lying.Entrypoint"
     ]
   },
+  "accessWidener": "jackfredlib-lying.accesswidener",
   "depends": {
     "minecraft": ">=1.20.1",
     "fabricloader": "*",

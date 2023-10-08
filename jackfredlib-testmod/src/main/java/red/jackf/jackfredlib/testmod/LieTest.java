@@ -83,11 +83,13 @@ public class LieTest {
         });
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
-            if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 var handStack = player.getItemInHand(hand);
                 if (handStack.is(Items.GLOW_INK_SAC)) {
-                    var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.of(entity, ChatFormatting.AQUA));
-                    Debris.INSTANCE.schedule(lie, 10 * SharedConstants.TICKS_PER_SECOND);
+                    var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.builder(entity)
+                            .colour(ChatFormatting.AQUA)
+                            .build());
+                    Debris.INSTANCE.schedule(lie, 20 * SharedConstants.TICKS_PER_SECOND);
                 }
             }
             return InteractionResult.PASS;

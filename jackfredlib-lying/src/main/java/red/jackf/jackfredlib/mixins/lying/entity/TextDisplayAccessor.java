@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.mixins.lying;
+package red.jackf.jackfredlib.mixins.lying.entity;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Display;

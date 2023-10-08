@@ -7,7 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
 import red.jackf.jackfredlib.api.colour.Colour;
-import red.jackf.jackfredlib.mixins.lying.TextDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.TextDisplayAccessor;
 
 /**
  * Builder to create a text display, which shows a {@link net.minecraft.network.chat.Component}.

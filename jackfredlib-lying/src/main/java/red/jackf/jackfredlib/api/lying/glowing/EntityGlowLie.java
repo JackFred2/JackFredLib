@@ -7,7 +7,27 @@ import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
 
 public interface EntityGlowLie extends Lie<EntityGlowLie> {
 
-    static EntityGlowLie of(Entity entity, ChatFormatting colour) {
-        return new EntityGlowLieImpl(entity, colour);
+    Entity entity();
+
+    static Builder builder(Entity entity) {
+        return new Builder(entity);
+    }
+
+    class Builder {
+        private final Entity entity;
+        private ChatFormatting colour = ChatFormatting.WHITE;
+
+        private Builder(Entity entity) {
+            this.entity = entity;
+        }
+
+        public Builder colour(ChatFormatting colour) {
+            this.colour = colour;
+            return this;
+        }
+
+        public EntityGlowLie build() {
+            return new EntityGlowLieImpl(entity, colour);
+        }
     }
 }

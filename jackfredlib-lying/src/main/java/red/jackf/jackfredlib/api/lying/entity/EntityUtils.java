@@ -7,8 +7,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import red.jackf.jackfredlib.mixins.lying.BlockDisplayAccessor;
-import red.jackf.jackfredlib.mixins.lying.TextDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.TextDisplayAccessor;
 
 /**
  * Collection of common utilities for manipulating entities.

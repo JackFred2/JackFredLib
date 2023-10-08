@@ -10,7 +10,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
-import red.jackf.jackfredlib.mixins.lying.DisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.DisplayAccessor;
 
 import static net.minecraft.world.entity.Display.*;
 

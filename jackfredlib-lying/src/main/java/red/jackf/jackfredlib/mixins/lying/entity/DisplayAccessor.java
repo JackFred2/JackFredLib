@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.mixins.lying;
+package red.jackf.jackfredlib.mixins.lying.entity;
 
 import com.mojang.math.Transformation;
 import net.minecraft.network.syncher.SynchedEntityData;

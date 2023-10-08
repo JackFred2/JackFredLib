@@ -1,0 +1,6 @@
+accessWidener v1 named
+
+# lying
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+accessible field net/minecraft/world/entity/Entity FLAG_GLOWING I
+accessible field net/minecraft/world/entity/Entity DATA_SHARED_FLAGS_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
