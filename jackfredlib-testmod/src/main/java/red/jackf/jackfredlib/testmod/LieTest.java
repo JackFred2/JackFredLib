@@ -8,8 +8,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +23,10 @@ import red.jackf.jackfredlib.api.lying.Debris;
 import red.jackf.jackfredlib.api.lying.Lies;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 import red.jackf.jackfredlib.api.lying.entity.EntityPresets;
+import red.jackf.jackfredlib.api.lying.entity.EntityUtils;
 import red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders;
 import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
+import red.jackf.jackfredlib.impl.lying.LiesImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,15 +85,32 @@ public class LieTest {
                    .build();
            return EntityLie.builder(text).build();
         });
+        ENTITY_LIES.put(Items.DIAMOND_HOE, (level, pos, player) -> {
+            var entity = EntityBuilders.generic(EntityType.ALLAY, level)
+                    .position(pos)
+                    .facing(player)
+                    .customName(Component.literal("Coloured Glow non-display"))
+                    .alwaysRenderName(true)
+                    .build();
+            return EntityLie.builder(entity)
+                    .onRightClick((activeLie, shiftDown, hand, relativeToEntity) -> EntityUtils.face(
+                            activeLie.lie().entity(), activeLie.player()))
+                    .build();
+        });
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
-            if (player instanceof ServerPlayer serverPlayer) {
+            if (hand == InteractionHand.MAIN_HAND && hitResult != null && player instanceof ServerPlayer serverPlayer) {
                 var handStack = player.getItemInHand(hand);
                 if (handStack.is(Items.GLOW_INK_SAC)) {
-                    var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.builder(entity)
-                            .colour(ChatFormatting.AQUA)
-                            .build());
-                    Debris.INSTANCE.schedule(lie, 40 * SharedConstants.TICKS_PER_SECOND);
+                    var existing = LiesImpl.INSTANCE.getEntityGlowLieFromId(serverPlayer, entity.getId());
+                    if (existing.isPresent()) {
+                        existing.get().fade();
+                    } else {
+                        var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.builder(entity)
+                                .colour(ChatFormatting.AQUA)
+                                .build());
+                        Debris.INSTANCE.schedule(lie, 30 * SharedConstants.TICKS_PER_SECOND);
+                    }
                 }
             }
             return InteractionResult.PASS;

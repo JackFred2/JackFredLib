@@ -53,9 +53,9 @@ public class EntityUtils {
         var yRot = (float) (Mth.atan2(vector.z, vector.x) * 180.0F / (float) Math.PI) + 90.0F;
         //noinspection SuspiciousNameCombination
         var xRot = (float)(Mth.atan2(vector.horizontalDistance(), vector.y) * 180.0F / (float) Math.PI) - 90.0F;
-        if (source instanceof Display) { // if this wasn't offset the displays would be backwards
+        //if (source instanceof Display) { // if this wasn't offset the displays would be backwards
             yRot += 180.0F % 360.0F;
-        }
+        //}
         source.moveTo(source.getX(),
                 source.getY(),
                 source.getZ(),
