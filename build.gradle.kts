@@ -75,6 +75,8 @@ allprojects {
 
         runConfigs.configureEach {
             this.isIdeConfigGenerated = false
+
+            rootProject.file("log4j2.xml").let { log4jConfigs.from( it ) }
         }
 
         mods {
