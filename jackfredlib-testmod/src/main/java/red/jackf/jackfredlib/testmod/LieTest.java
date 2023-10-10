@@ -107,7 +107,7 @@ public class LieTest {
                         existing.get().fade();
                     } else {
                         var lie = Lies.INSTANCE.addEntityGlow(serverPlayer, EntityGlowLie.builder(entity)
-                                .colour(ChatFormatting.AQUA)
+                                .colour(ChatFormatting.getById((int) (Math.random() * 16)))
                                 .build());
                         Debris.INSTANCE.schedule(lie, 30 * SharedConstants.TICKS_PER_SECOND);
                     }

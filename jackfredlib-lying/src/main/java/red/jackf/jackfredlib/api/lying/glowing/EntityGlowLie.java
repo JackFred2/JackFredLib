@@ -6,6 +6,7 @@ import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
 
 public interface EntityGlowLie extends Lie<EntityGlowLie> {
+    ChatFormatting colour();
 
     Entity entity();
 

@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
+import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class EntityGlowLieImpl implements EntityGlowLie {
                 entity.getId(),
                 List.of(dataValue))
         );
+        FakeTeamManager.INSTANCE.removeFromTeam(activeLie.player(), activeLie.lie().entity(), activeLie.lie().colour());
     }
 
     @Override
@@ -46,10 +48,15 @@ public class EntityGlowLieImpl implements EntityGlowLie {
                 entity.getId(),
                 List.of(dataValue))
         );
+        FakeTeamManager.INSTANCE.addToTeam(player, entity, colour);
     }
 
     @Override
     public Entity entity() {
         return entity;
+    }
+
+    public ChatFormatting colour() {
+        return colour;
     }
 }

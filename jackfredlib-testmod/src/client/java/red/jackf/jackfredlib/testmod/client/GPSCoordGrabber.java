@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.Minecraft;
 import red.jackf.jackfredlib.client.api.gps.Coordinate;
 
-public class GPSClientTest {
+public class GPSCoordGrabber {
     public static void setup() {
         HudRenderCallback.EVENT.register((graphics, tickDelta) -> {
             graphics.drawString(Minecraft.getInstance().font,

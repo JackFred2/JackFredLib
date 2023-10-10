@@ -28,7 +28,8 @@ public class TestModClient implements ClientModInitializer {
 
         ToastTest.setup();
 
-        GPSClientTest.setup();
+        GPSCoordGrabber.setup();
+        LyingTeamsGrabber.setup();
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) ->
             dispatcher.register(
