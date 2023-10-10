@@ -1,5 +1,5 @@
 /**
- * Set of builders for construction of entities in an easier way.
+ * Collection of type-safe builders for creating Minecraft entities, in a builder-pattern method..
  *
  * @see red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders
  */

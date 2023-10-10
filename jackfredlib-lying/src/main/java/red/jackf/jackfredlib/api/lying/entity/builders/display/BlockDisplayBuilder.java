@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.api.lying.entity.builders;
+package red.jackf.jackfredlib.api.lying.entity.builders.display;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Display;
@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3f;
+import red.jackf.jackfredlib.api.lying.entity.builders.BuilderBase;
 import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
 
 /**
@@ -19,7 +20,13 @@ import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
  * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Display</a>
  */
 public class BlockDisplayBuilder extends DisplayBuilder<Display.BlockDisplay, BlockDisplayBuilder> {
-    protected BlockDisplayBuilder(ServerLevel level) {
+    /**
+     * Create a new Block Display builder. Don't use directly, use a method in {@link red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders}.
+     *
+     * @param level Level to create the fake entity in.
+     */
+    @ApiStatus.Internal
+    public BlockDisplayBuilder(ServerLevel level) {
         super(EntityType.BLOCK_DISPLAY, level);
     }
 

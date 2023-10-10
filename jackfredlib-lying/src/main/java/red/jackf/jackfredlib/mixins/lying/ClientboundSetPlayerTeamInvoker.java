@@ -17,5 +17,5 @@ public interface ClientboundSetPlayerTeamInvoker {
             @SuppressWarnings("OptionalUsedAsFieldOrParameterType") Optional<ClientboundSetPlayerTeamPacket.Parameters> parameters,
             Collection<String> players) {
         throw new AssertionError("mixin method called");
-    };
+    }
 }

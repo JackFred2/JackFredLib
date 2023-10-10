@@ -3,6 +3,9 @@ package red.jackf.jackfredlib.api.lying.entity.builders;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import red.jackf.jackfredlib.api.lying.entity.builders.display.BlockDisplayBuilder;
+import red.jackf.jackfredlib.api.lying.entity.builders.display.ItemDisplayBuilder;
+import red.jackf.jackfredlib.api.lying.entity.builders.display.TextDisplayBuilder;
 
 /**
  * Collection of builders to help create entities with lie-useful properties.

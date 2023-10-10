@@ -15,7 +15,6 @@ public enum FakeTeamManager {
     INSTANCE;
 
     private static final int CREATE_TEAM = 0;
-    private static final int REMOVE_TEAM = 1;
     private static final int ADD_ENTITY = 3;
     private static final int REMOVE_ENTITY = 4;
 
@@ -29,8 +28,6 @@ public enum FakeTeamManager {
 
     public void addToTeam(ServerPlayer player, Entity entity, ChatFormatting colour) {
         if (!colour.isColor()) colour = ChatFormatting.WHITE;
-
-        String name = entity.getScoreboardName();
 
         if (!visible.get(colour).contains(player.getGameProfile())) {
             var packet = ClientboundSetPlayerTeamInvoker.createManually(
@@ -51,6 +48,21 @@ public enum FakeTeamManager {
             );
 
             player.connection.send(packet);
+        }
+    }
+
+    public void removeFromAllTeams(ServerPlayer player, Entity entity) {
+        for (var colour : FakeTeamUtil.COLOURS) {
+            if (visible.containsEntry(colour, player.getGameProfile())) {
+                var packet = ClientboundSetPlayerTeamInvoker.createManually(
+                        FakeTeamUtil.getName(colour),
+                        REMOVE_ENTITY,
+                        Optional.empty(),
+                        ImmutableList.of(entity.getScoreboardName())
+                );
+
+                player.connection.send(packet);
+            }
         }
     }
 

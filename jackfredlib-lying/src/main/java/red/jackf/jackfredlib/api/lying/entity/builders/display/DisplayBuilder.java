@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.api.lying.entity.builders;
+package red.jackf.jackfredlib.api.lying.entity.builders.display;
 
 import com.mojang.math.Transformation;
 import net.minecraft.server.level.ServerLevel;
@@ -10,9 +10,10 @@ import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
+import red.jackf.jackfredlib.api.lying.entity.builders.BuilderBase;
 import red.jackf.jackfredlib.mixins.lying.entity.DisplayAccessor;
 
-import static net.minecraft.world.entity.Display.*;
+import static net.minecraft.world.entity.Display.BillboardConstraints;
 
 /**
  * Entity builder with additional options for display entities.
@@ -22,7 +23,13 @@ import static net.minecraft.world.entity.Display.*;
  * @see BuilderBase
  */
 public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder<E, B>> extends BuilderBase<E, B> {
-    protected DisplayBuilder(EntityType<E> type, ServerLevel level) {
+    /**
+     * Create a new Display builder. Don't use directly, use a method in {@link red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders}.
+     *
+     * @param level Level to create the fake entity in.
+     */
+    @ApiStatus.Internal
+    public DisplayBuilder(EntityType<E> type, ServerLevel level) {
         super(type, level);
     }
 
@@ -73,9 +80,9 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      *     </tr>
      * </table>
      *
-     * @implNote Default: {@link BillboardConstraints#FIXED}
      * @param billboardMode How a display entity is billboarded.
      * @return This builder
+     * @implNote Default: {@link BillboardConstraints#FIXED}
      */
     public B billboard(BillboardConstraints billboardMode) {
         ((DisplayAccessor) this.entity).callSetBillboardConstraints(billboardMode);
@@ -85,10 +92,10 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     /**
      * <p>Sets a brightness override for this display entity.</p>
      *
-     * @implNote Default: No override, meaning the display entity takes the light level from its current world position
      * @param block Block light to use when rendering, in the range [0, 15]
-     * @param sky Sky light level to use when rendering, in the range [0, 15]
+     * @param sky   Sky light level to use when rendering, in the range [0, 15]
      * @return This entity builder
+     * @implNote Default: No override, meaning the display entity takes the light level from its current world position
      */
     public B brightness(int block, int sky) {
         ((DisplayAccessor) this.entity).callSetBrightnessOverride(new Brightness(Mth.clamp(block, 0, 15), Mth.clamp(sky, 0, 15)));
@@ -99,9 +106,9 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * <p>Sets the view range modifier for this display entity. This results in an approximate range of
      * <code>64 * modifier * clientEntityRenderMultiplier</code> for rendering this display.</p>
      *
-     * @implNote Default: 1.0
      * @param modifier View ranger modifier for this entity.
      * @return This entity builder
+     * @implNote Default: 1.0
      */
     public B viewRangeModifier(float modifier) {
         ((DisplayAccessor) this.entity).callSetViewRange(modifier);
@@ -113,9 +120,9 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      *
      * <p>Does not normally appear for text displays. To enable them, see {@link TextDisplayBuilder#hasShadow(boolean)}</p>
      *
-     * @implNote Default: 0 (no shadow).
      * @param shadowRadius Radius of the shadow for this display entity, in the range [0, 64].
      * @return This entity builder
+     * @implNote Default: 0 (no shadow).
      */
     public B shadowRadius(float shadowRadius) {
         ((DisplayAccessor) this.entity).callSetShadowRadius(Mth.clamp(shadowRadius, 0, 64));
@@ -128,9 +135,9 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      *
      * <p>Does not normally appear for text displays. To enable them, see {@link TextDisplayBuilder#hasShadow(boolean)}</p>
      *
-     * @implNote Default: 1
      * @param shadowStrength Shadow strength multiplier for this display entity.
      * @return This builder
+     * @implNote Default: 1
      */
     public B shadowStrength(float shadowStrength) {
         ((DisplayAccessor) this.entity).callSetShadowStrength(shadowStrength);

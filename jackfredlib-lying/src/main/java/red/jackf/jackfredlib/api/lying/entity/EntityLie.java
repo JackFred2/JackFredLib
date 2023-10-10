@@ -1,9 +1,11 @@
 package red.jackf.jackfredlib.api.lying.entity;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.impl.lying.entity.EntityLieImpl;
@@ -40,6 +42,8 @@ public interface EntityLie<E extends Entity> extends Lie<EntityLie<E>> {
         private RightClickCallback<E> rightClickCallback = null;
         private TickCallback<E> tickCallback = null;
         private FadeCallback<E> fadeCallback = null;
+        @Nullable
+        private ChatFormatting glowColour = null;
 
         private Builder(E entity) {
             this.entity = entity;
@@ -87,12 +91,17 @@ public interface EntityLie<E extends Entity> extends Lie<EntityLie<E>> {
             return this;
         }
 
+        public Builder<E> glowColour(@Nullable ChatFormatting colour) {
+            this.glowColour = colour != null && !colour.isColor() ? ChatFormatting.WHITE : colour;
+            return this;
+        }
+
         /**
          * Create a new entity lie from this builder.
          * @return The built entity lie.
          */
         public EntityLie<E> build() {
-            return new EntityLieImpl<>(entity, leftClickCallback, rightClickCallback, tickCallback, fadeCallback);
+            return new EntityLieImpl<>(entity, leftClickCallback, rightClickCallback, tickCallback, fadeCallback, glowColour);
         }
     }
 

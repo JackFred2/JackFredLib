@@ -1,5 +1,6 @@
 package red.jackf.jackfredlib.impl.lying.entity;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -7,8 +8,10 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
+import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +24,10 @@ public final class EntityLieImpl<E extends Entity> implements EntityLie<E> {
     private final RightClickCallback<E> rightClickCallback;
     private final TickCallback<E> tickCallback;
     private final FadeCallback<E> fadeCallback;
+    private final ChatFormatting glowColour;
 
-    public EntityLieImpl(E entity, LeftClickCallback<E> leftClickCallback, RightClickCallback<E> rightClickCallback, TickCallback<E> tickCallback, FadeCallback<E> fadeCallback) {
+    public EntityLieImpl(E entity, LeftClickCallback<E> leftClickCallback, RightClickCallback<E> rightClickCallback, TickCallback<E> tickCallback, FadeCallback<E> fadeCallback,
+                         @Nullable ChatFormatting glowColour) {
         this.entity = entity;
         this.serverEntity = new ServerEntity((ServerLevel) entity.level(),
                 entity,
@@ -33,6 +38,7 @@ public final class EntityLieImpl<E extends Entity> implements EntityLie<E> {
         this.rightClickCallback = rightClickCallback;
         this.tickCallback = tickCallback;
         this.fadeCallback = fadeCallback;
+        this.glowColour = glowColour;
     }
 
     public E entity() {
@@ -62,12 +68,16 @@ public final class EntityLieImpl<E extends Entity> implements EntityLie<E> {
         this.serverEntity.removePairing(activeLie.player());
         if (fadeCallback != null)
             fadeCallback.onFade(activeLie);
+        if (this.glowColour != null)
+            FakeTeamManager.INSTANCE.removeFromAllTeams(activeLie.player(), this.entity);
     }
 
     @Override
     public void setup(ServerPlayer player) {
         connections.add(player.connection);
         this.serverEntity.addPairing(player);
+        if (this.glowColour != null)
+            FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.glowColour);
     }
 
     @Override

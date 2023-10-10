@@ -91,10 +91,12 @@ public class LieTest {
                     .facing(player)
                     .customName(Component.literal("Coloured Glow non-display"))
                     .alwaysRenderName(true)
+                    .glowing(true)
                     .build();
             return EntityLie.builder(entity)
                     .onRightClick((activeLie, shiftDown, hand, relativeToEntity) -> EntityUtils.face(
                             activeLie.lie().entity(), activeLie.player()))
+                    .glowColour(ChatFormatting.AQUA)
                     .build();
         });
 
