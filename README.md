@@ -4,9 +4,12 @@ Collection of common utilities for my Minecraft mods, and where I'm figuring out
 
 - Tri-state value holder for Fabric API's events.
 - Gradient/colour toolkit
-- Lying API to fake entities (and more in the future) to the client.
+- Lying API to fake entities and coloured entity outlines to the client.
+  - Planned: block & particles
 - Easy creation of custom [toasts](https://en.wikipedia.org/wiki/Pop-up_notification), with progress bars and images.
-- Custom Data for Command Source Stacks, with planned support for repeatable arguments
+- Custom Data for Command Source Stacks, allowing for repeatable arguments. Helpers for this are planned.
+- GPS module for client-only mods to determine where they are without server support - think minimap data, or for a 
+  practical example [Chest Tracker](https://modrinth.com/mod/chest-tracker).
 
 Feel free to use yourself (via GitHub Package Registry).
 
