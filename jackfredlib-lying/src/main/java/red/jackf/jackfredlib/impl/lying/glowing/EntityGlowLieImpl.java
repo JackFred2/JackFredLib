@@ -53,7 +53,7 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
 
     @Override
     public void addPlayer(ServerPlayer player) {
-        LieManager.INSTANCE.addGlowing(player, this);
+        LieManager.INSTANCE.addEntityGlow(player, this);
         super.addPlayer(player);
 
         var dataValue = new SynchedEntityData.DataValue<>(
@@ -70,7 +70,7 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
 
     @Override
     public void removePlayer(ServerPlayer player) {
-        LieManager.INSTANCE.remove(player, this);
+        LieManager.INSTANCE.removeEntityGlow(player, this);
         super.removePlayer(player);
 
         var dataValue = new SynchedEntityData.DataValue<>(

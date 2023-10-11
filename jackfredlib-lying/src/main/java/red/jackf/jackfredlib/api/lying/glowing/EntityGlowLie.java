@@ -29,7 +29,7 @@ public interface EntityGlowLie extends Lie {
         }
 
         public Builder colour(ChatFormatting colour) {
-            this.colour = colour;
+            this.colour = colour.isColor() ? colour : ChatFormatting.WHITE;
             return this;
         }
 
