@@ -1,5 +1,6 @@
 package red.jackf.jackfredlib.api.lying.entity.builders;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -130,10 +131,11 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
     }
 
     /**
-     * <p>Adds a glowing outline to this entity. Colour is pulled from an entity's team (TODO: add team manipulation).
-     * Defaults to white.</p>
+     * <p>Adds a glowing outline to this entity. Colour is pulled from an entity's team, or white as default.</p>
+     * <p>If using this builder for an entity lie, then a glowing outline can be added using
+     * {@link red.jackf.jackfredlib.api.lying.entity.EntityLie.Builder#glowColour(ChatFormatting)} instead.</p>
      *
-     * @apiNote Does not show up for all entities (e.g. text displays).
+     * @apiNote Does not show up for all entities (e.g. text displays, which have their own glowing mechanics).
      * @param shouldGlow Whether this entity have a glowing outline
      * @return This builder
      */

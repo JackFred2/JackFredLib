@@ -53,7 +53,9 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
 
     @Override
     public void addPlayer(ServerPlayer player) {
+        if (this.getViewingPlayers().contains(player)) return;
         LieManager.INSTANCE.addEntityGlow(player, this);
+
         super.addPlayer(player);
 
         var dataValue = new SynchedEntityData.DataValue<>(

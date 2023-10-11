@@ -97,7 +97,7 @@ public class LieTest {
             return EntityLie.builder(entity)
                     .onRightClick((player1, lie, wasSneaking, hand, relativeToEntity) -> EntityUtils.face(lie.entity(), player1))
                     .onTick(tickCallback)
-                    .colour(ChatFormatting.AQUA)
+                    .glowColour(ChatFormatting.AQUA)
                     .createAndShow(player);
         });
 

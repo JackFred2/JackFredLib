@@ -55,10 +55,12 @@ public class EntityLieImpl extends LieImpl implements EntityLie {
         if (colour != null && !colour.isColor()) colour = ChatFormatting.WHITE;
         if (colour == this.glowColour) return;
         if (colour == null) {
+            this.entity.setGlowingTag(false);
             for (ServerPlayer viewingPlayer : this.getViewingPlayers()) {
                 FakeTeamManager.INSTANCE.removeFromTeam(viewingPlayer, this.entity, this.glowColour);
             }
         } else {
+            this.entity.setGlowingTag(true);
             for (ServerPlayer viewingPlayer : this.getViewingPlayers()) {
                 FakeTeamManager.INSTANCE.addToTeam(viewingPlayer, this.entity, colour);
             }
@@ -73,8 +75,11 @@ public class EntityLieImpl extends LieImpl implements EntityLie {
 
     @Override
     public void addPlayer(ServerPlayer player) {
+        if (this.getViewingPlayers().contains(player)) return;
         LieManager.INSTANCE.addEntity(player, this);
+
         super.addPlayer(player);
+
         this.serverEntity.addPairing(player);
         if (this.glowColour != null)
             FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.glowColour);
