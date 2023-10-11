@@ -6,7 +6,8 @@ import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import red.jackf.jackfredlib.impl.lying.LiesImpl;
+import red.jackf.jackfredlib.impl.lying.LieManager;
+import red.jackf.jackfredlib.impl.lying.glowing.FakeGlowPacketMeddling;
 
 @Mixin(ServerEntity.class)
 public class ServerEntityMixin {
@@ -14,10 +15,8 @@ public class ServerEntityMixin {
     @ModifyExpressionValue(method = "sendPairingData",
             at = @At(value = "NEW", args = "class=net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket"))
     private ClientboundSetEntityDataPacket jackfredlib$changeGlowingForLies(ClientboundSetEntityDataPacket originalPacket, ServerPlayer player) {
-        var lie = LiesImpl.INSTANCE.getEntityGlowLieFromId(player, originalPacket.id());
-        if (lie.isPresent()) {
-            return lie.get().modifyPacket(originalPacket);
-        }
-        return originalPacket;
+        var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityId(player, originalPacket.id());
+        return lie.map(glowLie -> FakeGlowPacketMeddling.modifyPacket(originalPacket, glowLie.entity()))
+                .orElse(originalPacket);
     }
 }

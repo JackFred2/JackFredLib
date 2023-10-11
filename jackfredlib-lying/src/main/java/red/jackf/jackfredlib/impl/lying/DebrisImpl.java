@@ -5,8 +5,8 @@ import com.google.common.collect.Multimap;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import red.jackf.jackfredlib.api.lying.ActiveLie;
 import red.jackf.jackfredlib.api.lying.Debris;
+import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.impl.base.LogUtil;
 
 public class DebrisImpl implements Debris {
@@ -17,7 +17,7 @@ public class DebrisImpl implements Debris {
 
     @Nullable
     private MinecraftServer server = null;
-    private final Multimap<Long, ActiveLie<?>> scheduled = ArrayListMultimap.create();
+    private final Multimap<Long, Lie> scheduled = ArrayListMultimap.create();
 
     public void init(MinecraftServer server) {
         LOGGER.debug("Init debris");
@@ -35,11 +35,11 @@ public class DebrisImpl implements Debris {
         var thisTick = scheduled.removeAll(server.overworld().getGameTime());
         if (thisTick.isEmpty()) return;
         LOGGER.debug("Fading {} lie(s) at {}", thisTick.size(), server.overworld().getGameTime());
-        thisTick.forEach(ActiveLie::fade);
+        thisTick.forEach(Lie::fade);
     }
 
     @Override
-    public void schedule(ActiveLie<?> lie, long lifetimeTicks) {
+    public void schedule(Lie lie, long lifetimeTicks) {
         if (this.server == null) {
             LOGGER.warn("Tried to use debris service when not in-game");
             return;
@@ -54,7 +54,7 @@ public class DebrisImpl implements Debris {
     }
 
     @Override
-    public void cancel(ActiveLie<?> lie) {
+    public void cancel(Lie lie) {
         if (this.server == null) {
             LOGGER.warn("Tried to use debris service when not in-game");
             return;

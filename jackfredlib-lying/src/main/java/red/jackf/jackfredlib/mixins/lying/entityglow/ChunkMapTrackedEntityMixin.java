@@ -8,7 +8,8 @@ import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.network.ServerPlayerConnection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import red.jackf.jackfredlib.impl.lying.LiesImpl;
+import red.jackf.jackfredlib.impl.lying.LieManager;
+import red.jackf.jackfredlib.impl.lying.glowing.FakeGlowPacketMeddling;
 
 @Mixin(ChunkMap.TrackedEntity.class)
 public class ChunkMapTrackedEntityMixin {
@@ -20,9 +21,9 @@ public class ChunkMapTrackedEntityMixin {
             Packet<?> packet,
             Operation<Void> original) {
         if (packet instanceof ClientboundSetEntityDataPacket entityData) {
-            var lie = LiesImpl.INSTANCE.getEntityGlowLieFromId(connection.getPlayer(), entityData.id());
+            var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityId(connection.getPlayer(), entityData.id());
             if (lie.isPresent()) {
-                original.call(connection, lie.get().modifyPacket(entityData));
+                original.call(connection, FakeGlowPacketMeddling.modifyPacket(entityData, lie.get().entity()));
                 return;
             }
         }

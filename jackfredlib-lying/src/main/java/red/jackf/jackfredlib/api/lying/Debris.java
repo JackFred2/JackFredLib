@@ -21,11 +21,11 @@ public interface Debris {
      * @param lifetimeTicks How many ticks this lie should live for
      */
 
-    void schedule(ActiveLie<?> lie, long lifetimeTicks);
+    void schedule(Lie lie, long lifetimeTicks);
 
     /**
      * Cancel an active lie's scheduled fade.
      * @param lie Lie to cancel a scheduled fade for.
      */
-    void cancel(ActiveLie<?> lie);
+    void cancel(Lie lie);
 }

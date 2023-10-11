@@ -19,7 +19,7 @@
   ],
   "entrypoints": {
     "main": [
-      "red.jackf.jackfredlib.impl.lying.Entrypoint"
+      "red.jackf.jackfredlib.impl.lying.ModuleEntrypoint"
     ]
   },
   "accessWidener": "jackfredlib-lying.accesswidener",

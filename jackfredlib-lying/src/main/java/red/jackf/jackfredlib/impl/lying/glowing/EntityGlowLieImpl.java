@@ -6,39 +6,56 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import red.jackf.jackfredlib.api.lying.ActiveLie;
+import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
+import red.jackf.jackfredlib.impl.lying.LieImpl;
+import red.jackf.jackfredlib.impl.lying.LieManager;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
 
 import java.util.List;
 
-public class EntityGlowLieImpl implements EntityGlowLie {
+public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
     private static final EntityDataAccessor<Byte> DATA = Entity.DATA_SHARED_FLAGS_ID;
 
     private final Entity entity;
     private ChatFormatting colour;
+    private final @Nullable TickCallback tickCallback;
+    private final @Nullable FadeCallback fadeCallback;
 
-    public EntityGlowLieImpl(Entity entity, ChatFormatting colour) {
+    public EntityGlowLieImpl(Entity entity, ChatFormatting colour, @Nullable TickCallback tickCallback, @Nullable FadeCallback fadeCallback) {
         this.entity = entity;
         this.colour = colour;
+        this.tickCallback = tickCallback;
+        this.fadeCallback = fadeCallback;
     }
 
     @Override
-    public void fade(ActiveLie<EntityGlowLie> activeLie) {
-        var dataValue = new SynchedEntityData.DataValue<>(
-                DATA.getId(),
-                DATA.getSerializer(),
-                entity.getEntityData().get(DATA)
-        );
-        activeLie.player().connection.send(new ClientboundSetEntityDataPacket(
-                entity.getId(),
-                List.of(dataValue))
-        );
-        FakeTeamManager.INSTANCE.removeFromTeam(activeLie.player(), activeLie.lie().entity(), activeLie.lie().colour());
+    public ChatFormatting glowColour() {
+        return colour;
     }
 
     @Override
-    public void setup(ServerPlayer player) {
+    public void setGlowColour(ChatFormatting colour) {
+        var newColour = colour.isColor() ? colour : ChatFormatting.WHITE;
+        if (newColour != this.colour) {
+            this.colour = newColour;
+
+            for (var player : this.getViewingPlayers()) {
+                FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.colour);
+            }
+        }
+    }
+
+    @Override
+    public Entity entity() {
+        return entity;
+    }
+
+    @Override
+    public void addPlayer(ServerPlayer player) {
+        LieManager.INSTANCE.addGlowing(player, this);
+        super.addPlayer(player);
+
         var dataValue = new SynchedEntityData.DataValue<>(
                 DATA.getId(),
                 DATA.getSerializer(),
@@ -52,11 +69,27 @@ public class EntityGlowLieImpl implements EntityGlowLie {
     }
 
     @Override
-    public Entity entity() {
-        return entity;
+    public void removePlayer(ServerPlayer player) {
+        LieManager.INSTANCE.remove(player, this);
+        super.removePlayer(player);
+
+        var dataValue = new SynchedEntityData.DataValue<>(
+                DATA.getId(),
+                DATA.getSerializer(),
+                entity.getEntityData().get(DATA)
+        );
+        player.connection.send(new ClientboundSetEntityDataPacket(
+                entity.getId(),
+                List.of(dataValue))
+        );
+        FakeTeamManager.INSTANCE.removeFromTeam(player, entity, colour);
+
+        if (this.fadeCallback != null)
+            this.fadeCallback.onFade(player, this);
     }
 
-    public ChatFormatting colour() {
-        return colour;
+    public void tick(ServerPlayer player) {
+        if (this.tickCallback != null)
+            this.tickCallback.onTick(player, this);
     }
 }
