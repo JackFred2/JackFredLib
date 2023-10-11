@@ -34,8 +34,8 @@ public class LieManager {
      * @param player Player to clear lies for.
      */
     public void removeAll(ServerPlayer player) {
-        this.entityGlowLies.removeAll(player).forEach(LieImpl::fade);
-        this.entityLies.removeAll(player).forEach(LieImpl::fade);
+        this.entityGlowLies.removeAll(player).forEach(lie -> lie.removePlayer(player));
+        this.entityLies.removeAll(player).forEach(lie -> lie.removePlayer(player));
     }
 
     /**
