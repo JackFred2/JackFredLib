@@ -14,8 +14,8 @@ public class LieManager {
     public static final Logger LOGGER = LogUtil.getLogger("Lie Manager");
     public static final LieManager INSTANCE = new LieManager();
 
-    private final Multimap<ServerPlayer, EntityGlowLieImpl> entityGlowLies = MultimapBuilder.hashKeys().hashSetValues().build();
-    private final Multimap<ServerPlayer, EntityLieImpl> entityLies = MultimapBuilder.hashKeys().hashSetValues().build();
+    private final Multimap<ServerPlayer, EntityGlowLieImpl<?>> entityGlowLies = MultimapBuilder.hashKeys().hashSetValues().build();
+    private final Multimap<ServerPlayer, EntityLieImpl<?>> entityLies = MultimapBuilder.hashKeys().hashSetValues().build();
 
     //////////////
     // All Lies //
@@ -57,30 +57,30 @@ public class LieManager {
     /////////////////
     // Entity Lies //
     /////////////////
-    public void addEntity(ServerPlayer player, EntityLieImpl lie) {
+    public void addEntity(ServerPlayer player, EntityLieImpl<?> lie) {
         this.entityLies.put(player, lie);
     }
 
-    public void removeEntity(ServerPlayer player, EntityLieImpl lie) {
+    public void removeEntity(ServerPlayer player, EntityLieImpl<?> lie) {
         this.entityLies.remove(player, lie);
     }
 
-    public Optional<EntityLieImpl> getEntityLieFromEntityId(ServerPlayer player, int entityId) {
+    public Optional<EntityLieImpl<?>> getEntityLieFromEntityId(ServerPlayer player, int entityId) {
         return this.entityLies.get(player).stream().filter(entityLie -> entityLie.entity().getId() == entityId).findFirst();
     }
 
     //////////////////////
     // Entity Glow Lies //
     //////////////////////
-    public void addEntityGlow(ServerPlayer player, EntityGlowLieImpl lie) {
+    public void addEntityGlow(ServerPlayer player, EntityGlowLieImpl<?> lie) {
         this.entityGlowLies.put(player, lie);
     }
 
-    public void removeEntityGlow(ServerPlayer player, EntityGlowLieImpl lie) {
+    public void removeEntityGlow(ServerPlayer player, EntityGlowLieImpl<?> lie) {
         this.entityGlowLies.remove(player, lie);
     }
 
-    public Optional<EntityGlowLieImpl> getEntityGlowLieFromEntityId(ServerPlayer player, int entityId) {
+    public Optional<EntityGlowLieImpl<?>> getEntityGlowLieFromEntityId(ServerPlayer player, int entityId) {
         return entityGlowLies.get(player).stream().filter(glowLie -> glowLie.entity().getId() == entityId).findFirst();
     }
 }

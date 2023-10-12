@@ -14,22 +14,22 @@ import red.jackf.jackfredlib.impl.lying.LieManager;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
-public class EntityLieImpl extends LieImpl implements EntityLie {
-    private final Entity entity;
+public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLie<E> {
+    private final E entity;
     private final ServerEntity serverEntity;
     private @Nullable ChatFormatting glowColour;
-    private final @Nullable TickCallback tickCallback;
-    private final @Nullable FadeCallback fadeCallback;
-    private final @Nullable LeftClickCallback leftClickCallback;
-    private final @Nullable RightClickCallback rightClickCallback;
+    private final @Nullable TickCallback<E> tickCallback;
+    private final @Nullable FadeCallback<E> fadeCallback;
+    private final @Nullable LeftClickCallback<E> leftClickCallback;
+    private final @Nullable RightClickCallback<E> rightClickCallback;
 
     public EntityLieImpl(
-            Entity entity,
+            E entity,
             @Nullable ChatFormatting glowColour,
-            @Nullable TickCallback tickCallback,
-            @Nullable FadeCallback fadeCallback,
-            @Nullable LeftClickCallback leftClickCallback,
-            @Nullable RightClickCallback rightClickCallback) {
+            @Nullable TickCallback<E> tickCallback,
+            @Nullable FadeCallback<E> fadeCallback,
+            @Nullable LeftClickCallback<E> leftClickCallback,
+            @Nullable RightClickCallback<E> rightClickCallback) {
         this.entity = entity;
         this.glowColour = glowColour;
         this.tickCallback = tickCallback;
@@ -70,7 +70,7 @@ public class EntityLieImpl extends LieImpl implements EntityLie {
     }
 
     @Override
-    public Entity entity() {
+    public E entity() {
         return entity;
     }
 

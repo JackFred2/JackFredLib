@@ -17,7 +17,7 @@ import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
  *
  * @see red.jackf.jackfredlib.api.lying.Lie
  */
-public interface EntityLie extends Lie {
+public interface EntityLie<E extends Entity> extends Lie {
     /**
      * The colour of this fake entity's glowing outline.
      *
@@ -41,30 +41,31 @@ public interface EntityLie extends Lie {
      *
      * @return The entity being shown to it's players.
      */
-    Entity entity();
+    E entity();
 
     /**
      * Create a new builder for an entity lie.
      *
      * @param entity Entity to base this lie off of.
      * @return A new entity lie builder.
+     * @param <E> Type of entity to make a lie of.
      */
-    static Builder builder(Entity entity) {
-        return new Builder(entity);
+    static <E extends Entity> Builder<E> builder(E entity) {
+        return new Builder<>(entity);
     }
 
     /**
      * Class for building an Entity Lie.
      */
-    class Builder {
-        private final Entity entity;
+    class Builder<E extends Entity> {
+        private final E entity;
         private @Nullable ChatFormatting glowColour = null;
-        private @Nullable TickCallback tickCallback = null;
-        private @Nullable FadeCallback fadeCallback = null;
-        private @Nullable LeftClickCallback leftClickCallback = null;
-        private @Nullable RightClickCallback rightClickCallback = null;
+        private @Nullable TickCallback<E> tickCallback = null;
+        private @Nullable FadeCallback<E> fadeCallback = null;
+        private @Nullable LeftClickCallback<E> leftClickCallback = null;
+        private @Nullable RightClickCallback<E> rightClickCallback = null;
 
-        private Builder(Entity entity) {
+        private Builder(E entity) {
             this.entity = entity;
         }
 
@@ -76,7 +77,7 @@ public interface EntityLie extends Lie {
          * @return This entity lie builder.
          * @implNote Modifies the entity's glowing tag accordingly.
          */
-        public Builder glowColour(@Nullable ChatFormatting colour) {
+        public Builder<E> glowColour(@Nullable ChatFormatting colour) {
             colour = FakeTeamUtil.ensureValidColour(colour);
             if (colour == null) {
                 this.entity.setGlowingTag(false);
@@ -95,7 +96,7 @@ public interface EntityLie extends Lie {
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity lie builder.
          */
-        public Builder onTick(@Nullable TickCallback callback) {
+        public Builder<E> onTick(@Nullable TickCallback<E> callback) {
             this.tickCallback = callback;
             return this;
         }
@@ -111,7 +112,7 @@ public interface EntityLie extends Lie {
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity lie builder.
          */
-        public Builder onFade(@Nullable FadeCallback callback) {
+        public Builder<E> onFade(@Nullable FadeCallback<E> callback) {
             this.fadeCallback = callback;
             return this;
         }
@@ -122,7 +123,7 @@ public interface EntityLie extends Lie {
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity lie builder.
          */
-        public Builder onLeftClick(@Nullable LeftClickCallback callback) {
+        public Builder<E> onLeftClick(@Nullable LeftClickCallback<E> callback) {
             this.leftClickCallback = callback;
             return this;
         }
@@ -133,7 +134,7 @@ public interface EntityLie extends Lie {
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity lie builder.
          */
-        public Builder onRightClick(@Nullable RightClickCallback callback) {
+        public Builder<E> onRightClick(@Nullable RightClickCallback<E> callback) {
             this.rightClickCallback = callback;
             return this;
         }
@@ -144,8 +145,8 @@ public interface EntityLie extends Lie {
          * @param players Players to initially send this lie to.
          * @return The constructed entity lie.
          */
-        public EntityLie createAndShow(ServerPlayer... players) {
-            var lie = new EntityLieImpl(entity, glowColour, tickCallback, fadeCallback, leftClickCallback, rightClickCallback);
+        public EntityLie<E> createAndShow(ServerPlayer... players) {
+            var lie = new EntityLieImpl<>(entity, glowColour, tickCallback, fadeCallback, leftClickCallback, rightClickCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);
             return lie;
@@ -155,33 +156,33 @@ public interface EntityLie extends Lie {
     /**
      * A callback ran every tick for every player viewing this lie.
      */
-    interface TickCallback {
+    interface TickCallback<E extends Entity> {
         /**
          * Ran every tick, for every player currently viewing this lie.
          *
          * @param player Player this lie is being ticked with.
          * @param lie    Lie that is being ticked.
          */
-        void onTick(ServerPlayer player, EntityLie lie);
+        void onTick(ServerPlayer player, EntityLie<E> lie);
     }
 
     /**
      * A callback ran when this lie is faded. This includes when a player disconnects.
      */
-    interface FadeCallback {
+    interface FadeCallback<E extends Entity> {
         /**
          * Ran when a player is removed from this lie.
          *
          * @param player Player being removed from this lie.
          * @param lie    Lie that the player is being removed from.
          */
-        void onFade(ServerPlayer player, EntityLie lie);
+        void onFade(ServerPlayer player, EntityLie<E> lie);
     }
 
     /**
      * A callback ran when this entity lie is left clicked (attacked).
      */
-    interface LeftClickCallback {
+    interface LeftClickCallback<E extends Entity> {
         /**
          * Ran when a player that is viewing this entity lie left clicks it.
          *
@@ -192,13 +193,13 @@ public interface EntityLie extends Lie {
          * @implNote <code>relativeToEntity</code> is calculated on the server-side, as this data is not send in the
          * packet. This means there may be a small amount of desync.
          */
-        void onLeftClick(ServerPlayer player, EntityLie lie, boolean wasSneaking, Vec3 relativeToEntity);
+        void onLeftClick(ServerPlayer player, EntityLie<E> lie, boolean wasSneaking, Vec3 relativeToEntity);
     }
 
     /**
      * A callback ran when this entity lie is right clicked (used).
      */
-    interface RightClickCallback {
+    interface RightClickCallback<E extends Entity> {
         /**
          * Ran when a player that is viewing this entity lie right clicks it.
          *
@@ -208,7 +209,6 @@ public interface EntityLie extends Lie {
          * @param hand             Hand that the player interacted with.
          * @param relativeToEntity Relative position to the entity's position that was right clicked.
          */
-        void onRightClick(
-                ServerPlayer player, EntityLie lie, boolean wasSneaking, InteractionHand hand, Vec3 relativeToEntity);
+        void onRightClick(ServerPlayer player, EntityLie<E> lie, boolean wasSneaking, InteractionHand hand, Vec3 relativeToEntity);
     }
 }

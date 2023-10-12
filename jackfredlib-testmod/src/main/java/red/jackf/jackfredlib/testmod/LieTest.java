@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.allay.Allay;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +49,7 @@ public class LieTest {
         });
     }
 
-    private static final Map<Item, TriFunction<ServerLevel, BlockPos, ServerPlayer, EntityLie>> ENTITY_LIES = new HashMap<>();
+    private static final Map<Item, TriFunction<ServerLevel, BlockPos, ServerPlayer, EntityLie<?>>> ENTITY_LIES = new HashMap<>();
 
     private static void setupHooks() {
         ENTITY_LIES.put(Items.DIAMOND_AXE, (level, pos, player) -> {
@@ -93,7 +94,7 @@ public class LieTest {
                     .alwaysRenderName(true)
                     .glowing(true)
                     .build();
-            EntityLie.TickCallback tickCallback = player.isShiftKeyDown() ? (player1, lie) -> lie.setGlowColour(randomColour()) : null;
+            EntityLie.TickCallback<Allay> tickCallback = player.isShiftKeyDown() ? (player1, lie) -> lie.setGlowColour(randomColour()) : null;
             return EntityLie.builder(entity)
                     .onRightClick((player1, lie, wasSneaking, hand, relativeToEntity) -> EntityUtils.face(lie.entity(), player1))
                     .onTick(tickCallback)

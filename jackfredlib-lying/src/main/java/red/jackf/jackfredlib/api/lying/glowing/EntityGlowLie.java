@@ -13,7 +13,7 @@ import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
  * <p>An entity glow lie adds a glowing border to an existing entity, via faking an entity's glowing packet and team.
  * This allows you to highlight entities without affecting server-side gameplay.</p>
  */
-public interface EntityGlowLie extends Lie {
+public interface EntityGlowLie<E extends Entity> extends Lie {
     /**
      * Gets the current outline colour for this lie's entity.
      *
@@ -34,28 +34,29 @@ public interface EntityGlowLie extends Lie {
      *
      * @return Entity that this lie is highlighting.
      */
-    Entity entity();
+    E entity();
 
     /**
      * Create a new builder for an entity glow lie.
      *
      * @param entity Entity to create a fake outline for.
      * @return A new glow lie builder for the given entity.
+     * @param <E> Type of entity to make a lie of.
      */
-    static Builder builder(Entity entity) {
-        return new Builder(entity);
+    static <E extends Entity> Builder<E> builder(E entity) {
+        return new Builder<>(entity);
     }
 
     /**
      * Class for building an entity glow lie.
      */
-    class Builder {
-        private final Entity entity;
+    class Builder<E extends Entity> {
+        private final E entity;
         private @Nullable ChatFormatting initialColour = ChatFormatting.WHITE;
-        private @Nullable TickCallback tickCallback = null;
-        private @Nullable FadeCallback fadeCallback = null;
+        private @Nullable TickCallback<E> tickCallback = null;
+        private @Nullable FadeCallback<E> fadeCallback = null;
 
-        private Builder(Entity entity) {
+        private Builder(E entity) {
             this.entity = entity;
         }
 
@@ -66,7 +67,7 @@ public interface EntityGlowLie extends Lie {
          *               defaults to white. If the passed colour is <code>null</code>, removes the outline.
          * @return This entity glow lie builder.
          */
-        public Builder colour(@Nullable ChatFormatting colour) {
+        public Builder<E> colour(@Nullable ChatFormatting colour) {
             this.initialColour = FakeTeamUtil.ensureValidColour(colour);
             return this;
         }
@@ -77,7 +78,7 @@ public interface EntityGlowLie extends Lie {
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity glow lie builder.
          */
-        public Builder onTick(TickCallback callback) {
+        public Builder<E> onTick(TickCallback<E> callback) {
             this.tickCallback = callback;
             return this;
         }
@@ -93,7 +94,7 @@ public interface EntityGlowLie extends Lie {
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity glow lie builder.
          */
-        public Builder onFade(FadeCallback callback) {
+        public Builder<E> onFade(FadeCallback<E> callback) {
             this.fadeCallback = callback;
             return this;
         }
@@ -104,8 +105,8 @@ public interface EntityGlowLie extends Lie {
          * @param players Players to initially send this lie to.
          * @return The constructed entity glow lie.
          */
-        public EntityGlowLie createAndShow(ServerPlayer... players) {
-            var lie = new EntityGlowLieImpl(entity, initialColour, tickCallback, fadeCallback);
+        public EntityGlowLie<E> createAndShow(ServerPlayer... players) {
+            var lie = new EntityGlowLieImpl<>(entity, initialColour, tickCallback, fadeCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);
             return lie;
@@ -115,26 +116,26 @@ public interface EntityGlowLie extends Lie {
     /**
      * A callback ran every tick for every player viewing this lie.
      */
-    interface TickCallback {
+    interface TickCallback<E extends Entity> {
         /**
          * Ran every tick, for every player currently viewing this lie.
          *
          * @param player Player this lie is being ticked with.
          * @param lie    Lie that is being ticked.
          */
-        void onTick(ServerPlayer player, EntityGlowLie lie);
+        void onTick(ServerPlayer player, EntityGlowLie<E> lie);
     }
 
     /**
      * A callback ran when this lie is faded. This includes when a player disconnects.
      */
-    interface FadeCallback {
+    interface FadeCallback<E extends Entity> {
         /**
          * Ran when a player is removed from this lie.
          *
          * @param player Player being removed from this lie.
          * @param lie    Lie that the player is being removed from.
          */
-        void onFade(ServerPlayer player, EntityGlowLie lie);
+        void onFade(ServerPlayer player, EntityGlowLie<E> lie);
     }
 }

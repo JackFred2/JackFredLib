@@ -12,7 +12,7 @@ public class FakeGlowPacketMeddling {
 
 
     // Modify a packet, so as to force glowing if needed by a lie.
-    public static ClientboundSetEntityDataPacket modifyPacket(ClientboundSetEntityDataPacket original, EntityGlowLieImpl entityGlowLie) {
+    public static ClientboundSetEntityDataPacket modifyPacket(ClientboundSetEntityDataPacket original, EntityGlowLieImpl<?> entityGlowLie) {
         if (entityGlowLie.glowColour() == null) return original;
         List<SynchedEntityData.DataValue<?>> copy = new ArrayList<>(original.packedItems().size() + 1);
         boolean hasAddedGlowing = false;

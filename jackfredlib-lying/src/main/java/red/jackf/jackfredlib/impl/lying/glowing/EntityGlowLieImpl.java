@@ -15,15 +15,15 @@ import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
 import java.util.List;
 
-public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
+public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements EntityGlowLie<E> {
     private static final EntityDataAccessor<Byte> DATA = Entity.DATA_SHARED_FLAGS_ID;
 
-    private final Entity entity;
+    private final E entity;
     private ChatFormatting colour;
-    private final @Nullable TickCallback tickCallback;
-    private final @Nullable FadeCallback fadeCallback;
+    private final @Nullable TickCallback<E> tickCallback;
+    private final @Nullable FadeCallback<E> fadeCallback;
 
-    public EntityGlowLieImpl(Entity entity, ChatFormatting colour, @Nullable TickCallback tickCallback, @Nullable FadeCallback fadeCallback) {
+    public EntityGlowLieImpl(E entity, ChatFormatting colour, @Nullable TickCallback<E> tickCallback, @Nullable FadeCallback<E> fadeCallback) {
         this.entity = entity;
         this.colour = colour;
         this.tickCallback = tickCallback;
@@ -57,7 +57,7 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
     }
 
     @Override
-    public Entity entity() {
+    public E entity() {
         return entity;
     }
 
