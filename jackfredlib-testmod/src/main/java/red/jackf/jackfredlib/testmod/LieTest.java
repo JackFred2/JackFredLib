@@ -113,12 +113,17 @@ public class LieTest {
                                 .colour(randomColour())
                                 .onFade((player2, lie2) -> player2.playSound(SoundEvents.NOTE_BLOCK_CHIME.value()))
                                 .onTick((player2, lie2) -> {
-                                    if (lie2.entity().level().getGameTime() % 15 == 0) {
-                                        lie2.setGlowColour(randomColour());
+                                    if (lie2.entity().level().getGameTime() % 20 == 0) {
+                                        var existingCol = lie2.glowColour();
+                                        if (existingCol != null) {
+                                            lie2.setGlowColour(null);
+                                        } else {
+                                            lie2.setGlowColour(randomColour());
+                                        }
                                     }
                                 })
                                 .createAndShow(serverPlayer);
-                        Debris.INSTANCE.schedule(lie, 15 * SharedConstants.TICKS_PER_SECOND);
+                        Debris.INSTANCE.schedule(lie, 30 * SharedConstants.TICKS_PER_SECOND);
                     }
                 }
             }

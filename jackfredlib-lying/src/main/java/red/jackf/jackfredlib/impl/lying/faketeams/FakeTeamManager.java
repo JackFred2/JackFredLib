@@ -7,6 +7,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import red.jackf.jackfredlib.mixins.lying.ClientboundSetPlayerTeamInvoker;
 
 import java.util.Optional;
@@ -26,8 +27,8 @@ public enum FakeTeamManager {
             visible.get(colour).remove(profile);
     }
 
-    public void addToTeam(ServerPlayer player, Entity entity, ChatFormatting colour) {
-        if (!colour.isColor()) colour = ChatFormatting.WHITE;
+    public void addToTeam(ServerPlayer player, Entity entity, @NotNull ChatFormatting colour) {
+        colour = FakeTeamUtil.ensureValidColour(colour);
 
         if (!visible.get(colour).contains(player.getGameProfile())) {
             var packet = ClientboundSetPlayerTeamInvoker.createManually(
@@ -66,8 +67,8 @@ public enum FakeTeamManager {
         }
     }
 
-    public void removeFromTeam(ServerPlayer player, Entity entity, ChatFormatting colour) {
-        if (!colour.isColor()) colour = ChatFormatting.WHITE;
+    public void removeFromTeam(ServerPlayer player, Entity entity, @NotNull ChatFormatting colour) {
+        colour = FakeTeamUtil.ensureValidColour(colour);
 
         if (visible.get(colour).contains(player.getGameProfile())) {
             var packet = ClientboundSetPlayerTeamInvoker.createManually(

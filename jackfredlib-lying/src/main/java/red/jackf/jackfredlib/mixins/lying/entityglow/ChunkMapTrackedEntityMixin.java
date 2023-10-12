@@ -11,6 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import red.jackf.jackfredlib.impl.lying.LieManager;
 import red.jackf.jackfredlib.impl.lying.glowing.FakeGlowPacketMeddling;
 
+/**
+ * Modifies an entities' initial data packet so as to add a glowing tag if needed by an entity glow lie..
+ *
+ * @author JackFred
+ */
 @Mixin(ChunkMap.TrackedEntity.class)
 public class ChunkMapTrackedEntityMixin {
 
@@ -23,7 +28,7 @@ public class ChunkMapTrackedEntityMixin {
         if (packet instanceof ClientboundSetEntityDataPacket entityData) {
             var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityId(connection.getPlayer(), entityData.id());
             if (lie.isPresent()) {
-                original.call(connection, FakeGlowPacketMeddling.modifyPacket(entityData, lie.get().entity()));
+                original.call(connection, FakeGlowPacketMeddling.modifyPacket(entityData, lie.get()));
                 return;
             }
         }

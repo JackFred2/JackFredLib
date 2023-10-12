@@ -16,7 +16,7 @@ public class ServerEntityMixin {
             at = @At(value = "NEW", args = "class=net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket"))
     private ClientboundSetEntityDataPacket jackfredlib$changeGlowingForLies(ClientboundSetEntityDataPacket originalPacket, ServerPlayer player) {
         var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityId(player, originalPacket.id());
-        return lie.map(glowLie -> FakeGlowPacketMeddling.modifyPacket(originalPacket, glowLie.entity()))
+        return lie.map(glowLie -> FakeGlowPacketMeddling.modifyPacket(originalPacket, glowLie))
                 .orElse(originalPacket);
     }
 }

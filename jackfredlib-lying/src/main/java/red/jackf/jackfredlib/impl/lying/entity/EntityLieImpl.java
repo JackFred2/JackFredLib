@@ -12,6 +12,7 @@ import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 import red.jackf.jackfredlib.impl.lying.LieImpl;
 import red.jackf.jackfredlib.impl.lying.LieManager;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
+import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
 public class EntityLieImpl extends LieImpl implements EntityLie {
     private final Entity entity;
@@ -52,7 +53,7 @@ public class EntityLieImpl extends LieImpl implements EntityLie {
 
     @Override
     public void setGlowColour(@Nullable ChatFormatting colour) {
-        if (colour != null && !colour.isColor()) colour = ChatFormatting.WHITE;
+        colour = FakeTeamUtil.ensureValidColour(colour);
         if (colour == this.glowColour) return;
         if (colour == null) {
             this.entity.setGlowingTag(false);

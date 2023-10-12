@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.impl.lying.entity.EntityLieImpl;
+import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
 /**
  * <p>Represents an active Entity Lie being sent to one or more players.</p>
@@ -73,12 +74,12 @@ public interface EntityLie extends Lie {
          * @implNote Modifies the entity's glowing tag accordingly.
          */
         public Builder glowColour(@Nullable ChatFormatting colour) {
+            colour = FakeTeamUtil.ensureValidColour(colour);
             if (colour == null) {
                 this.entity.setGlowingTag(false);
                 this.glowColour = null;
                 return this;
             } else {
-                if (!colour.isColor()) colour = ChatFormatting.WHITE;
                 this.entity.setGlowingTag(true);
                 this.glowColour = colour;
                 return this;

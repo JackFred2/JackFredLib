@@ -7,18 +7,29 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.world.scores.Team;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class FakeTeamUtil {
+public class FakeTeamUtil {
+    private FakeTeamUtil() {}
+
     static final List<ChatFormatting> COLOURS = Arrays.stream(ChatFormatting.values())
             .filter(ChatFormatting::isColor)
             .toList();
 
     static final Map<ChatFormatting, ClientboundSetPlayerTeamPacket.Parameters> FAKE_PARAMETERS = generateFakeParameters();
+
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable ChatFormatting ensureValidColour(@Nullable ChatFormatting colour) {
+        if (colour == null) return null;
+        if (!colour.isColor()) return ChatFormatting.WHITE;
+        return colour;
+    }
 
     private static Map<ChatFormatting, ClientboundSetPlayerTeamPacket.Parameters> generateFakeParameters() {
         var map = new HashMap<ChatFormatting, ClientboundSetPlayerTeamPacket.Parameters>(16);

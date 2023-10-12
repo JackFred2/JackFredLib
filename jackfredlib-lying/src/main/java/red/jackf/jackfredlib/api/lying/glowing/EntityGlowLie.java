@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.api.lying.Lie;
+import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
 
 /**
@@ -16,17 +17,17 @@ public interface EntityGlowLie extends Lie {
     /**
      * Gets the current outline colour for this lie's entity.
      *
-     * @return The entity's current outline colour.
+     * @return The entity's current outline colour, or <code>null</code> if none.
      */
-    ChatFormatting glowColour();
+    @Nullable ChatFormatting glowColour();
 
     /**
      * Sets this entity's outline colour to the given colour. If the passed <code>ChatFormatting</code> is not a colour,
-     * defaults to white.
+     * defaults to white. If the passed colour is <code>null</code>, removes the outline.
      *
-     * @param colour Colour to set the outline to.
+     * @param colour Colour to set the outline to. Pass <code>null</code> to remove the outline.
      */
-    void setGlowColour(ChatFormatting colour);
+    void setGlowColour(@Nullable ChatFormatting colour);
 
     /**
      * Entity that this lie is highlighting.
@@ -47,7 +48,7 @@ public interface EntityGlowLie extends Lie {
 
     class Builder {
         private final Entity entity;
-        private ChatFormatting colour = ChatFormatting.WHITE;
+        private @Nullable ChatFormatting initialColour = ChatFormatting.WHITE;
         private @Nullable TickCallback tickCallback = null;
         private @Nullable FadeCallback fadeCallback = null;
 
@@ -56,14 +57,14 @@ public interface EntityGlowLie extends Lie {
         }
 
         /**
-         * Sets the colour for this entity's glowing outline.
+         * Sets the initial colour for this entity's glowing outline.
          *
          * @param colour Colour to set the outline to. If the passed <code>ChatFormatting</code> is not a colour,
-         *               defaults to white.
+         *               defaults to white. If the passed colour is <code>null</code>, removes the outline.
          * @return This entity glow lie builder.
          */
-        public Builder colour(ChatFormatting colour) {
-            this.colour = colour.isColor() ? colour : ChatFormatting.WHITE;
+        public Builder colour(@Nullable ChatFormatting colour) {
+            this.initialColour = FakeTeamUtil.ensureValidColour(colour);
             return this;
         }
 
@@ -99,7 +100,7 @@ public interface EntityGlowLie extends Lie {
          * @return The constructed entity glow lie.
          */
         public EntityGlowLie createAndShow(ServerPlayer... players) {
-            var lie = new EntityGlowLieImpl(entity, colour, tickCallback, fadeCallback);
+            var lie = new EntityGlowLieImpl(entity, initialColour, tickCallback, fadeCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);
             return lie;

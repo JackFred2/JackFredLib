@@ -11,6 +11,7 @@ import red.jackf.jackfredlib.api.lying.glowing.EntityGlowLie;
 import red.jackf.jackfredlib.impl.lying.LieImpl;
 import red.jackf.jackfredlib.impl.lying.LieManager;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
+import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
 import java.util.List;
 
@@ -36,19 +37,52 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
 
     @Override
     public void setGlowColour(ChatFormatting colour) {
-        var newColour = colour.isColor() ? colour : ChatFormatting.WHITE;
+        var newColour = FakeTeamUtil.ensureValidColour(colour);
         if (newColour != this.colour) {
-            this.colour = newColour;
-
-            for (var player : this.getViewingPlayers()) {
-                FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.colour);
+            if (newColour == null) {
+                for (var player : this.getViewingPlayers()) {
+                    removeFakeGlowDataFromPlayer(player);
+                    FakeTeamManager.INSTANCE.removeFromTeam(player, this.entity, this.colour);
+                }
+            } else {
+                for (var player : this.getViewingPlayers()) {
+                    // adding an entity to a team removes it from the old anyway
+                    if (this.colour == null) sendFakeGlowDataToPlayer(player);
+                    FakeTeamManager.INSTANCE.addToTeam(player, this.entity, newColour);
+                }
             }
+
+            this.colour = newColour;
         }
     }
 
     @Override
     public Entity entity() {
         return entity;
+    }
+
+    private void sendFakeGlowDataToPlayer(ServerPlayer player) {
+        var dataValue = new SynchedEntityData.DataValue<>(
+            DATA.getId(),
+            DATA.getSerializer(),
+            (byte) (this.entity.getEntityData().get(DATA) | (1 << Entity.FLAG_GLOWING))
+        );
+        player.connection.send(new ClientboundSetEntityDataPacket(
+                this.entity.getId(),
+                List.of(dataValue))
+        );
+    }
+
+    private void removeFakeGlowDataFromPlayer(ServerPlayer player) {
+        var dataValue = new SynchedEntityData.DataValue<>(
+                DATA.getId(),
+                DATA.getSerializer(),
+                this.entity.getEntityData().get(DATA)
+        );
+        player.connection.send(new ClientboundSetEntityDataPacket(
+                this.entity.getId(),
+                List.of(dataValue))
+        );
     }
 
     @Override
@@ -58,16 +92,11 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
 
         super.addPlayer(player);
 
-        var dataValue = new SynchedEntityData.DataValue<>(
-                DATA.getId(),
-                DATA.getSerializer(),
-                (byte) (entity.getEntityData().get(DATA) | (1 << Entity.FLAG_GLOWING))
-        );
-        player.connection.send(new ClientboundSetEntityDataPacket(
-                entity.getId(),
-                List.of(dataValue))
-        );
-        FakeTeamManager.INSTANCE.addToTeam(player, entity, colour);
+        if (this.colour != null) {
+            // fake the glowing data for an entity
+            sendFakeGlowDataToPlayer(player);
+            FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.colour);
+        }
     }
 
     @Override
@@ -75,16 +104,9 @@ public class EntityGlowLieImpl extends LieImpl implements EntityGlowLie {
         LieManager.INSTANCE.removeEntityGlow(player, this);
         super.removePlayer(player);
 
-        var dataValue = new SynchedEntityData.DataValue<>(
-                DATA.getId(),
-                DATA.getSerializer(),
-                entity.getEntityData().get(DATA)
-        );
-        player.connection.send(new ClientboundSetEntityDataPacket(
-                entity.getId(),
-                List.of(dataValue))
-        );
-        FakeTeamManager.INSTANCE.removeFromTeam(player, entity, colour);
+        // remove the glowing data for an entity
+        removeFakeGlowDataFromPlayer(player);
+        FakeTeamManager.INSTANCE.removeFromTeam(player, this.entity, this.colour);
 
         if (this.fadeCallback != null)
             this.fadeCallback.onFade(player, this);
