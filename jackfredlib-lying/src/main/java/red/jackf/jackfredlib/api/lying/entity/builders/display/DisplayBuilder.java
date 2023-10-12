@@ -26,6 +26,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     /**
      * Create a new Display builder. Don't use directly, use a method in {@link red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders}.
      *
+     * @param type Type of entity to create.
      * @param level Level to create the fake entity in.
      */
     @ApiStatus.Internal

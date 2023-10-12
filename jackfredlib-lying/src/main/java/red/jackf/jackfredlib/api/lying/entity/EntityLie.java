@@ -53,6 +53,9 @@ public interface EntityLie extends Lie {
         return new Builder(entity);
     }
 
+    /**
+     * Class for building an Entity Lie.
+     */
     class Builder {
         private final Entity entity;
         private @Nullable ChatFormatting glowColour = null;
@@ -99,9 +102,11 @@ public interface EntityLie extends Lie {
 
         /**
          * Adds a callback to be ran when this lie is removed from a player. Practically, this is called when:
-         * <li>The lie's {@link Lie#fade()} method is called, for each player;</li>
-         * <li>A player is removed using {@link Lie#removePlayer(ServerPlayer)};</li>
-         * <li>A player disconnects from the server.</li>
+         * <ul>
+             * <li>The lie's {@link Lie#fade()} method is called, for each player;</li>
+             * <li>A player is removed using {@link Lie#removePlayer(ServerPlayer)};</li>
+             * <li>A player disconnects from the server.</li>
+         * </ul>
          *
          * @param callback Callback to add to this lie. If <code>null</code>, removes the callback.
          * @return This entity lie builder.
