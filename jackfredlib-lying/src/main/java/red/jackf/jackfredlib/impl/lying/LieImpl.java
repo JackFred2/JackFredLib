@@ -6,6 +6,7 @@ import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import red.jackf.jackfredlib.api.lying.Lie;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +22,7 @@ public abstract class LieImpl implements Lie {
         if (this.faded) return;
         this.faded = true;
 
-        for (ServerPlayer player : this.players)
+        for (ServerPlayer player : List.copyOf(this.players))
             this.removePlayer(player);
     }
 
