@@ -125,7 +125,7 @@ public class LieTest {
                     } else {
                         System.out.println("ID: " + entity.getId());
                         var lie = EntityGlowLie.builder(entity)
-                                .colour(player.isShiftKeyDown() ? null : randomColour())
+                                .colour(randomColour())
                                 .onFade((player2, lie2) -> player2.playSound(SoundEvents.NOTE_BLOCK_CHIME.value()))
                                 .onTick(player.isShiftKeyDown() ? null : (player2, lie2) -> {
                                     //noinspection resource

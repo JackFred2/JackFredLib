@@ -296,6 +296,16 @@ if (canPublish) {
         newTag.set(newTagVal)
         githubUrl.set(properties["github_url"]!!.toString())
         prefixFilters.set(properties["changelog_filter"]!!.toString().split(","))
+
+        // Add a bundled block for each module version
+        prologue.set("""
+			|Bundled:
+			|  - Mixin Extras: ${properties["mixin_extras_version"]}
+			${
+            subprojects.filter { it.name != "jackfredlib-testmod" }
+                .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.properties["module_version"]}+${it.properties["minecraft_version"]}" }
+        }
+			""".trimMargin())
     }
 
     tasks.named<GithubReleaseTask>("githubRelease") {
