@@ -6,7 +6,10 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.network.ServerPlayerConnection;
+import net.minecraft.world.entity.Entity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import red.jackf.jackfredlib.impl.lying.LieManager;
 import red.jackf.jackfredlib.impl.lying.glowing.FakeGlowPacketMeddling;
@@ -18,15 +21,18 @@ import red.jackf.jackfredlib.impl.lying.glowing.FakeGlowPacketMeddling;
  */
 @Mixin(ChunkMap.TrackedEntity.class)
 public class ChunkMapTrackedEntityMixin {
+    @Shadow
+    @Final
+    Entity entity;
 
     @WrapOperation(method = "broadcast(Lnet/minecraft/network/protocol/Packet;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerConnection;send(Lnet/minecraft/network/protocol/Packet;)V"))
-    private static void jackfredlib$modifyDataPacket(
+    private void jackfredlib$modifyDataPacket(
             ServerPlayerConnection connection,
             Packet<?> packet,
             Operation<Void> original) {
         if (packet instanceof ClientboundSetEntityDataPacket entityData) {
-            var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityId(connection.getPlayer(), entityData.id());
+            var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityUuid(connection.getPlayer(), this.entity.getUUID());
             if (lie.isPresent()) {
                 original.call(connection, FakeGlowPacketMeddling.modifyPacket(entityData, lie.get()));
                 return;

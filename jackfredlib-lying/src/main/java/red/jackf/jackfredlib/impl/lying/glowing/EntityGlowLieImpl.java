@@ -18,7 +18,7 @@ import java.util.List;
 public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements EntityGlowLie<E> {
     private static final EntityDataAccessor<Byte> DATA = Entity.DATA_SHARED_FLAGS_ID;
 
-    private final E entity;
+    private E entity;
     private ChatFormatting colour;
     private final @Nullable TickCallback<E> tickCallback;
     private final @Nullable FadeCallback<E> fadeCallback;
@@ -59,6 +59,10 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
     @Override
     public E entity() {
         return entity;
+    }
+
+    public void setEntity(E entity) {
+        this.entity = entity;
     }
 
     private void sendFakeGlowDataToPlayer(ServerPlayer player) {

@@ -119,14 +119,15 @@ public class LieTest {
             if (hand == InteractionHand.MAIN_HAND && hitResult != null && player instanceof ServerPlayer serverPlayer) {
                 var handStack = player.getItemInHand(hand);
                 if (handStack.is(Items.GLOW_INK_SAC)) {
-                    var existing = LieManager.INSTANCE.getEntityGlowLieFromEntityId(serverPlayer, entity.getId());
+                    var existing = LieManager.INSTANCE.getEntityGlowLieFromEntityUuid(serverPlayer, entity.getUUID());
                     if (existing.isPresent()) {
                         existing.get().fade();
                     } else {
+                        System.out.println("ID: " + entity.getId());
                         var lie = EntityGlowLie.builder(entity)
-                                .colour(randomColour())
+                                .colour(player.isShiftKeyDown() ? null : randomColour())
                                 .onFade((player2, lie2) -> player2.playSound(SoundEvents.NOTE_BLOCK_CHIME.value()))
-                                .onTick((player2, lie2) -> {
+                                .onTick(player.isShiftKeyDown() ? null : (player2, lie2) -> {
                                     //noinspection resource
                                     if (lie2.entity().level().getGameTime() % 20 == 0) {
                                         var existingCol = lie2.glowColour();

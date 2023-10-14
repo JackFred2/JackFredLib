@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.impl.lying;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -28,9 +29,9 @@ public class ModuleEntrypoint implements ModInitializer {
 
 		ServerPlayConnectionEvents.DISCONNECT.register(ModuleEntrypoint::onPlayerDisconnect);
 
-		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-			LieManager.INSTANCE.migratePlayerInstance(oldPlayer, newPlayer);
-		});
+		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> LieManager.INSTANCE.migrateEntity(entity));
+
+		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> LieManager.INSTANCE.migratePlayerInstance(oldPlayer, newPlayer));
 	}
 
 	private static void onPlayerDisconnect(
