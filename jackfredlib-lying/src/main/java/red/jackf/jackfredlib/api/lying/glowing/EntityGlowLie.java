@@ -30,7 +30,8 @@ public interface EntityGlowLie<E extends Entity> extends Lie {
     void setGlowColour(@Nullable ChatFormatting colour);
 
     /**
-     * Entity that this lie is highlighting.
+     * Entity that this lie is highlighting. This may not return the same instance over the lie's lifespan due to chunk
+     * load/unloading.
      *
      * @return Entity that this lie is highlighting.
      */
