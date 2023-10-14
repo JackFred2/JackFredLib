@@ -10,6 +10,8 @@ import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.impl.lying.entity.EntityLieImpl;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
+import java.util.Collection;
+
 /**
  * <p>Represents an active Entity Lie being sent to one or more players.</p>
  * <p>An entity lie is a fake entity that is sent to the player on the packet level. They do not exist on the server, but
@@ -146,6 +148,19 @@ public interface EntityLie<E extends Entity> extends Lie {
          * @return The constructed entity lie.
          */
         public EntityLie<E> createAndShow(ServerPlayer... players) {
+            var lie = new EntityLieImpl<>(entity, glowColour, tickCallback, fadeCallback, leftClickCallback, rightClickCallback);
+            for (ServerPlayer player : players)
+                lie.addPlayer(player);
+            return lie;
+        }
+
+        /**
+         * Create this entity lie, and show it to the given set of initial players.
+         *
+         * @param players Players to initially send this lie to.
+         * @return The constructed entity lie.
+         */
+        public EntityLie<E> createAndShow(Collection<ServerPlayer> players) {
             var lie = new EntityLieImpl<>(entity, glowColour, tickCallback, fadeCallback, leftClickCallback, rightClickCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);

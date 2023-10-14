@@ -8,6 +8,8 @@ import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
 
+import java.util.Collection;
+
 /**
  * <p>Represents an active Entity Glow Lie being sent to one or more players.</p>
  * <p>An entity glow lie adds a glowing border to an existing entity, via faking an entity's glowing packet and team.
@@ -107,6 +109,19 @@ public interface EntityGlowLie<E extends Entity> extends Lie {
          * @return The constructed entity glow lie.
          */
         public EntityGlowLie<E> createAndShow(ServerPlayer... players) {
+            var lie = new EntityGlowLieImpl<>(entity, initialColour, tickCallback, fadeCallback);
+            for (ServerPlayer player : players)
+                lie.addPlayer(player);
+            return lie;
+        }
+
+        /**
+         * Create this entity glow lie, and show it to the given set of initial players.
+         *
+         * @param players Players to initially send this lie to.
+         * @return The constructed entity glow lie.
+         */
+        public EntityGlowLie<E> createAndShow(Collection<ServerPlayer> players) {
             var lie = new EntityGlowLieImpl<>(entity, initialColour, tickCallback, fadeCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);
