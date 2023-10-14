@@ -8,6 +8,7 @@ import red.jackf.jackfredlib.impl.base.LogUtil;
 import red.jackf.jackfredlib.impl.lying.entity.EntityLieImpl;
 import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 public class LieManager {
@@ -25,8 +26,10 @@ public class LieManager {
      * Call the tick callbacks for each lie.
      */
     public void tick() {
-        this.entityGlowLies.entries().forEach(entry -> entry.getValue().tick(entry.getKey()));
-        this.entityLies.entries().forEach(entry -> entry.getValue().tick(entry.getKey()));
+        if (!this.entityGlowLies.isEmpty())
+            List.copyOf(this.entityGlowLies.entries()).forEach(entry -> entry.getValue().tick(entry.getKey()));
+        if (!this.entityLies.isEmpty())
+            List.copyOf(this.entityLies.entries()).forEach(entry -> entry.getValue().tick(entry.getKey()));
     }
 
     /**

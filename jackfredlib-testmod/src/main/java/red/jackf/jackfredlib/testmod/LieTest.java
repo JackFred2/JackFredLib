@@ -101,6 +101,19 @@ public class LieTest {
                     .glowColour(ChatFormatting.AQUA)
                     .createAndShow(player);
         });
+        ENTITY_LIES.put(Items.GOLDEN_HOE, (level, pos, player) -> {
+            var entity = EntityBuilders.generic(EntityType.ALLAY, level)
+                    .position(pos)
+                    .facing(player)
+                    .alwaysRenderName(true)
+                    .build();
+            return EntityLie.builder(entity)
+                    .onTick((player1, lie) -> {
+                        if (Math.random() < 0.02) lie.fade();
+                    })
+                    .glowColour(ChatFormatting.RED)
+                    .createAndShow(player);
+        });
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             if (hand == InteractionHand.MAIN_HAND && hitResult != null && player instanceof ServerPlayer serverPlayer) {
@@ -114,6 +127,7 @@ public class LieTest {
                                 .colour(randomColour())
                                 .onFade((player2, lie2) -> player2.playSound(SoundEvents.NOTE_BLOCK_CHIME.value()))
                                 .onTick((player2, lie2) -> {
+                                    //noinspection resource
                                     if (lie2.entity().level().getGameTime() % 20 == 0) {
                                         var existingCol = lie2.glowColour();
                                         if (existingCol != null) {
