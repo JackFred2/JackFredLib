@@ -11,7 +11,7 @@ Collection of common utilities for my Minecraft mods, and where I'm figuring out
 - GPS module for client-only mods to determine where they are without server support - think minimap data, or for a 
   practical example [Chest Tracker](https://modrinth.com/mod/chest-tracker).
 
-Feel free to use yourself (via GitHub Package Registry).
+Feel free to use yourself (see wiki for instructions and a basic overview).
 
 ## Usage:
 
