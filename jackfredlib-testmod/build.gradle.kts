@@ -36,6 +36,8 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
+
+    mavenCentral()
 }
 
 dependencies {
@@ -46,7 +48,6 @@ dependencies {
     }
 
     modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
-    modRuntimeOnly("com.github.llamalad7.mixinextras:mixinextras-fabric:${properties["mixin_extras_version"]}")
 }
 
 tasks.withType<JavaCompile>().configureEach {

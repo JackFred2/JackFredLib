@@ -96,13 +96,7 @@ allprojects {
                 includeGroup("org.parchmentmc.data")
             }
         }
-        maven {
-            name = "JitPack"
-            url = uri("https://jitpack.io")
-            content {
-                includeGroupByRegex("com.github.llamalad7.*")
-            }
-        }
+        mavenCentral()
     }
 
     val loom = project.extensions.getByType<LoomGradleExtensionAPI>()
@@ -116,10 +110,13 @@ allprojects {
         add("modImplementation", "net.fabricmc:fabric-loader:${properties["loader_version"]}")
         add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
 
-        add("include",
-            add("implementation",
-                add("annotationProcessor",
-                    "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!)
+        // add mixin extras as a depdendency to all, but only bundle on root project
+        val mixinExtrasDep = add("implementation",
+            add("annotationProcessor",
+                "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!
+
+        if (this@allprojects == rootProject)
+            add("include", mixinExtrasDep)
     }
 
     ///////////////
