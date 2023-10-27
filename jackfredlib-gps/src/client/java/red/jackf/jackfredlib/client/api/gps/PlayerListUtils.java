@@ -11,6 +11,22 @@ import java.util.Optional;
  */
 public class PlayerListUtils {
     /**
+     * Return the header of the player list if one exists, an empty optional if not present
+     * @return An Optional containing the current header for the in-game player list, or an empty Optional if not present.
+     */
+    public static Optional<String> getHeader() {
+        return Optional.ofNullable(GPSUtilImpl.getPlayerListHeader());
+    }
+
+    /**
+     * Return the footer of the player list if one exists, an empty optional if not present
+     * @return An Optional containing the current footer for the in-game player list, or an empty Optional if not present.
+     */
+    public static Optional<String> getFooter() {
+        return Optional.ofNullable(GPSUtilImpl.getPlayerListFooter());
+    }
+
+    /**
      * Return a list of all tab list entries as strings.
      *
      * @return A list of all tab list entries, mapped to a string.

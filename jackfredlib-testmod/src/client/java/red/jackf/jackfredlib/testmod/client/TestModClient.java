@@ -45,6 +45,14 @@ public class TestModClient implements ClientModInitializer {
                             literal("scoreboard").executes(ctx -> {
                                 LOGGER.info(ScoreboardUtils.getRows().toString());
                                 return 0;
+                            })).then(
+                            literal("header").executes(ctx -> {
+                                LOGGER.info(PlayerListUtils.getHeader().toString());
+                                return 0;
+                            })).then(
+                            literal("footer").executes(ctx -> {
+                                LOGGER.info(PlayerListUtils.getFooter().toString());
+                                return 0;
                             }))));
     }
 }
