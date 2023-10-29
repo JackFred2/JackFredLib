@@ -7,7 +7,6 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,19 +30,18 @@ public class ServerGamePacketListenerImplMixin {
             locals = LocalCapture.CAPTURE_FAILHARD)
     private void handleFakeEntities(ServerboundInteractPacket packet, CallbackInfo ci, final ServerLevel serverLevel, final Entity entity) {
         if (entity == null) {
+            final int entityId = ((ServerboundInteractPacketAccessor) packet).invokeGetEntityId();
             packet.dispatch(new ServerboundInteractPacket.Handler() {
 
                 @Override
                 public void onAttack() {
-                    @Nullable Entity existingEntity = ((ServerboundInteractPacketAccessor) packet).invokeGetTarget(serverLevel);
-                    if (existingEntity != null)
-                        LieManager.INSTANCE.getEntityLieFromEntityUuid(player, existingEntity.getUUID())
-                                .ifPresent(entityLie -> {
-                                    Vec3 from = player.getEyePosition();
-                                    Vec3 to = from.add(player.getLookAngle().scale(6));
-                                    Optional<Vec3> collision = entityLie.entity().getBoundingBox().clip(from, to);
-                                    collision.ifPresent(vec3 -> entityLie.leftClick(player, packet.isUsingSecondaryAction(), vec3));
-                                });
+                    LieManager.INSTANCE.getEntityLieFromId(player, entityId)
+                            .ifPresent(entityLie -> {
+                                Vec3 from = player.getEyePosition();
+                                Vec3 to = from.add(player.getLookAngle().scale(6));
+                                Optional<Vec3> collision = entityLie.entity().getBoundingBox().clip(from, to);
+                                collision.ifPresent(vec3 -> entityLie.leftClick(player, packet.isUsingSecondaryAction(), vec3));
+                            });
                 }
 
                 @Override
@@ -53,10 +51,8 @@ public class ServerGamePacketListenerImplMixin {
 
                 @Override
                 public void onInteraction(InteractionHand hand, Vec3 interactionLocation) {
-                    @Nullable Entity existingEntity = ((ServerboundInteractPacketAccessor) packet).invokeGetTarget(serverLevel);
-                    if (existingEntity != null)
-                        LieManager.INSTANCE.getEntityLieFromEntityUuid(player, existingEntity.getUUID())
-                                .ifPresent(entityLie -> entityLie.rightClick(player, packet.isUsingSecondaryAction(), hand, interactionLocation));
+                    LieManager.INSTANCE.getEntityLieFromId(player, entityId)
+                            .ifPresent(entityLie -> entityLie.rightClick(player, packet.isUsingSecondaryAction(), hand, interactionLocation));
                 }
             });
         }
