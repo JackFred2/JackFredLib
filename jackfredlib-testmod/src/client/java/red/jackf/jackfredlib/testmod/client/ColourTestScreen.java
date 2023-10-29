@@ -69,7 +69,7 @@ public class ColourTestScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         GradientUtils.drawHorizontalGradient(graphics, 10, 40, 410, 20, Gradients.RAINBOW, 0f, 1f);
 

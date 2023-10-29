@@ -4,10 +4,10 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Score;
+import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.client.mixins.gps.PlayerTabOverlayAccessor;
 
@@ -59,12 +59,16 @@ public class GPSUtilImpl {
         if (mc.level == null || mc.player == null) return null;
         var scoreboard = mc.level.getScoreboard();
         Objective obj = null;
+
         var playerTeam = scoreboard.getPlayerTeam(mc.player.getScoreboardName());
+
         if (playerTeam != null) {
-            var displaySlot = DisplaySlot.teamColorToSlot(playerTeam.getColor());
-            if (displaySlot != null) obj = scoreboard.getDisplayObjective(displaySlot);
+            int colourIndex = playerTeam.getColor().getId();
+            if (colourIndex >= 0) obj = scoreboard.getDisplayObjective(Scoreboard.DISPLAY_SLOT_TEAMS_SIDEBAR_START + colourIndex);
         }
-        if (obj == null) obj = scoreboard.getDisplayObjective(DisplaySlot.SIDEBAR);
+
+        if (obj == null) obj = scoreboard.getDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR);
+
         return obj;
     }
 }

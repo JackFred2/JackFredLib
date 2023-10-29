@@ -16,7 +16,7 @@
   "environment": "client",
   "depends": {
     "fabricloader": "*",
-    "minecraft": ">1.20.1",
+    "minecraft": "<=1.20.1",
     "jackfredlib-base": "*"
   },
   "custom": {

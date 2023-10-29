@@ -41,7 +41,7 @@ public class CoordinateGrabber {
         if (serverData == null) return Optional.empty();
 
         // Minecraft Realms
-        if (serverData.isRealm()) {
+        if (mc.isConnectedToRealms()) {
             return Optional.of(new Coordinate.Realms(
                     "realms/" + Sanitizer.sanitize(StringUtils.leftPad(Long.toHexString(lastRealmId).toUpperCase(Locale.ROOT), 16, '0')),
                     I18n.get("menu.online") + ": " + lastRealmName
