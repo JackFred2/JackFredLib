@@ -35,7 +35,7 @@ public class GradientUtils {
         if (gradientStart == gradientEnd) GuiComponent.fill(poseStack, x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
         gradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
@@ -73,7 +73,7 @@ public class GradientUtils {
         if (gradientStart == gradientEnd) GuiComponent.fill(poseStack, x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
         gradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
