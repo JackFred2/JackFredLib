@@ -20,9 +20,9 @@ public class ServerEntityMixin {
 
     @ModifyExpressionValue(method = "sendPairingData",
             at = @At(value = "NEW", args = "class=net/minecraft/network/protocol/game/ClientboundSetEntityDataPacket"))
-    private ClientboundSetEntityDataPacket jackfredlib$changeGlowingForLies(ClientboundSetEntityDataPacket originalPacket, ServerPlayer player) {
+    private ClientboundSetEntityDataPacket jackfredlib$changeGlowingForLies(ClientboundSetEntityDataPacket original) {
         var lie = LieManager.INSTANCE.getEntityGlowLieFromEntityUuid(player, this.entity.getUUID());
-        return lie.map(glowLie -> FakeGlowPacketMeddling.modifyPacket(originalPacket, glowLie))
-                .orElse(originalPacket);
+        return lie.map(glowLie -> FakeGlowPacketMeddling.modifyPacket(original, glowLie))
+                .orElse(original);
     }
 }

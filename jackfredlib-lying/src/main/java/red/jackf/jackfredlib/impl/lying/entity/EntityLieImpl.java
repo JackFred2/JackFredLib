@@ -38,7 +38,7 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
         this.rightClickCallback = rightClickCallback;
 
         this.serverEntity = new ServerEntity(
-                (ServerLevel) entity.level(),
+                (ServerLevel) entity.getLevel(),
                 entity,
                 entity.getType().updateInterval(),
                 entity.getType().trackDeltas(),

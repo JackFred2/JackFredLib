@@ -129,7 +129,7 @@ public class LieTest {
                                 .onFade((player2, lie2) -> player2.playSound(SoundEvents.NOTE_BLOCK_CHIME.value()))
                                 .onTick(player.isShiftKeyDown() ? null : (player2, lie2) -> {
                                     //noinspection resource
-                                    if (lie2.entity().level().getGameTime() % 20 == 0) {
+                                    if (lie2.entity().getLevel().getGameTime() % 20 == 0) {
                                         var existingCol = lie2.glowColour();
                                         if (existingCol != null) {
                                             lie2.setGlowColour(null);

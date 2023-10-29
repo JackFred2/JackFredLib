@@ -1,6 +1,6 @@
 package red.jackf.jackfredlib.testmod.client;
 
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import red.jackf.jackfredlib.api.colour.Colours;
@@ -68,12 +68,12 @@ public class ColourTestScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics);
-        super.render(graphics, mouseX, mouseY, partialTick);
-        GradientUtils.drawHorizontalGradient(graphics, 10, 40, 410, 20, Gradients.RAINBOW, 0f, 1f);
+    public void render(PoseStack pose, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(pose);
+        super.render(pose, mouseX, mouseY, partialTick);
+        GradientUtils.drawHorizontalGradient(pose, 10, 40, 410, 20, Gradients.RAINBOW, 0f, 1f);
 
-        drawGradients(graphics, 10, 65, 200, 10,
+        drawGradients(pose, 10, 65, 200, 10,
                 Gradients.GAY,
                 Gradients.LESBIAN,
                 Gradients.BISEXUAL,
@@ -85,7 +85,7 @@ public class ColourTestScreen extends Screen {
                 Gradients.ACE,
                 Gradients.ARO);
 
-        drawGradients(graphics, 215, 65, 100, 10,
+        drawGradients(pose, 215, 65, 100, 10,
                 EDGE_TRANSITION_TEST,
                 CUT_TEST,
                 MERGE_REVERSE_TEST,
@@ -96,18 +96,18 @@ public class ColourTestScreen extends Screen {
                 HSV_FULL_SPECTRUM_TEST,
                 HSV_LONG_WRAP_TEST);
 
-        drawGradients(graphics, 320, 65, 100, 10, Gradients.INTERSEX_SHARP.repeat(20), JITTER);
+        drawGradients(pose, 320, 65, 100, 10, Gradients.INTERSEX_SHARP.repeat(20), JITTER);
 
-        GradientUtils.drawHorizontalGradient(graphics, 320, 95, 100, 10, Gradients.ACE, 0f, 3f);
-        GradientUtils.drawHorizontalGradient(graphics, 320, 110, 100, 10, Gradients.ACE, 3f, 0f);
+        GradientUtils.drawHorizontalGradient(pose, 320, 95, 100, 10, Gradients.ACE, 0f, 3f);
+        GradientUtils.drawHorizontalGradient(pose, 320, 110, 100, 10, Gradients.ACE, 3f, 0f);
 
-        GradientUtils.drawVerticalGradient(graphics, 320, 125, 10, 100, Gradients.ACE, 0f, 3f);
-        GradientUtils.drawVerticalGradient(graphics, 335, 125, 10, 100, Gradients.ACE, 3f, 0f);
+        GradientUtils.drawVerticalGradient(pose, 320, 125, 10, 100, Gradients.ACE, 0f, 3f);
+        GradientUtils.drawVerticalGradient(pose, 335, 125, 10, 100, Gradients.ACE, 3f, 0f);
     }
 
-    private void drawGradients(GuiGraphics graphics, int x, int startY, int width, int height, Gradient... gradients) {
+    private void drawGradients(PoseStack pose, int x, int startY, int width, int height, Gradient... gradients) {
         float offset = (renderCount++ % 2400) / 2400f;
         for (int i = 0; i < gradients.length; i++)
-            GradientUtils.drawHorizontalGradient(graphics, x, startY + (height + 5) * i, width, height, gradients[i], 0f - offset, 1f - offset);
+            GradientUtils.drawHorizontalGradient(pose, x, startY + (height + 5) * i, width, height, gradients[i], 0f - offset, 1f - offset);
     }
 }

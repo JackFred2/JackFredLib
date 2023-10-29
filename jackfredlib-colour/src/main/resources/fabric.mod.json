@@ -15,7 +15,7 @@
   "icon": "assets/jackfredlib-colour/icon.png",
   "environment": "*",
   "depends": {
-    "minecraft": "*"
+    "minecraft": "<=1.19.4"
   },
   "custom": {
     "modmenu": {
