@@ -96,6 +96,10 @@ public class LieManager {
         return this.entityLies.get(player).stream().filter(entityLie -> entityLie.entity().getUUID().equals(uuid)).findFirst();
     }
 
+    public Optional<EntityLieImpl<?>> getEntityLieFromId(ServerPlayer player, int id) {
+        return this.entityLies.get(player).stream().filter(entityLie -> entityLie.entity().getId() == id).findFirst();
+    }
+
     //////////////////////
     // Entity Glow Lies //
     //////////////////////
