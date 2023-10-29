@@ -128,14 +128,14 @@ public class CustomToastImpl implements CustomToast {
         }
 
         if (messageLines.isEmpty()) {
-            GuiComponent.drawString(pose, font, title, textX, 12, format.titleColour());
+            font.draw(pose, title, textX, 12, this.format.titleColour());
         } else {
             int textYStart = 7;
-            GuiComponent.drawString(pose, font, title, textX, textYStart, format.titleColour());
+            font.draw(pose, title, textX, textYStart, this.format.messageColour());
             for (int i = 1; i <= messageLines.size(); i++) {
                 var line = messageLines.get(i - 1);
                 var textY = textYStart + (i * 11);
-                GuiComponent.drawString(pose, font, line, textX, textY, this.format.messageColour());
+                font.draw(pose, line, textX, textY, this.format.messageColour());
             }
         }
 

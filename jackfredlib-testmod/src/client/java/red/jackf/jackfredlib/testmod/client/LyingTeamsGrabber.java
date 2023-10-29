@@ -15,6 +15,7 @@ public class LyingTeamsGrabber {
                                     "Current teams (according to client):",
                                     10, 25, 0xFF_FFFFFF);
             for (var team : level.getScoreboard().getPlayerTeams()) {
+                //noinspection DataFlowIssue
                 GuiComponent.drawString(pose,
                                     Minecraft.getInstance().font,
                                     team.getName(),

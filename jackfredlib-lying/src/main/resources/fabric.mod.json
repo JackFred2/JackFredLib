@@ -27,7 +27,7 @@
     "minecraft": "<=1.19.4",
     "fabricloader": "*",
     "fabric-lifecycle-events-v1": "*",
-    "jackfredlib-base": "*",
+    "jackfredlib-base": ">=1.2.0",
     "jackfredlib-colour": "*"
   },
   "custom": {
