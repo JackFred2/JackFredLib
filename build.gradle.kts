@@ -300,6 +300,7 @@ if (canPublish) {
         prologue.set("""
 			|Bundled:
 			|  - Mixin Extras: ${properties["mixin_extras_version"]}
+			|  - Jankson: ${properties["jankson_version"]}
 			${
             subprojects.filter { it.name != "jackfredlib-testmod" }
                 .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.properties["module_version"]}+${it.properties["minecraft_version"]}" }
@@ -321,6 +322,14 @@ if (canPublish) {
             tasks["remapSourcesJar"].outputs.files,
             tasks["javadocJar"].outputs.files,
         )
+        subprojects.forEach {
+            if (it.name == "jackfredlib-testmod") return@forEach
+
+            releaseAssets.from(
+                it.tasks["remapJar"].outputs.files,
+                it.tasks["remapSourcesJar"].outputs.files,
+            )
+        }
         body = provider {
             return@provider generateChangelogTask.get().changelogFile.get().asFile.readText()
         }
