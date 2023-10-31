@@ -12,6 +12,7 @@ pluginManagement {
 rootProject.name = "jackfredlib"
 include("jackfredlib-base")
 
+include("jackfredlib-config")
 include("jackfredlib-colour")
 include("jackfredlib-extracommandsourcedata")
 include("jackfredlib-gps")
