@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "jackfredlib-config",
+  "version": "${module_version}",
+  "name": "${module_name}",
+  "description": "${module_description}",
+  "authors": [
+    "JackFred"
+  ],
+  "contact": {
+    "sources": "https://github.com/JackFred2/JackFredLib",
+    "issues": "https://github.com/JackFred2/JackFredLib/issues"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/jackfredlib-config/icon.png",
+  "environment": "*",
+  "depends": {
+    "minecraft": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ],
+      "parent": {
+        "id": "jackfredlib",
+        "name": "${root_module_name}",
+        "description": "${root_module_description}",
+        "icon": "assets/jackfredlib/icon.png",
+        "badges": ["library"]
+      },
+      "update_checker": false
+    }
+  }
+}
