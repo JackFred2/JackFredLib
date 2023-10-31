@@ -170,10 +170,12 @@ subprojects.forEach {
     }
 }
 
+// bundle modules
 tasks.getByName<RemapJarTask>("remapJar") {
     afterEvaluate {
         subprojects.forEach {
             if (it.name == "jackfredlib-testmod") return@forEach
+            if (it.name == "jackfredlib-config") return@forEach
 
             nestedJars.from(it.tasks.getByName("remapJar"))
         }
