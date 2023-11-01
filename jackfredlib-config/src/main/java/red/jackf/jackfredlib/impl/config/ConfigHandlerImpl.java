@@ -16,6 +16,7 @@ import red.jackf.jackfredlib.impl.config.migrator.MigratorImpl;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -75,12 +76,19 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
 
                 // Config Migration
                 JsonElement lastVersion = json.remove(MigratorImpl.VERSION_KEY);
-                boolean hasChangedDueToUpdate = false;
+                boolean hasVersionChanged = false;
 
                 if (this.migrator != null
                         && lastVersion instanceof JsonPrimitive primitive
-                        && primitive.getValue() instanceof String versionStr)
-                    hasChangedDueToUpdate = this.migrator.migrate(json, versionStr);
+                        && primitive.getValue() instanceof String versionStr
+                        && !versionStr.equals(this.migrator.getCurrentVersion())) {
+                    hasVersionChanged = true;
+                    this.logger.info("Config migration: {} -> {}", versionStr, this.migrator.getCurrentVersion());
+
+                    List<String> messages = this.migrator.migrate(json, versionStr);
+
+                    messages.forEach(this.logger::info);
+                }
 
                 this.instance = this.jankson.fromJson(json, configClass);
 
@@ -88,7 +96,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
 
                 // Update checking
                 JsonElement copy = this.jankson.toJson(instance);
-                if (hasChangedDueToUpdate || copy instanceof JsonObject copyObj && !copyObj.getDelta(json).isEmpty()) {
+                if (hasVersionChanged || copy instanceof JsonObject copyObj && !copyObj.getDelta(json).isEmpty()) {
                     this.logger.info("Saving updated config");
                     this.save();
                 }
