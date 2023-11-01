@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.impl.config;
 import blue.endless.jankson.*;
 import blue.endless.jankson.api.SyntaxError;
 import blue.endless.jankson.magic.TypeMagic;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.config.Config;
 import red.jackf.jackfredlib.api.config.ConfigHandler;
@@ -14,13 +15,14 @@ import red.jackf.jackfredlib.api.config.migration.Migrator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> {
     private final Class<T> configClass;
     private final Path path;
     private final Jankson jankson;
-    private final JsonGrammar grammar;
+    private JsonGrammar grammar;
     private final Logger logger;
     private final LoadErrorHandlingMode loadErrorHandlingMode;
     private final Consumer<Exception> loadExceptionCallback;
@@ -136,5 +138,11 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
         } catch (IOException ex) {
             this.logger.error("Error saving config " + this.path.getFileName(), ex);
         }
+    }
+
+    @Override
+    public void changeGrammar(@NotNull JsonGrammar newGrammar) {
+        Objects.requireNonNull(newGrammar, "New Jankson Grammar must not be null.");
+        this.grammar = newGrammar;
     }
 }
