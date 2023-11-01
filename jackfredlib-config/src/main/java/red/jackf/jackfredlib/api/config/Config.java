@@ -1,13 +1,16 @@
 package red.jackf.jackfredlib.api.config;
 
-import com.google.gson.JsonParseException;
+import org.jetbrains.annotations.Nullable;
 
-public interface Config extends Validatable {
+/**
+ * Represents a config class. Must be implemented by your config class.
+ */
+public interface Config<T extends Config<T>> extends Validatable {
 
     /**
-     * Called after a config is successfully validated and loaded.
+     * Called when a config has been successfully loaded and validated.
+     * @param oldInstance Previous instance of the config, or <code>null</code> if not applicable, such as on initial
+     *                    load.
      */
-    default void load() {
-
-    }
+    default void onLoad(@Nullable T oldInstance) {}
 }

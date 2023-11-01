@@ -1,8 +1,11 @@
-package red.jackf.jackfredlib.api.config;
+package red.jackf.jackfredlib.api.config.error;
 
 /**
  * Should be raised if a non-correctable error occurs in config validation. Correction should be preferred, such as
  * clamping an int to a valid range, over throwing, but sometimes this is unavoidable.
  */
 public class ConfigValidationException extends Exception {
+    public ConfigValidationException(String message) {
+        super(message);
+    }
 }
