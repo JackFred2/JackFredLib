@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.api.config;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -43,6 +44,7 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
     /**
      * Use a custom Jankson grammar.
      *
+     * @apiNote Default: JsonGrammar.builder().printUnquotedKeys(true).bareSpecialNumerics(true).printTrailingCommas(true).withComments(true).build();
      * @param grammar Custom grammar to use.
      * @return This config handler builder.
      */
@@ -57,19 +59,32 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
     ConfigHandlerBuilder<T> modifyJankson(@NotNull Consumer<Jankson.Builder> operator);
 
     /**
-     * Guides the config handler on how to deal with a config it can't load. Default: LOG_AND_TEMPORARY_DEFAULT
-     * @see #errorCallback(Consumer)
-     * @see LoadErrorHandlingMode
+     * Guides the config handler on how to deal with a config it can't load.
+     *
      * @param loadErrorHandlingMode How to handle errored config files.
      * @return This config handler builder.
+     * @apiNote Default: {@link LoadErrorHandlingMode#LOG}
+     * @see #errorCallback(Consumer)
+     * @see LoadErrorHandlingMode
      */
     ConfigHandlerBuilder<T> loadErrorHandling(@NotNull LoadErrorHandlingMode loadErrorHandlingMode);
 
     /**
      * Adds a callback that is ran when there is an error loading the config file. This is always ran before the given
      * {@link LoadErrorHandlingMode} is handled. Multiple callbacks can be added.
+     *
      * @param errorCallback Callback to be ran with the thrown exception.
      * @return This config handler builder
+     * @apiNote Default: none
      */
     ConfigHandlerBuilder<T> errorCallback(@NotNull Consumer<Exception> errorCallback);
+
+    /**
+     * Use a custom logger instance of JFLib-Config's.
+     *
+     * @param customLogger Custom logger to use.
+     * @return This config handler builder.
+     * @apiNote Default: JFLib's Internal Logger.
+     */
+    ConfigHandlerBuilder<T> withLogger(@NotNull Logger customLogger);
 }
