@@ -47,6 +47,8 @@ dependencies {
         add("clientImplementation", it.extensions.getByType(SourceSetContainer::class)["client"].output)
     }
 
+    implementation("blue.endless:jankson:${properties["jankson_version"]}")
+
     modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 }
 
