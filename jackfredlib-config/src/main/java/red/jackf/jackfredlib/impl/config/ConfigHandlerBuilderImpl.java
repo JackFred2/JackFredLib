@@ -4,6 +4,7 @@ import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.config.Config;
 import red.jackf.jackfredlib.api.config.ConfigHandler;
 import red.jackf.jackfredlib.api.config.ConfigHandlerBuilder;
@@ -21,6 +22,7 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
                                              .printTrailingCommas(true).withComments(true).build();
     private LoadErrorHandlingMode loadErrorHandling = LoadErrorHandlingMode.LOG;
     private Consumer<Exception> loadExceptionCallback = e -> {};
+    private Logger logger = JFLibConfig.LOGGER;
 
     public ConfigHandlerBuilderImpl(@NotNull Class<T> configClass) {
         this.configClass = configClass;
@@ -74,8 +76,15 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     }
 
     @Override
+    public ConfigHandlerBuilder<T> withLogger(@NotNull Logger customLogger) {
+        Objects.requireNonNull(customLogger, "Custom logger must not be null.");
+        this.logger = customLogger;
+        return this;
+    }
+
+    @Override
     public ConfigHandler<T> build() {
         Objects.requireNonNull(path, "Must specify a path or name for the config file.");
-        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, loadErrorHandling, loadExceptionCallback);
+        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, loadErrorHandling, loadExceptionCallback);
     }
 }

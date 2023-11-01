@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.impl.config;
 import blue.endless.jankson.*;
 import blue.endless.jankson.api.SyntaxError;
 import blue.endless.jankson.magic.TypeMagic;
+import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.config.Config;
 import red.jackf.jackfredlib.api.config.ConfigHandler;
 import red.jackf.jackfredlib.api.config.LoadErrorHandlingMode;
@@ -20,6 +21,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
     private final Path path;
     private final Jankson jankson;
     private final JsonGrammar grammar;
+    private final Logger logger;
     private final LoadErrorHandlingMode loadErrorHandlingMode;
     private final Consumer<Exception> loadExceptionCallback;
 
@@ -29,12 +31,16 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
             Class<T> configClass,
             Path path,
             Jankson jankson,
-            JsonGrammar grammar, LoadErrorHandlingMode loadErrorHandlingMode, Consumer<Exception> loadExceptionCallback) {
+            JsonGrammar grammar,
+            Logger logger,
+            LoadErrorHandlingMode loadErrorHandlingMode,
+            Consumer<Exception> loadExceptionCallback) {
 
         this.configClass = configClass;
         this.path = path;
         this.jankson = jankson;
         this.grammar = grammar;
+        this.logger = logger;
         this.loadErrorHandlingMode = loadErrorHandlingMode;
         this.loadExceptionCallback = loadExceptionCallback;
     }
@@ -55,7 +61,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
         T oldInstance = this.instance;
 
         if (Files.exists(this.path)) {
-            JFLibConfig.LOGGER.debug("Loading config file {}", this.path.getFileName());
+            this.logger.info("Loading config file {}", this.path.getFileName());
 
             try {
 
@@ -72,7 +78,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
                 // Update checking
                 JsonElement copy = this.jankson.toJson(instance);
                 if (hasVersionChanged || copy instanceof JsonObject copyObj && !copyObj.getDelta(json).isEmpty()) {
-                    JFLibConfig.LOGGER.debug("Saving updated config");
+                    this.logger.info("Saving updated config");
                     this.save();
                 }
 
@@ -83,21 +89,21 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
                 // Log appropriate message
                 if (this.loadErrorHandlingMode == LoadErrorHandlingMode.LOG) {
                     if (err instanceof IOException ioEx) {
-                        JFLibConfig.LOGGER.error("IO error when loading config file " + path.getFileName(), ioEx);
+                        this.logger.error("IO error when loading config file " + path.getFileName(), ioEx);
                     } else if (err instanceof SyntaxError syntaxErr){
-                        JFLibConfig.LOGGER.error("Syntax error in {}: {}", path.getFileName(), syntaxErr.getMessage());
-                        JFLibConfig.LOGGER.error(syntaxErr.getLineMessage());
+                        this.logger.error("Syntax error in {}: {}", path.getFileName(), syntaxErr.getMessage());
+                        this.logger.error(syntaxErr.getLineMessage());
                     } else {
                         ConfigValidationException validationEx = (ConfigValidationException) err;
-                        JFLibConfig.LOGGER.error("Error validating config file {}", path.getFileName());
-                        JFLibConfig.LOGGER.error(validationEx.getMessage());
+                        this.logger.error("Error validating config file {}", path.getFileName());
+                        this.logger.error(validationEx.getMessage());
                     }
                 }
 
                 // keep last or load default
                 if (this.instance == null) {
                     if (this.loadErrorHandlingMode == LoadErrorHandlingMode.LOG)
-                        JFLibConfig.LOGGER.error("Temporarily using defaults for {}", path.getFileName());
+                        this.logger.error("Temporarily using defaults for {}", path.getFileName());
 
                     this.instance = getDefault();
                 }
@@ -107,13 +113,11 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
 
             }
         } else {
-            JFLibConfig.LOGGER.debug("Creating config file {}", this.path.getFileName());
+            this.logger.info("Creating default config file {}", this.path.getFileName());
 
             this.instance = this.getDefault();
             this.save();
         }
-
-        JFLibConfig.LOGGER.info("done");
 
         if (this.instance != oldInstance) this.instance.onLoad(oldInstance);
     }
@@ -125,11 +129,12 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
 
         json.put(Migrator.VERSION_KEY, JsonPrimitive.of("NOVER"), "Last saved mod version - do not edit manually!");
 
+        // TODO proper error handling for saving
         try {
-            JFLibConfig.LOGGER.debug("Saving config {}", this.path.getFileName());
+            this.logger.info("Saving config {}", this.path.getFileName());
             Files.writeString(this.path, json.toJson(this.grammar));
         } catch (IOException ex) {
-            JFLibConfig.LOGGER.error("Error saving config " + this.path.getFileName(), ex);
+            this.logger.error("Error saving config " + this.path.getFileName(), ex);
         }
     }
 }
