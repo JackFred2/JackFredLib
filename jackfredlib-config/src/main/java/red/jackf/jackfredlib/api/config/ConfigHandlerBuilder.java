@@ -4,6 +4,7 @@ import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import red.jackf.jackfredlib.api.config.migration.MigratorBuilder;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -44,9 +45,9 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
     /**
      * Use a custom Jankson grammar.
      *
-     * @apiNote Default: JsonGrammar.builder().printUnquotedKeys(true).bareSpecialNumerics(true).printTrailingCommas(true).withComments(true).build();
      * @param grammar Custom grammar to use.
      * @return This config handler builder.
+     * @apiNote Default: JsonGrammar.builder().printUnquotedKeys(true).bareSpecialNumerics(true).printTrailingCommas(true).withComments(true).build();
      */
     ConfigHandlerBuilder<T> janksonGrammar(@NotNull JsonGrammar grammar);
 
@@ -87,4 +88,14 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
      * @apiNote Default: JFLib's Internal Logger.
      */
     ConfigHandlerBuilder<T> withLogger(@NotNull Logger customLogger);
+
+    /**
+     * Assign a new Migrator to this config handler. Migrators are what is used to update the config between versions, if
+     * needed.
+     *
+     * @apiNote Default: no Migrator
+     * @param builder Migrator builder to use for this config handler.
+     * @return This config handler builder.
+     */
+    ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder builder);
 }
