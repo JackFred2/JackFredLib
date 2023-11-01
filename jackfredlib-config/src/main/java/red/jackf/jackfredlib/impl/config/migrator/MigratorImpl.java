@@ -2,6 +2,9 @@ package red.jackf.jackfredlib.impl.config.migrator;
 
 import blue.endless.jankson.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MigratorImpl {
     public static final String VERSION_KEY = "__version";
 
@@ -15,8 +18,10 @@ public class MigratorImpl {
         return currentVersion;
     }
 
-    public boolean migrate(JsonObject oldConfigJson, String lastVersion) {
-        boolean changed = !currentVersion.equals(lastVersion);
-        return changed;
+    public List<String> migrate(JsonObject oldConfigJson, String lastVersion) {
+        //noinspection UnnecessaryLocalVariable
+        List<String> messages = new ArrayList<>();
+
+        return messages;
     }
 }
