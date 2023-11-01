@@ -10,6 +10,7 @@ Collection of common utilities for my Minecraft mods, and where I'm figuring out
 - Custom Data for Command Source Stacks, allowing for repeatable arguments. Helpers for this are planned.
 - GPS module for client-only mods to determine where they are without server support - think minimap data, or for a 
   practical example [Chest Tracker](https://modrinth.com/mod/chest-tracker).
+- Simple config module, oriented for server side but works on both
 
 Feel free to use yourself (see wiki for instructions and a basic overview).
 
