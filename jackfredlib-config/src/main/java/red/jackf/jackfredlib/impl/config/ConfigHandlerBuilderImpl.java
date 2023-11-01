@@ -4,11 +4,15 @@ import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.config.Config;
 import red.jackf.jackfredlib.api.config.ConfigHandler;
 import red.jackf.jackfredlib.api.config.ConfigHandlerBuilder;
 import red.jackf.jackfredlib.api.config.LoadErrorHandlingMode;
+import red.jackf.jackfredlib.api.config.migration.MigratorBuilder;
+import red.jackf.jackfredlib.impl.config.migrator.MigratorBuilderImpl;
+import red.jackf.jackfredlib.impl.config.migrator.MigratorImpl;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -23,6 +27,8 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     private LoadErrorHandlingMode loadErrorHandling = LoadErrorHandlingMode.LOG;
     private Consumer<Exception> loadExceptionCallback = e -> {};
     private Logger logger = JFLibConfig.LOGGER;
+    @Nullable
+    private MigratorImpl migrator = null;
 
     public ConfigHandlerBuilderImpl(@NotNull Class<T> configClass) {
         this.configClass = configClass;
@@ -83,8 +89,15 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     }
 
     @Override
+    public ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder builder) {
+        Objects.requireNonNull(builder, "Migrator builder must not be null.");
+        this.migrator = ((MigratorBuilderImpl) builder).build();
+        return this;
+    }
+
+    @Override
     public ConfigHandler<T> build() {
         Objects.requireNonNull(path, "Must specify a path or name for the config file.");
-        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, loadErrorHandling, loadExceptionCallback);
+        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, migrator, loadErrorHandling, loadExceptionCallback);
     }
 }
