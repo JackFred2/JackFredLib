@@ -7,5 +7,6 @@ contains a hot-reload listener (TODO), migration rules, and utilities for making
 
 - Hot Reload listener
 - Version migration
+  - Helper implementations: JSON Patch
 - Annotation-based verifiers, mainly for ints
 - Autopopulation of `Range`, `Valid Options`, and `Default` comments.

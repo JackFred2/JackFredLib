@@ -12,7 +12,6 @@ import red.jackf.jackfredlib.api.config.ConfigHandlerBuilder;
 import red.jackf.jackfredlib.api.config.LoadErrorHandlingMode;
 import red.jackf.jackfredlib.api.config.migration.MigratorBuilder;
 import red.jackf.jackfredlib.impl.config.migrator.MigratorBuilderImpl;
-import red.jackf.jackfredlib.impl.config.migrator.MigratorImpl;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -28,7 +27,7 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     private Consumer<Exception> loadExceptionCallback = e -> {};
     private Logger logger = JFLibConfig.LOGGER;
     @Nullable
-    private MigratorImpl migrator = null;
+    private MigratorBuilderImpl<T> migratorBuilder = null;
 
     public ConfigHandlerBuilderImpl(@NotNull Class<T> configClass) {
         this.configClass = configClass;
@@ -89,15 +88,15 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     }
 
     @Override
-    public ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder builder) {
+    public ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder<T> builder) {
         Objects.requireNonNull(builder, "Migrator builder must not be null.");
-        this.migrator = ((MigratorBuilderImpl) builder).build();
+        this.migratorBuilder = ((MigratorBuilderImpl<T>) builder);
         return this;
     }
 
     @Override
     public ConfigHandler<T> build() {
         Objects.requireNonNull(path, "Must specify a path or name for the config file.");
-        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, migrator, loadErrorHandling, loadExceptionCallback);
+        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, migratorBuilder, loadErrorHandling, loadExceptionCallback);
     }
 }
