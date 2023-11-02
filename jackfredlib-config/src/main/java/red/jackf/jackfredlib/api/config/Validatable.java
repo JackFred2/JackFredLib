@@ -2,6 +2,10 @@ package red.jackf.jackfredlib.api.config;
 
 import red.jackf.jackfredlib.api.config.error.ConfigValidationException;
 
+/**
+ * Marks a config (and in the future, any POJOs in the config) to have a validation function ran after deserialization
+ * (and migration, if applicable).
+ */
 public interface Validatable {
     /**
      * Called after an object is loaded. This should verify that all values are valid (i.e. ints within range), and correct

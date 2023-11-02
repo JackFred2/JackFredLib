@@ -57,6 +57,7 @@ public interface MigratorBuilder<T extends Config<T>> {
      * Create a new migration builder, using the given mod's version as the current version.
      * @param modid Mod ID to pull the version from.
      * @return This migrator builder.
+     * @param <T> Class file of the config.
      */
     static <T extends Config<T>> MigratorBuilder<T> forMod(@NotNull String modid) {
         Objects.requireNonNull(modid, "Mod ID must not be null.");
@@ -71,6 +72,7 @@ public interface MigratorBuilder<T extends Config<T>> {
      * Create a new migration builder, using the version string as the current. This will be converted to a {@link Version}.
      * @param versionStr Version string to parse and use.
      * @return This migrator builder.
+     * @param <T> Class file of the config.
      */
     static <T extends Config<T>> MigratorBuilder<T> forVersion(@NotNull String versionStr) {
         Objects.requireNonNull(versionStr, "Version string must not be null.");
@@ -85,6 +87,7 @@ public interface MigratorBuilder<T extends Config<T>> {
      * Create a new migration builder, using the given version as the current.
      * @param currentVersion Version to use as the current.
      * @return This migrator builder.
+     * @param <T> Class file of the config.
      */
     static <T extends Config<T>> MigratorBuilder<T> forVersion(@NotNull Version currentVersion) {
         Objects.requireNonNull(currentVersion, "Current version must not be null.");

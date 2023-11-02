@@ -12,7 +12,7 @@ import red.jackf.jackfredlib.api.config.ConfigHandler;
 import red.jackf.jackfredlib.api.config.LoadErrorHandlingMode;
 import red.jackf.jackfredlib.api.config.error.ConfigLoadException;
 import red.jackf.jackfredlib.api.config.error.ConfigValidationException;
-import red.jackf.jackfredlib.api.config.migration.MigratorResult;
+import red.jackf.jackfredlib.impl.config.migrator.MigratorResult;
 import red.jackf.jackfredlib.impl.config.migrator.MigratorBuilderImpl;
 import red.jackf.jackfredlib.impl.config.migrator.MigratorImpl;
 import red.jackf.jackfredlib.api.config.migration.MigratorUtil;
