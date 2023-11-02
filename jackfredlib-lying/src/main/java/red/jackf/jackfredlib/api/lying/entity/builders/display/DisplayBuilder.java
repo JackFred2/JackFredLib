@@ -250,6 +250,10 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
         return self();
     }
 
+    /**
+     * Gert the current transformation matrix of this Display entity.
+     * @return The current transformation of this Display entity.
+     */
     protected Transformation getTransformation() {
         return DisplayAccessor.callCreateTransformation(this.entity.getEntityData());
     }

@@ -5,6 +5,10 @@ package red.jackf.jackfredlib.api.config.error;
  * clamping an int to a valid range, over throwing, but sometimes this is unavoidable.
  */
 public class ConfigValidationException extends Exception {
+    /**
+     * Create a new config validation exception with the given message.
+     * @param message Message to add to the exception.
+     */
     public ConfigValidationException(String message) {
         super(message);
     }

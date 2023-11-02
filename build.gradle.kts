@@ -201,6 +201,12 @@ tasks.withType<Javadoc>().configureEach {
 
     classpath = files(getSourceSet("main").compileClasspath, getSourceSet("client").compileClasspath)
 
+    subprojects.forEach {
+        if (it.name == "jackfredlib-testmod") return@forEach
+        classpath += it.getSourceSet("main").compileClasspath
+        classpath += it.getSourceSet("client").compileClasspath
+    }
+
     (options as StandardJavadocDocletOptions).tags(
         "apiNote:a:API Note:",
         "implNote:a:Implementation Note:"
