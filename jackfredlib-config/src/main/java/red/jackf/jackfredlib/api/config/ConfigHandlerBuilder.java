@@ -97,5 +97,5 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
      * @param builder Migrator builder to use for this config handler.
      * @return This config handler builder.
      */
-    ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder builder);
+    ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder<T> builder);
 }
