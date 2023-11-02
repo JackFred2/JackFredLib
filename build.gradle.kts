@@ -305,12 +305,20 @@ if (canPublish) {
 
         // Add a bundled block for each module version
         prologue.set("""
+            |## JackFredLib
+            |
 			|Bundled:
 			|  - Mixin Extras: ${properties["mixin_extras_version"]}
 			${
-            subprojects.filter { it.name != "jackfredlib-testmod" }
-                .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.properties["module_version"]}+${it.properties["minecraft_version"]}" }
-        }
+            subprojects.filter { it.name != "jackfredlib-testmod" && it.name != "jackfredlib-config" }
+                .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.version}" }
+            }
+            |
+            |## JackFredLib: Config
+            |
+            |Bundled:
+            |  - Jankson: ${properties["jankson_version"]}
+            |  - JackFredLib: Base: ${project("jackfredlib-base").version}
 			""".trimMargin())
     }
 
