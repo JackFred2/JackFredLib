@@ -18,7 +18,7 @@ import java.util.UUID;
  * <p>
  * Note to self:
  * Currently not an issue, but migrating entities for entity glow lies is currently O(N) of the number of active lies,
- * for every new entity loaded. If it becomes an issue, possibly use a Multiset<UUID, EntityGlowLieImpl> to reduce this
+ * for every new entity loaded. If it becomes an issue, possibly use a Multiset to reduce this
  */
 public class LieManager {
     public static final Logger LOGGER = LogUtil.getLogger("Lie Manager");

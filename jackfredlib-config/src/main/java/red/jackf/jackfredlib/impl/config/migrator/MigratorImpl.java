@@ -8,7 +8,6 @@ import org.apache.commons.lang3.Validate;
 import red.jackf.jackfredlib.api.config.Config;
 import red.jackf.jackfredlib.api.config.migration.Migration;
 import red.jackf.jackfredlib.api.config.migration.MigrationResult;
-import red.jackf.jackfredlib.api.config.migration.MigratorResult;
 import red.jackf.jackfredlib.impl.config.ConfigHandlerImpl;
 
 import java.util.ArrayList;

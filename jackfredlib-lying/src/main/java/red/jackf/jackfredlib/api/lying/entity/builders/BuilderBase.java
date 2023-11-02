@@ -18,8 +18,19 @@ import red.jackf.jackfredlib.api.lying.entity.EntityUtils;
  * @param <B> Builder class for extension purposes
  */
 public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>> {
+    /**
+     * Entity being built with.
+     */
     protected final E entity;
 
+    /**
+     * Create a new entity builder. This instantiates a new entity in the given level, which <i>will throw</i> if the
+     * entity could not be created.
+     *
+     * @see EntityType
+     * @param type Entity type to be used.
+     * @param level Level to create the entity in
+     */
     protected BuilderBase(EntityType<E> type, ServerLevel level) {
         this.entity = type.create(level);
         if (this.entity == null) throw new IllegalArgumentException("Could not create entity; likely caused by being" +
