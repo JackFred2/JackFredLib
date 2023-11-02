@@ -60,6 +60,14 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
     ConfigHandlerBuilder<T> modifyJankson(@NotNull Consumer<Jankson.Builder> operator);
 
     /**
+     * By default, some adapters are added to Jankson in order to ease common usecases, such as {@link net.minecraft.resources.ResourceLocation}s.
+     * This method prevents them from being registered.
+     *
+     * @return This config handler builder.
+     */
+    ConfigHandlerBuilder<T> skipDefaultAdapters();
+
+    /**
      * Guides the config handler on how to deal with a config it can't load.
      *
      * @param loadErrorHandlingMode How to handle errored config files.
@@ -93,9 +101,9 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
      * Assign a new Migrator to this config handler. Migrators are what is used to update the config between versions, if
      * needed.
      *
-     * @apiNote Default: no Migrator
      * @param builder Migrator builder to use for this config handler.
      * @return This config handler builder.
+     * @apiNote Default: no Migrator
      */
     ConfigHandlerBuilder<T> withMigrator(@NotNull MigratorBuilder<T> builder);
 }
