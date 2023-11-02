@@ -197,6 +197,11 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
     }
 
     @Override
+    public Path getFilePath() {
+        return this.path;
+    }
+
+    @Override
     public void changeGrammar(@NotNull JsonGrammar newGrammar) {
         Objects.requireNonNull(newGrammar, "New Jankson Grammar must not be null.");
         this.grammar = newGrammar;

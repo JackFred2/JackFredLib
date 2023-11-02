@@ -4,6 +4,8 @@ import blue.endless.jankson.JsonGrammar;
 import org.jetbrains.annotations.NotNull;
 import red.jackf.jackfredlib.impl.config.ConfigHandlerBuilderImpl;
 
+import java.nio.file.Path;
+
 /**
  * A ConfigHandler is your interface point to access your config. Create a new instance using {@link #builder(Class)}.
  *
@@ -35,6 +37,12 @@ public interface ConfigHandler<T extends Config<T>> {
      * Save the current config instance to the given file.
      */
     void save();
+
+    /**
+     * Get the path of the config file used for this handler.
+     * @return Path of the config file for this handler.
+     */
+    Path getFilePath();
 
     /**
      * Update the Jankson grammar for this handler.

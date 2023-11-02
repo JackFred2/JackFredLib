@@ -2,7 +2,9 @@ package red.jackf.jackfredlib.impl.config;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
+import blue.endless.jankson.JsonPrimitive;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import red.jackf.jackfredlib.api.config.Config;
 import red.jackf.jackfredlib.api.config.ConfigHandler;
 import red.jackf.jackfredlib.api.config.ConfigHandlerBuilder;
 import red.jackf.jackfredlib.api.config.LoadErrorHandlingMode;
+import red.jackf.jackfredlib.api.config.defaults.ResourceLocationAdapter;
 import red.jackf.jackfredlib.api.config.migration.MigratorBuilder;
 import red.jackf.jackfredlib.impl.config.migrator.MigratorBuilderImpl;
 
@@ -19,8 +22,9 @@ import java.util.function.Consumer;
 
 public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHandlerBuilder<T> {
     private final Class<T> configClass;
-    private final Jankson.Builder jankson = Jankson.builder();
     private Path path = null;
+    private final Jankson.Builder jankson = Jankson.builder();
+    private boolean skipDefaultAdapters = false;
     private JsonGrammar grammar = JsonGrammar.builder().printUnquotedKeys(true).bareSpecialNumerics(true)
                                              .printTrailingCommas(true).withComments(true).build();
     private LoadErrorHandlingMode loadErrorHandling = LoadErrorHandlingMode.LOG;
@@ -62,6 +66,12 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     }
 
     @Override
+    public ConfigHandlerBuilder<T> skipDefaultAdapters() {
+        this.skipDefaultAdapters = true;
+        return this;
+    }
+
+    @Override
     public ConfigHandlerBuilder<T> loadErrorHandling(@NotNull LoadErrorHandlingMode loadErrorHandling) {
         Objects.requireNonNull(loadErrorHandling, "Error handling mode must not be null.");
         this.loadErrorHandling = loadErrorHandling;
@@ -97,6 +107,12 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     @Override
     public ConfigHandler<T> build() {
         Objects.requireNonNull(path, "Must specify a path or name for the config file.");
+        if (!skipDefaultAdapters) this.addDefaultAdapters(this.jankson);
         return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, migratorBuilder, loadErrorHandling, loadExceptionCallback);
+    }
+
+    private void addDefaultAdapters(Jankson.Builder jankson) {
+        jankson.registerDeserializer(JsonPrimitive.class, ResourceLocation.class, ResourceLocationAdapter::deserializer);
+        jankson.registerSerializer(ResourceLocation.class, ResourceLocationAdapter::serializer);
     }
 }
