@@ -80,8 +80,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: build & run tests
+        run: ./gradlew check build
+
       - name: Publish to GitHub Package Registry and GitHub Release
-        run: ./gradlew build generateChangelog publish githubRelease -PlastTag="${{ github.event.inputs.lastTag }}" -PnewTag="${{ github.event.inputs.newTag }}"
+        run: ./gradlew generateChangelog publish githubRelease -PlastTag="${{ github.event.inputs.lastTag }}" -PnewTag="${{ github.event.inputs.newTag }}"
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
