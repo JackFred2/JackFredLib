@@ -26,7 +26,7 @@ fun Project.getSourceSet(name: String) = this.extensions.getByType(SourceSetCont
 operator fun Any?.unaryPlus() = this!!.toString()
 
 // Adapted from Fabric API; helper for depending on other modules
-extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
+extra["moduleDependencies"] = fun(project: Project, depNames: List<String>, include: Boolean) {
     val deps = depNames.map { project.dependencies.project(path = ":$it", configuration = "namedElements") }
     val clientOutputs =
         depNames.map { project(":$it").getSourceSet("client").output }
@@ -34,6 +34,7 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>) {
     project.dependencies {
         deps.forEach {
             add("api", it)
+            if (include) add("include", it)
         }
 
         clientOutputs.forEach {
