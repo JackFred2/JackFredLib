@@ -22,7 +22,7 @@ tasks.withType<Test> {
 }
 
 @Suppress("UNCHECKED_CAST")
-val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, List<String>) -> Unit
+val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, List<String>, Boolean) -> Unit
 
-moduleDependencies(project, listOf("jackfredlib-base"))
+moduleDependencies(project, listOf("jackfredlib-base"), true)
 
