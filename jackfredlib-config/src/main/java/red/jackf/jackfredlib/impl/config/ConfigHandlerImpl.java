@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.impl.config;
 import blue.endless.jankson.*;
 import blue.endless.jankson.api.SyntaxError;
 import blue.endless.jankson.magic.TypeMagic;
+import net.fabricmc.loader.api.Version;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -11,12 +12,14 @@ import red.jackf.jackfredlib.api.config.ConfigHandler;
 import red.jackf.jackfredlib.api.config.LoadErrorHandlingMode;
 import red.jackf.jackfredlib.api.config.error.ConfigLoadException;
 import red.jackf.jackfredlib.api.config.error.ConfigValidationException;
+import red.jackf.jackfredlib.api.config.migration.MigratorResult;
+import red.jackf.jackfredlib.impl.config.migrator.MigratorBuilderImpl;
 import red.jackf.jackfredlib.impl.config.migrator.MigratorImpl;
+import red.jackf.jackfredlib.api.config.migration.MigratorUtil;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -26,7 +29,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
     private final Jankson jankson;
     private JsonGrammar grammar;
     private final Logger logger;
-    private final @Nullable MigratorImpl migrator;
+    private final @Nullable MigratorImpl<T> migrator;
     private final LoadErrorHandlingMode loadErrorHandlingMode;
     private final Consumer<Exception> loadExceptionCallback;
 
@@ -38,7 +41,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
             Jankson jankson,
             JsonGrammar grammar,
             Logger logger,
-            @Nullable MigratorImpl migrator,
+            @Nullable MigratorBuilderImpl<T> migratorBuilder,
             LoadErrorHandlingMode loadErrorHandlingMode,
             Consumer<Exception> loadExceptionCallback) {
 
@@ -47,7 +50,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
         this.jankson = jankson;
         this.grammar = grammar;
         this.logger = logger;
-        this.migrator = migrator;
+        this.migrator = migratorBuilder != null ? migratorBuilder.build(this) : null;
         this.loadErrorHandlingMode = loadErrorHandlingMode;
         this.loadExceptionCallback = loadExceptionCallback;
     }
@@ -77,27 +80,60 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
                 // Config Migration
                 JsonElement lastVersion = json.remove(MigratorImpl.VERSION_KEY);
                 boolean hasVersionChanged = false;
+                T loadedInstance = null;
 
                 if (this.migrator != null
                         && lastVersion instanceof JsonPrimitive primitive
-                        && primitive.getValue() instanceof String versionStr
-                        && !versionStr.equals(this.migrator.getCurrentVersion())) {
-                    hasVersionChanged = true;
-                    this.logger.info("Config migration: {} -> {}", versionStr, this.migrator.getCurrentVersion());
+                        && primitive.getValue() instanceof String versionStr) {
 
-                    List<String> messages = this.migrator.migrate(json, versionStr);
+                    Version parsed = MigratorUtil.unsafeParse(versionStr);
 
-                    messages.forEach(this.logger::info);
+                    int versionComparison = this.migrator.getCurrentVersion().compareTo(parsed);
+
+                    if (versionComparison != 0) {
+                        hasVersionChanged = true;
+                        if (versionComparison > 0) {
+                            this.logger.info("Config migration: {} -> {}",
+                                             parsed.getFriendlyString(),
+                                             this.migrator.getCurrentVersion().getFriendlyString());
+
+
+                            MigratorResult result = this.migrator.migrate(json, parsed);
+
+                            if (result instanceof MigratorResult.Replace replace) {
+
+                                this.logger.debug("Replacing config");
+                                json = replace.replacement();
+
+                            } else if (result instanceof MigratorResult.FailHard failHard) {
+
+                                this.logger.error("Error migrating config");
+                                // TODO move errored file
+                                failHard.messages().forEach(this.logger::info);
+                                loadedInstance = getDefault();
+                                json = (JsonObject) this.jankson.toJson(this.instance);
+
+                            } else if (result instanceof MigratorResult.Success success) {
+
+                                success.messages().forEach(this.logger::info);
+                                json = success.result();
+
+                            }
+                        } else { // mod downdate, don't migrate and hope for the best
+                            this.logger.info("Mod downdate, not migrating: {} -> {}",
+                                             parsed.getFriendlyString(),
+                                             this.migrator.getCurrentVersion().getFriendlyString());
+                        }
+                    }
                 }
 
-                this.instance = this.jankson.fromJson(json, configClass);
+                this.instance = loadedInstance != null ? loadedInstance : this.jankson.fromJson(json, configClass);
 
                 this.instance.validate();
 
-                // Update checking
+                // Re-save if updated
                 JsonElement copy = this.jankson.toJson(instance);
                 if (hasVersionChanged || copy instanceof JsonObject copyObj && !copyObj.getDelta(json).isEmpty()) {
-                    this.logger.info("Saving updated config");
                     this.save();
                 }
 
@@ -148,7 +184,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
 
         if (this.migrator != null)
             json.put(MigratorImpl.VERSION_KEY,
-                     JsonPrimitive.of(this.migrator.getCurrentVersion()),
+                     JsonPrimitive.of(this.migrator.getCurrentVersion().getFriendlyString()),
                      "Users: do not edit manually! Last saved mod version");
 
         // TODO proper error handling for saving
@@ -164,5 +200,9 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
     public void changeGrammar(@NotNull JsonGrammar newGrammar) {
         Objects.requireNonNull(newGrammar, "New Jankson Grammar must not be null.");
         this.grammar = newGrammar;
+    }
+
+    public Jankson getJankson() {
+        return jankson;
     }
 }
