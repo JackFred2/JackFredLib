@@ -318,6 +318,7 @@ if (canPublish) {
             |
             |Bundled:
             |  - Jankson: ${properties["jankson_version"]}
+            |  - Apache Commons IO: ${properties["commons_io_version"]}
             |  - JackFredLib: Base: ${project("jackfredlib-base").version}
 			""".trimMargin())
     }

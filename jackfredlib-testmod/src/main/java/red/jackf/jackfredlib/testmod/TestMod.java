@@ -11,7 +11,8 @@ public class TestMod implements ModInitializer {
             = ConfigHandler.builder(TestConfig.class)
                            .fileName("testmod")
                            .withMigrator(MigratorBuilder.<TestConfig>forMod("jackfredlib-testmod")
-                                                 .addMigration("1.0.5", new Identity<>()))
+                                                        .addMigration("1.0.5", new Identity<>()))
+                           .withFileWatcher()
                            .build();
 
     @Override

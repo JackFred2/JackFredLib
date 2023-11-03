@@ -43,6 +43,16 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
     // OPTIONAL
 
     /**
+     * Enables file watcher for this config, which checks for changes on-disk every second, and call {@link ConfigHandler#load()}
+     * if changes are detected. The config handler can also opt in / out during runtime.
+     *
+     * @return This config handler builder.
+     * @throws IllegalArgumentException If a file watcher was requested, but the config file is not in the default
+     *                                  Config directory.
+     */
+    ConfigHandlerBuilder<T> withFileWatcher();
+
+    /**
      * Use a custom Jankson grammar.
      *
      * @param grammar Custom grammar to use.
