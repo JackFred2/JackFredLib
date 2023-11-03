@@ -17,6 +17,11 @@
   "depends": {
     "minecraft": "*"
   },
+  "entrypoints": {
+    "main": [
+      "red.jackf.jackfredlib.impl.config.FileWatcher"
+    ]
+  },
   "custom": {
     "modmenu": {
       "badges": [
