@@ -19,9 +19,9 @@ public class ConfigLoadTest {
         var methodName = StackWalker.getInstance().walk(s -> s.skip(1).findFirst().orElseThrow().getMethodName());
 
         return ConfigHandler.builder(TestConfig.class)
-                .path(testDir.resolve(methodName + ".json5"))
-                .withLogger(NOPLogger.NOP_LOGGER)
-                .build();
+                            .path(testDir.resolve(methodName + ".json5"))
+                            .withLogger(NOPLogger.NOP_LOGGER)
+                            .build();
     }
 
     @Test

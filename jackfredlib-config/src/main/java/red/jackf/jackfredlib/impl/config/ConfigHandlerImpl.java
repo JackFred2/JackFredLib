@@ -40,6 +40,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
             Path path,
             Jankson jankson,
             JsonGrammar grammar,
+            boolean useFileWatcher,
             Logger logger,
             @Nullable MigratorBuilderImpl<T> migratorBuilder,
             LoadErrorHandlingMode loadErrorHandlingMode,
@@ -53,6 +54,8 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
         this.migrator = migratorBuilder != null ? migratorBuilder.build(this) : null;
         this.loadErrorHandlingMode = loadErrorHandlingMode;
         this.loadExceptionCallback = loadExceptionCallback;
+
+        if (useFileWatcher) this.useFileWatcher(true);
     }
 
     @Override
@@ -191,6 +194,7 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
         try {
             this.logger.info("Saving config {}", this.path.getFileName());
             Files.writeString(this.path, json.toJson(this.grammar));
+            FileWatcher.skip(this.path);
         } catch (IOException ex) {
             this.logger.error("Error saving config " + this.path.getFileName(), ex);
         }
@@ -205,6 +209,15 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
     public void changeGrammar(@NotNull JsonGrammar newGrammar) {
         Objects.requireNonNull(newGrammar, "New Jankson Grammar must not be null.");
         this.grammar = newGrammar;
+    }
+
+    @Override
+    public void useFileWatcher(boolean shouldUseFileWatcher) {
+        if (shouldUseFileWatcher) {
+            FileWatcher.enable(this.path, this);
+        } else {
+            FileWatcher.disable(this.path);
+        }
     }
 
     public Jankson getJankson() {

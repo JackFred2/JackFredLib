@@ -25,6 +25,7 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     private Path path = null;
     private final Jankson.Builder jankson = Jankson.builder();
     private boolean skipDefaultAdapters = false;
+    private boolean useFileWatcher = false;
     private JsonGrammar grammar = JsonGrammar.builder().printUnquotedKeys(true).bareSpecialNumerics(true)
                                              .printTrailingCommas(true).withComments(true).build();
     private LoadErrorHandlingMode loadErrorHandling = LoadErrorHandlingMode.LOG;
@@ -48,6 +49,12 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     public ConfigHandlerBuilder<T> fileName(@NotNull String name) {
         Objects.requireNonNull(name, "Filename must not be null.");
         this.path = FabricLoader.getInstance().getConfigDir().resolve(name + ".json5");
+        return this;
+    }
+
+    @Override
+    public ConfigHandlerBuilder<T> withFileWatcher() {
+        this.useFileWatcher = true;
         return this;
     }
 
@@ -107,8 +114,19 @@ public class ConfigHandlerBuilderImpl<T extends Config<T>> implements ConfigHand
     @Override
     public ConfigHandler<T> build() {
         Objects.requireNonNull(path, "Must specify a path or name for the config file.");
+        if (this.useFileWatcher && !this.path.startsWith(FabricLoader.getInstance().getConfigDir()))
+            throw new IllegalArgumentException("Using file watchers outside the default config directory is not currently supported");
+
         if (!skipDefaultAdapters) this.addDefaultAdapters(this.jankson);
-        return new ConfigHandlerImpl<>(configClass, path, jankson.build(), grammar, logger, migratorBuilder, loadErrorHandling, loadExceptionCallback);
+        return new ConfigHandlerImpl<>(configClass,
+                                       path,
+                                       jankson.build(),
+                                       grammar,
+                                       useFileWatcher,
+                                       logger,
+                                       migratorBuilder,
+                                       loadErrorHandling,
+                                       loadExceptionCallback);
     }
 
     private void addDefaultAdapters(Jankson.Builder jankson) {

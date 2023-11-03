@@ -53,6 +53,13 @@ public interface ConfigHandler<T extends Config<T>> {
     void changeGrammar(@NotNull JsonGrammar newGrammar);
 
     /**
+     * Allows a config handler to opt in or out of the file watcher at runtime.
+     *
+     * @param shouldUseFileWatcher Whether to use the config file watcher or not.
+     */
+    void useFileWatcher(boolean shouldUseFileWatcher);
+
+    /**
      * Create a new builder for a config handler.
      *
      * @param configClass Class of your config file.
