@@ -3,7 +3,7 @@ base {
 }
 
 dependencies {
-    include(implementation("blue.endless:jankson:${properties["jankson_version"]}")!!)
+    include(api("blue.endless:jankson:${properties["jankson_version"]}")!!)
     include(implementation("commons-io:commons-io:${properties["commons_io_version"]}")!!)
 
     testImplementation("net.fabricmc:fabric-loader-junit:${properties["loader_version"]}")

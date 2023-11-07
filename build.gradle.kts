@@ -314,7 +314,7 @@ if (canPublish) {
                 .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.version}" }
             }
             |
-            |## JackFredLib: Config
+            |## JackFredLib: Config v${project("jackfredlib-config").version}
             |
             |Bundled:
             |  - Jankson: ${properties["jankson_version"]}
