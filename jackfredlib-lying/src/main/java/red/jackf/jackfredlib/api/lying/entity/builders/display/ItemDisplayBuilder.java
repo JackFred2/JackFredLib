@@ -31,7 +31,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<Display.ItemDisplay, Item
      * @return This entity builder
      */
     public ItemDisplayBuilder stack(ItemStack stack) {
-        ((ItemDisplayAccessor) this.entity).callSetItemStack(stack);
+        ((ItemDisplayAccessor) this.entity).jflib$setItemStack(stack);
         return self();
     }
 
@@ -43,7 +43,7 @@ public class ItemDisplayBuilder extends DisplayBuilder<Display.ItemDisplay, Item
      * @implNote Default: {@link ItemDisplayContext#NONE}
      */
     public ItemDisplayBuilder displayContext(ItemDisplayContext context) {
-        ((ItemDisplayAccessor) this.entity).callSetItemTransform(context);
+        ((ItemDisplayAccessor) this.entity).jflib$setItemTransform(context);
         return self();
     }
 
