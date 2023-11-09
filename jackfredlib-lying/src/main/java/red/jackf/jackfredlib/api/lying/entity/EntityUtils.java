@@ -57,7 +57,7 @@ public class EntityUtils {
      *                        to the current world time.
      */
     public static void startInterpolationAt(Display display, long targetStartTime) {
-        int delay = (int) (Math.max(targetStartTime, display.level().getGameTime()) - display.level().getGameTime());
+        int delay = (int) (Math.max(targetStartTime, display.getLevel().getGameTime()) - display.getLevel().getGameTime());
         ((DisplayAccessor) display).jflib$setTransformationInterpolationDelay(delay);
     }
 
