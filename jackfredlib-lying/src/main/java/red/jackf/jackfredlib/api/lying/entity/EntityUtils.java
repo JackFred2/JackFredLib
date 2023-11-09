@@ -8,6 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import red.jackf.jackfredlib.api.lying.entity.builders.display.TextDisplayBuilder;
 import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
 import red.jackf.jackfredlib.mixins.lying.entity.DisplayAccessor;
 import red.jackf.jackfredlib.mixins.lying.entity.ItemDisplayAccessor;
@@ -27,6 +28,61 @@ public class EntityUtils {
      */
     public static void setDisplayText(Display.TextDisplay display, Component text) {
         ((TextDisplayAccessor) display).jflib$setText(text);
+    }
+
+    /**
+     * Change a text display's text alignment.
+     *
+     * @param display Display to update
+     * @param align How text for this display should be justified.
+     */
+    public static void setDisplayTextAlign(Display.TextDisplay display, Display.TextDisplay.Align align) {
+        byte flags = (byte) (((TextDisplayAccessor) display).jflib$getFlags() & 0b00111);
+        if (align == Display.TextDisplay.Align.LEFT) flags |= Display.TextDisplay.FLAG_ALIGN_LEFT;
+        else if (align == Display.TextDisplay.Align.RIGHT) flags |= Display.TextDisplay.FLAG_ALIGN_RIGHT;
+        ((TextDisplayAccessor) display).jflib$setFlags(flags);
+    }
+
+    /**
+     * Change a text display's default background status.
+     *
+     * @param display Display to update
+     * @param useDefaultBackground Whether this text display should use a client's default background.
+     */
+    public static void setDisplayTextDefaultBackground(Display.TextDisplay display, boolean useDefaultBackground) {
+        ((TextDisplayAccessor) display).jflib$setFlags(TextDisplayBuilder.withFlag(
+                ((TextDisplayAccessor) display).jflib$getFlags(),
+                Display.TextDisplay.FLAG_USE_DEFAULT_BACKGROUND,
+                useDefaultBackground
+        ));
+    }
+
+    /**
+     * Change a text display's see-through status.
+     *
+     * @param display Display to update
+     * @param seeThrough Whether text should be visible through terrain.
+     */
+    public static void setDisplayTextSeeThrough(Display.TextDisplay display, boolean seeThrough) {
+        ((TextDisplayAccessor) display).jflib$setFlags(TextDisplayBuilder.withFlag(
+                ((TextDisplayAccessor) display).jflib$getFlags(),
+                Display.TextDisplay.FLAG_SEE_THROUGH,
+                seeThrough
+        ));
+    }
+
+    /**
+     * Change whether a text display has a shadow.
+     *
+     * @param display Display to update
+     * @param hasShadow Whether text should have a shadow on the ground.
+     */
+    public static void setDisplayTextHasShadow(Display.TextDisplay display, boolean hasShadow) {
+        ((TextDisplayAccessor) display).jflib$setFlags(TextDisplayBuilder.withFlag(
+                ((TextDisplayAccessor) display).jflib$getFlags(),
+                Display.TextDisplay.FLAG_SHADOW,
+                hasShadow
+        ));
     }
 
     /**
