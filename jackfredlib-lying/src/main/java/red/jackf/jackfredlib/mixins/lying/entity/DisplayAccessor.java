@@ -35,12 +35,11 @@ public interface DisplayAccessor {
     @Invoker("setShadowStrength")
     void jflib$setShadowStrength(float radius);
 
-    @Invoker("setTransformationInterpolationDelay")
+    @Invoker("setInterpolationDelay")
     void jflib$setTransformationInterpolationDelay(int ticks);
 
-    @Invoker("setTransformationInterpolationDuration")
+    @Invoker("setInterpolationDuration")
     void jflib$setTransformationInterpolationLength(int transformationInterpolationLength);
 
-    @Invoker("setPosRotInterpolationDuration")
-    void jflib$setTeleportInterpolationLength(int transformationInterpolationLength);
+    // teleport interpolation: not applicable below 1.20.2
 }

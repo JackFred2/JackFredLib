@@ -6,7 +6,6 @@ import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -262,18 +261,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
         return self();
     }
 
-    /**
-     * Sets how long a display entity will interpolate between positions and rotations when teleported, for example using
-     * {@link net.minecraft.world.entity.Entity#setPos(Vec3)}.
-     *
-     * @param interpolationDurationTicks How long interpolation of an entity lie's position and rotation when teleported
-     *                                  will last, in ticks.
-     * @return This builder
-     */
-    public B teleportInterpolationDuration(int interpolationDurationTicks) {
-        ((DisplayAccessor) this.entity).jflib$setTeleportInterpolationLength(interpolationDurationTicks);
-        return self();
-    }
+    // teleport interpolation length: not applicable below 1.20.2
 
     /**
      * Gert the current transformation matrix of this Display entity.
