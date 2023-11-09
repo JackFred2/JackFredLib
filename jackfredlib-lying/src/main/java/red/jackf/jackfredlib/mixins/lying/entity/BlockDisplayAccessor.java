@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Display.BlockDisplay.class)
 public interface BlockDisplayAccessor {
     @Invoker("setBlockState")
-    void callSetBlockState(BlockState newState);
+    void jflib$setBlockState(BlockState newState);
 }

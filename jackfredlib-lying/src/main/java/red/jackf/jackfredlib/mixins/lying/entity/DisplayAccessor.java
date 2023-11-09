@@ -10,28 +10,37 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Display.class)
 public interface DisplayAccessor {
     @Invoker("setBillboardConstraints")
-    void callSetBillboardConstraints(Display.BillboardConstraints constraints);
+    void jflib$setBillboardConstraints(Display.BillboardConstraints constraints);
 
     @Invoker("setGlowColorOverride")
-    void callSetGlowColorOverride(int colour);
+    void jflib$setGlowColorOverride(int colour);
 
     @Invoker("createTransformation")
-    static Transformation callCreateTransformation(SynchedEntityData data) {
+    static Transformation jflib$createTransformation(SynchedEntityData data) {
         throw new AssertionError("mixin not applied correctly");
     }
 
     @Invoker("setTransformation")
-    void callSetTransformation(Transformation transformation);
+    void jflib$setTransformation(Transformation transformation);
 
     @Invoker("setBrightnessOverride")
-    void callSetBrightnessOverride(Brightness brightness);
+    void jflib$setBrightnessOverride(Brightness brightness);
 
     @Invoker("setViewRange")
-    void callSetViewRange(float rangeModifier);
+    void jflib$setViewRange(float rangeModifier);
 
     @Invoker("setShadowRadius")
-    void callSetShadowRadius(float radius);
+    void jflib$setShadowRadius(float radius);
 
     @Invoker("setShadowStrength")
-    void callSetShadowStrength(float radius);
+    void jflib$setShadowStrength(float radius);
+
+    @Invoker("setTransformationInterpolationDelay")
+    void jflib$setTransformationInterpolationDelay(int ticks);
+
+    @Invoker("setTransformationInterpolationDuration")
+    void jflib$setTransformationInterpolationLength(int transformationInterpolationLength);
+
+    @Invoker("setPosRotInterpolationDuration")
+    void jflib$setTeleportInterpolationLength(int transformationInterpolationLength);
 }

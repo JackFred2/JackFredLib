@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ServerboundInteractPacket.class)
 public interface ServerboundInteractPacketAccessor {
     @Accessor("entityId")
-    int invokeGetEntityId();
+    int jflib$getEntityId();
 }
