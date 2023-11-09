@@ -171,7 +171,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
         return self();
     }
 
-    private static byte withFlag(byte field, byte flag, boolean shouldSet) {
+    public static byte withFlag(byte field, byte flag, boolean shouldSet) {
         if (shouldSet) return (byte) (field | flag);
         else return (byte) (field & ~flag);
     }
