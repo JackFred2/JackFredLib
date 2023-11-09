@@ -30,7 +30,7 @@ public class ServerGamePacketListenerImplMixin {
             locals = LocalCapture.CAPTURE_FAILHARD)
     private void handleFakeEntities(ServerboundInteractPacket packet, CallbackInfo ci, final ServerLevel serverLevel, final Entity entity) {
         if (entity == null) {
-            final int entityId = ((ServerboundInteractPacketAccessor) packet).invokeGetEntityId();
+            final int entityId = ((ServerboundInteractPacketAccessor) packet).jflib$getEntityId();
             packet.dispatch(new ServerboundInteractPacket.Handler() {
 
                 @Override

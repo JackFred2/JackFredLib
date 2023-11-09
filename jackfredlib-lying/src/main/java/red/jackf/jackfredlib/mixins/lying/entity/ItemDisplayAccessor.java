@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Display.ItemDisplay.class)
 public interface ItemDisplayAccessor {
     @Invoker("setItemStack")
-    void callSetItemStack(ItemStack stack);
+    void jflib$setItemStack(ItemStack stack);
 
     @Invoker("setItemTransform")
-    void callSetItemTransform(ItemDisplayContext context);
+    void jflib$setItemTransform(ItemDisplayContext context);
 }

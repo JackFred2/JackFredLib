@@ -33,7 +33,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @return This entity builder
      */
     public TextDisplayBuilder text(Component text) {
-        ((TextDisplayAccessor) this.entity).callSetText(text);
+        ((TextDisplayAccessor) this.entity).jflib$setText(text);
         return self();
     }
 
@@ -46,10 +46,10 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @see #lineWidth(int)
      */
     public TextDisplayBuilder textAlign(Display.TextDisplay.Align align) {
-        byte flags = (byte) (((TextDisplayAccessor) this.entity).callGetFlags() & 0b00111);
+        byte flags = (byte) (((TextDisplayAccessor) this.entity).jflib$getFlags() & 0b00111);
         if (align == Display.TextDisplay.Align.LEFT) flags |= Display.TextDisplay.FLAG_ALIGN_LEFT;
         else if (align == Display.TextDisplay.Align.RIGHT) flags |= Display.TextDisplay.FLAG_ALIGN_RIGHT;
-        ((TextDisplayAccessor) this.entity).callSetFlags(flags);
+        ((TextDisplayAccessor) this.entity).jflib$setFlags(flags);
         return self();
     }
 
@@ -62,7 +62,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @implNote Default: 200
      */
     public TextDisplayBuilder lineWidth(int width) {
-        ((TextDisplayAccessor) this.entity).callSetLineWidth(width);
+        ((TextDisplayAccessor) this.entity).jflib$setLineWidth(width);
         return self();
     }
 
@@ -78,7 +78,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @see #backgroundColour(int)
      */
     public TextDisplayBuilder textOpacity(int opacity) {
-        ((TextDisplayAccessor) this.entity).callSetTextOpacity((byte) Mth.clamp(opacity, 0, 255));
+        ((TextDisplayAccessor) this.entity).jflib$setTextOpacity((byte) Mth.clamp(opacity, 0, 255));
         return self();
     }
 
@@ -93,7 +93,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @see #textOpacity(int)
      */
     public TextDisplayBuilder backgroundColour(int argb) {
-        ((TextDisplayAccessor) this.entity).callSetBackgroundColor(argb);
+        ((TextDisplayAccessor) this.entity).jflib$setBackgroundColor(argb);
         return self();
     }
 
@@ -139,7 +139,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @implNote Default: false
      */
     public TextDisplayBuilder useDefaultBackground(boolean useDefaultBackground) {
-        ((TextDisplayAccessor) this.entity).callSetFlags(withFlag(((TextDisplayAccessor) this.entity).callGetFlags(), Display.TextDisplay.FLAG_USE_DEFAULT_BACKGROUND, useDefaultBackground));
+        ((TextDisplayAccessor) this.entity).jflib$setFlags(withFlag(((TextDisplayAccessor) this.entity).jflib$getFlags(), Display.TextDisplay.FLAG_USE_DEFAULT_BACKGROUND, useDefaultBackground));
         return self();
     }
 
@@ -155,7 +155,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @implNote Default: false
      */
     public TextDisplayBuilder seeThrough(boolean seeThrough) {
-        ((TextDisplayAccessor) this.entity).callSetFlags(withFlag(((TextDisplayAccessor) this.entity).callGetFlags(), Display.TextDisplay.FLAG_SEE_THROUGH, seeThrough));
+        ((TextDisplayAccessor) this.entity).jflib$setFlags(withFlag(((TextDisplayAccessor) this.entity).jflib$getFlags(), Display.TextDisplay.FLAG_SEE_THROUGH, seeThrough));
         return self();
     }
 
@@ -167,7 +167,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @implNote Default: false
      */
     public TextDisplayBuilder hasShadow(boolean hasShadow) {
-        ((TextDisplayAccessor) this.entity).callSetFlags(withFlag(((TextDisplayAccessor) this.entity).callGetFlags(), Display.TextDisplay.FLAG_SHADOW, hasShadow));
+        ((TextDisplayAccessor) this.entity).jflib$setFlags(withFlag(((TextDisplayAccessor) this.entity).jflib$getFlags(), Display.TextDisplay.FLAG_SHADOW, hasShadow));
         return self();
     }
 

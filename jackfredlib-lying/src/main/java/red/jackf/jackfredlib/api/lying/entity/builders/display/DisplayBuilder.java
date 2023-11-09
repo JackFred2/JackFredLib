@@ -6,6 +6,7 @@ import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -43,7 +44,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B glowing(boolean shouldGlow, int colour) {
-        ((DisplayAccessor) this.entity).callSetGlowColorOverride(colour);
+        ((DisplayAccessor) this.entity).jflib$setGlowColorOverride(colour);
         return this.glowing(shouldGlow);
     }
 
@@ -86,7 +87,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @implNote Default: {@link BillboardConstraints#FIXED}
      */
     public B billboard(BillboardConstraints billboardMode) {
-        ((DisplayAccessor) this.entity).callSetBillboardConstraints(billboardMode);
+        ((DisplayAccessor) this.entity).jflib$setBillboardConstraints(billboardMode);
         return self();
     }
 
@@ -99,7 +100,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @implNote Default: No override, meaning the display entity takes the light level from its current world position
      */
     public B brightness(int block, int sky) {
-        ((DisplayAccessor) this.entity).callSetBrightnessOverride(new Brightness(Mth.clamp(block, 0, 15), Mth.clamp(sky, 0, 15)));
+        ((DisplayAccessor) this.entity).jflib$setBrightnessOverride(new Brightness(Mth.clamp(block, 0, 15), Mth.clamp(sky, 0, 15)));
         return self();
     }
 
@@ -112,7 +113,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @implNote Default: 1.0
      */
     public B viewRangeModifier(float modifier) {
-        ((DisplayAccessor) this.entity).callSetViewRange(modifier);
+        ((DisplayAccessor) this.entity).jflib$setViewRange(modifier);
         return self();
     }
 
@@ -126,7 +127,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @implNote Default: 0 (no shadow).
      */
     public B shadowRadius(float shadowRadius) {
-        ((DisplayAccessor) this.entity).callSetShadowRadius(Mth.clamp(shadowRadius, 0, 64));
+        ((DisplayAccessor) this.entity).jflib$setShadowRadius(Mth.clamp(shadowRadius, 0, 64));
         return self();
     }
 
@@ -141,7 +142,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @implNote Default: 1
      */
     public B shadowStrength(float shadowStrength) {
-        ((DisplayAccessor) this.entity).callSetShadowStrength(shadowStrength);
+        ((DisplayAccessor) this.entity).jflib$setShadowStrength(shadowStrength);
         return self();
     }
 
@@ -156,7 +157,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Displays</a>
      */
     public B transform(Vector3f translation, Quaternionf leftRotation, Vector3f scale, Quaternionf rightRotation) {
-        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
                 translation,
                 leftRotation,
                 scale,
@@ -173,7 +174,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B setTranslation(Vector3f translation) {
         var transform = getTransformation();
-        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
                 translation,
                 transform.getLeftRotation(),
                 transform.getScale(),
@@ -190,7 +191,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B addTranslation(Vector3f translation) {
         var transform = getTransformation();
-        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
                 transform.getTranslation().add(translation),
                 transform.getLeftRotation(),
                 transform.getScale(),
@@ -207,7 +208,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B leftRotation(Quaternionf leftRotation) {
         var transform = getTransformation();
-        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
                 transform.getTranslation(),
                 leftRotation,
                 transform.getScale(),
@@ -224,7 +225,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B scale(Vector3f scale) {
         var transform = getTransformation();
-        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
                 transform.getTranslation(),
                 transform.getLeftRotation(),
                 scale,
@@ -241,7 +242,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      */
     public B rightRotation(Quaternionf rightRotation) {
         var transform = getTransformation();
-        ((DisplayAccessor) this.entity).callSetTransformation(new Transformation(
+        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
                 transform.getTranslation(),
                 transform.getLeftRotation(),
                 transform.getScale(),
@@ -251,11 +252,35 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     }
 
     /**
+     * Sets how long a display entity will interpolate between two transforms.
+     *
+     * @param interpolationDurationTicks How long interpolation of an entity lie's transform will last, in ticks.
+     * @return This builder
+     */
+    public B transformInterpolationDuration(int interpolationDurationTicks) {
+        ((DisplayAccessor) this.entity).jflib$setTransformationInterpolationLength(interpolationDurationTicks);
+        return self();
+    }
+
+    /**
+     * Sets how long a display entity will interpolate between positions and rotations when teleported, for example using
+     * {@link net.minecraft.world.entity.Entity#setPos(Vec3)}.
+     *
+     * @param interpolationDurationTicks How long interpolation of an entity lie's position and rotation when teleported
+     *                                  will last, in ticks.
+     * @return This builder
+     */
+    public B teleportInterpolationDuration(int interpolationDurationTicks) {
+        ((DisplayAccessor) this.entity).jflib$setTeleportInterpolationLength(interpolationDurationTicks);
+        return self();
+    }
+
+    /**
      * Gert the current transformation matrix of this Display entity.
      * @return The current transformation of this Display entity.
      */
     protected Transformation getTransformation() {
-        return DisplayAccessor.callCreateTransformation(this.entity.getEntityData());
+        return DisplayAccessor.jflib$createTransformation(this.entity.getEntityData());
     }
 
     @Override

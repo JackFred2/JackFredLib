@@ -8,20 +8,20 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Display.TextDisplay.class)
 public interface TextDisplayAccessor {
     @Invoker("setText")
-    void callSetText(Component text);
+    void jflib$setText(Component text);
 
     @Invoker("setBackgroundColor")
-    void callSetBackgroundColor(int colour);
+    void jflib$setBackgroundColor(int colour);
 
     @Invoker("setTextOpacity")
-    void callSetTextOpacity(byte opacity);
+    void jflib$setTextOpacity(byte opacity);
 
     @Invoker("setLineWidth")
-    void callSetLineWidth(int colour);
+    void jflib$setLineWidth(int colour);
 
     @Invoker("setFlags")
-    void callSetFlags(byte opacity);
+    void jflib$setFlags(byte opacity);
 
     @Invoker("getFlags")
-    byte callGetFlags();
+    byte jflib$getFlags();
 }

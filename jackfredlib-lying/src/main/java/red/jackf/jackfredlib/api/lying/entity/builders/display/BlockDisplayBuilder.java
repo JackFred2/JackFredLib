@@ -37,7 +37,7 @@ public class BlockDisplayBuilder extends DisplayBuilder<Display.BlockDisplay, Bl
      * @return This builder
      */
     public BlockDisplayBuilder state(BlockState state) {
-        ((BlockDisplayAccessor) this.entity).callSetBlockState(state);
+        ((BlockDisplayAccessor) this.entity).jflib$setBlockState(state);
         return self();
     }
 
