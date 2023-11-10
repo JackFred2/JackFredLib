@@ -1,5 +1,6 @@
 package red.jackf.jackfredlib.api.lying.entity;
 
+import com.mojang.math.Transformation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
@@ -8,7 +9,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.lying.entity.builders.display.TextDisplayBuilder;
+import red.jackf.jackfredlib.impl.lying.entity.TransformUtil;
 import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
 import red.jackf.jackfredlib.mixins.lying.entity.DisplayAccessor;
 import red.jackf.jackfredlib.mixins.lying.entity.ItemDisplayAccessor;
@@ -34,7 +39,7 @@ public class EntityUtils {
      * Change a text display's text alignment.
      *
      * @param display Display to update
-     * @param align How text for this display should be justified.
+     * @param align   How text for this display should be justified.
      */
     public static void setDisplayTextAlign(Display.TextDisplay display, Display.TextDisplay.Align align) {
         byte flags = (byte) (((TextDisplayAccessor) display).jflib$getFlags() & 0b00111);
@@ -46,7 +51,7 @@ public class EntityUtils {
     /**
      * Change a text display's default background status.
      *
-     * @param display Display to update
+     * @param display              Display to update
      * @param useDefaultBackground Whether this text display should use a client's default background.
      */
     public static void setDisplayTextDefaultBackground(Display.TextDisplay display, boolean useDefaultBackground) {
@@ -60,7 +65,7 @@ public class EntityUtils {
     /**
      * Change a text display's see-through status.
      *
-     * @param display Display to update
+     * @param display    Display to update
      * @param seeThrough Whether text should be visible through terrain.
      */
     public static void setDisplayTextSeeThrough(Display.TextDisplay display, boolean seeThrough) {
@@ -74,7 +79,7 @@ public class EntityUtils {
     /**
      * Change whether a text display has a shadow.
      *
-     * @param display Display to update
+     * @param display   Display to update
      * @param hasShadow Whether text should have a shadow on the ground.
      */
     public static void setDisplayTextHasShadow(Display.TextDisplay display, boolean hasShadow) {
@@ -99,10 +104,124 @@ public class EntityUtils {
      * Change an item display's item stack.
      *
      * @param display Display to update
-     * @param stack ItemStack to give to the display
+     * @param stack   ItemStack to give to the display
      */
     public static void setDisplayItem(Display.ItemDisplay display, ItemStack stack) {
         ((ItemDisplayAccessor) display).jflib$setItemStack(stack);
+    }
+
+    /**
+     * Sets the transformation matrix of the given display entity.
+     *
+     * @param display        Display to update
+     * @param transformation New transformation matrix to give the display
+     */
+    public static void setDisplayTransform(Display display, Transformation transformation) {
+        ((DisplayAccessor) display).jflib$setTransformation(transformation);
+    }
+
+    /**
+     * Sets the translation for the given display entity's transformation.
+     *
+     * @param display     Display to update
+     * @param translation New translation vector to use
+     */
+    public static void setDisplayTranslation(Display display, Vector3f translation) {
+        Transformation original = DisplayAccessor.jflib$createTransformation(display.getEntityData());
+        ((DisplayAccessor) display).jflib$setTransformation(TransformUtil.update(
+                original,
+                translation,
+                null,
+                null,
+                null
+        ));
+    }
+
+    /**
+     * Get the given display entity's transformation.
+     *
+     * @param display Display to get the transform for
+     * @return Transformation for the given display entity
+     */
+    public static Transformation getDisplayTransformation(Display display) {
+        return DisplayAccessor.jflib$createTransformation(display.getEntityData());
+    }
+
+    /**
+     * Sets the left rotation for the given display entity's transformation.
+     *
+     * @param display      Display to update
+     * @param leftRotation New left rotation to use
+     */
+    public static void setDisplayLeftRotation(Display display, Quaternionf leftRotation) {
+        Transformation original = DisplayAccessor.jflib$createTransformation(display.getEntityData());
+        ((DisplayAccessor) display).jflib$setTransformation(TransformUtil.update(
+                original,
+                null,
+                leftRotation,
+                null,
+                null
+        ));
+    }
+
+    /**
+     * Sets the scale for the given display entity's transformation.
+     *
+     * @param display Display to update
+     * @param scale   New scale vector to use
+     */
+    public static void setDisplayScale(Display display, Vector3f scale) {
+        Transformation original = DisplayAccessor.jflib$createTransformation(display.getEntityData());
+        ((DisplayAccessor) display).jflib$setTransformation(TransformUtil.update(
+                original,
+                null,
+                null,
+                scale,
+                null
+        ));
+    }
+
+    /**
+     * Sets the right rotation for the given display entity's transformation.
+     *
+     * @param display       Display to update
+     * @param rightRotation New right rotation to use
+     */
+    public static void setDisplayRightRotation(Display display, Quaternionf rightRotation) {
+        Transformation original = DisplayAccessor.jflib$createTransformation(display.getEntityData());
+        ((DisplayAccessor) display).jflib$setTransformation(TransformUtil.update(
+                original,
+                null,
+                null,
+                null,
+                rightRotation
+        ));
+    }
+
+    /**
+     * Update multiple parts of a display entity's transformation matrix. Any parameter passed <code>null</code> will
+     * result in the original transform's field being kept.
+     *
+     * @param display       Display entity to update the transform for.
+     * @param translation   Translation vector to use. Pass <code>null</code> to keep original.
+     * @param leftRotation  Left rotation to use. Pass <code>null</code> to keep original.
+     * @param scale         Scale vector to use. Pass <code>null</code> to keep original.
+     * @param rightRotation Right rotation to use. Pass <code>null</code> to keep original.
+     */
+    public static void updateDisplayTransformation(
+            Display display,
+            @Nullable Vector3f translation,
+            @Nullable Quaternionf leftRotation,
+            @Nullable Vector3f scale,
+            @Nullable Quaternionf rightRotation) {
+        Transformation original = DisplayAccessor.jflib$createTransformation(display.getEntityData());
+        ((DisplayAccessor) display).jflib$setTransformation(TransformUtil.update(
+                original,
+                translation,
+                leftRotation,
+                scale,
+                rightRotation
+        ));
     }
 
     /**
