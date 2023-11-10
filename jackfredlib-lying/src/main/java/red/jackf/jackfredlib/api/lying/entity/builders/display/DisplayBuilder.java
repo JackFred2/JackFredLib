@@ -11,6 +11,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
+import red.jackf.jackfredlib.api.lying.entity.EntityUtils;
 import red.jackf.jackfredlib.api.lying.entity.builders.BuilderBase;
 import red.jackf.jackfredlib.mixins.lying.entity.DisplayAccessor;
 
@@ -157,7 +158,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @see <a href="https://minecraft.fandom.com/wiki/Display">Minecraft Wiki: Displays</a>
      */
     public B transform(Vector3f translation, Quaternionf leftRotation, Vector3f scale, Quaternionf rightRotation) {
-        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
+        EntityUtils.setDisplayTransform(this.entity, new Transformation(
                 translation,
                 leftRotation,
                 scale,
@@ -173,13 +174,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B setTranslation(Vector3f translation) {
-        var transform = getTransformation();
-        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
-                translation,
-                transform.getLeftRotation(),
-                transform.getScale(),
-                transform.getRightRotation()
-        ));
+        EntityUtils.setDisplayTranslation(this.entity, translation);
         return self();
     }
 
@@ -190,13 +185,8 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B addTranslation(Vector3f translation) {
-        var transform = getTransformation();
-        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
-                transform.getTranslation().add(translation),
-                transform.getLeftRotation(),
-                transform.getScale(),
-                transform.getRightRotation()
-        ));
+        var transform = EntityUtils.getDisplayTransformation(this.entity);
+        EntityUtils.setDisplayTranslation(this.entity, transform.getTranslation().add(translation));
         return self();
     }
 
@@ -207,13 +197,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B leftRotation(Quaternionf leftRotation) {
-        var transform = getTransformation();
-        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
-                transform.getTranslation(),
-                leftRotation,
-                transform.getScale(),
-                transform.getRightRotation()
-        ));
+        EntityUtils.setDisplayLeftRotation(this.entity, leftRotation);
         return self();
     }
 
@@ -224,13 +208,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B scale(Vector3f scale) {
-        var transform = getTransformation();
-        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
-                transform.getTranslation(),
-                transform.getLeftRotation(),
-                scale,
-                transform.getRightRotation()
-        ));
+        EntityUtils.setDisplayScale(this.entity, scale);
         return self();
     }
 
@@ -241,13 +219,7 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
      * @return This builder
      */
     public B rightRotation(Quaternionf rightRotation) {
-        var transform = getTransformation();
-        ((DisplayAccessor) this.entity).jflib$setTransformation(new Transformation(
-                transform.getTranslation(),
-                transform.getLeftRotation(),
-                transform.getScale(),
-                rightRotation
-        ));
+        EntityUtils.setDisplayRightRotation(this.entity, rightRotation);
         return self();
     }
 
@@ -273,14 +245,6 @@ public abstract class DisplayBuilder<E extends Display, B extends DisplayBuilder
     public B teleportInterpolationDuration(int interpolationDurationTicks) {
         ((DisplayAccessor) this.entity).jflib$setTeleportInterpolationLength(interpolationDurationTicks);
         return self();
-    }
-
-    /**
-     * Gert the current transformation matrix of this Display entity.
-     * @return The current transformation of this Display entity.
-     */
-    protected Transformation getTransformation() {
-        return DisplayAccessor.jflib$createTransformation(this.entity.getEntityData());
     }
 
     @Override
