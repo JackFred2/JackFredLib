@@ -1,23 +1,35 @@
 package red.jackf.jackfredlib.client.api.gps;
 
+import com.google.common.collect.Streams;
+import net.minecraft.network.chat.Component;
 import red.jackf.jackfredlib.client.impl.gps.GPSUtilImpl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * <p>Utilities for interacting with the in-game scoreboard on the right-side of the screen. Some servers use this to
  * provide additional information, which can be used by client mods.</p>
+ *
+ * <p>Deprecated, please use {@link ScoreboardSnapshot#getCurrent()}, and the given methods.</p>
  */
+@Deprecated(since = "1.0.5")
 public class ScoreboardUtils {
     /**
-     * Return all rows for the displayed scoreboard, or an empty list if not displayed. Entry order is top down, including
+     * Return all names for the displayed scoreboard, or an empty list if not displayed. Entry order is top down, including
      * the header at index 0.
      *
      * @return All displayed rows on the scoreboard.
      */
     public static List<String> getRows() {
-        return GPSUtilImpl.getScoreboard();
+        return GPSUtilImpl.getScoreboard()
+                          .map(snapshot -> Streams.concat(Stream.of(snapshot.title()),
+                                                          snapshot.names().stream())
+                                                  .map(Component::getString)
+                                                  .toList())
+                          .orElse(Collections.emptyList());
     }
 
     /**
@@ -29,10 +41,11 @@ public class ScoreboardUtils {
      * found.
      */
     public static Optional<String> getPrefixed(String prefix) {
-        return GPSUtilImpl.getScoreboard().stream()
-                .filter(s -> s.startsWith(prefix))
-                .findFirst()
-                .map(s -> s.substring(prefix.length()));
+        return GPSUtilImpl.getScoreboard().flatMap(snapshot -> snapshot.names().stream()
+                                                                       .map(Component::getString)
+                                                                       .filter(s -> s.startsWith(prefix))
+                                                                       .findFirst()
+                                                                       .map(s -> s.substring(prefix.length())));
     }
 
     /**
@@ -44,10 +57,14 @@ public class ScoreboardUtils {
      * @return The specified row on the scoreboard, or an empty optional if out of bounds.
      */
     public static Optional<String> getRow(int row) {
-        var rows = GPSUtilImpl.getScoreboard();
-        if (rows.isEmpty()) return Optional.empty();
-        int targetedRow = row < 0 ? rows.size() + row : row;
-        if (targetedRow < 0 || targetedRow >= rows.size()) return Optional.empty();
-        return Optional.of(rows.get(targetedRow));
+        return GPSUtilImpl.getScoreboard().map(snapshot -> {
+            int size = 1 + snapshot.entries().size();
+
+            int targetedRow = row < 0 ? size + row : row;
+            if (targetedRow < 0 || targetedRow >= size) return null;
+
+            if (targetedRow == 0) return snapshot.title().getString();
+            return snapshot.entries().get(targetedRow - 1).getFirst().getString();
+        });
     }
 }

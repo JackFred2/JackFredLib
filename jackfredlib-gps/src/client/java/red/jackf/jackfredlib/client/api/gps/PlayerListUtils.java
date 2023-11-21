@@ -15,7 +15,7 @@ public class PlayerListUtils {
      * @return An Optional containing the current header for the in-game player list, or an empty Optional if not present.
      */
     public static Optional<String> getHeader() {
-        return Optional.ofNullable(GPSUtilImpl.getPlayerListHeader());
+        return GPSUtilImpl.getPlayerListHeader();
     }
 
     /**
@@ -23,7 +23,7 @@ public class PlayerListUtils {
      * @return An Optional containing the current footer for the in-game player list, or an empty Optional if not present.
      */
     public static Optional<String> getFooter() {
-        return Optional.ofNullable(GPSUtilImpl.getPlayerListFooter());
+        return GPSUtilImpl.getPlayerListFooter();
     }
 
     /**

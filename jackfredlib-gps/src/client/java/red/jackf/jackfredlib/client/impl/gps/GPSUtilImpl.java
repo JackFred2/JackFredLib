@@ -1,28 +1,30 @@
 package red.jackf.jackfredlib.client.impl.gps;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.numbers.NumberFormat;
+import net.minecraft.network.chat.numbers.StyledFormat;
 import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Score;
+import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.Nullable;
+import red.jackf.jackfredlib.client.api.gps.ScoreboardSnapshot;
+import red.jackf.jackfredlib.client.mixins.gps.GuiAccessor;
 import red.jackf.jackfredlib.client.mixins.gps.PlayerTabOverlayAccessor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class GPSUtilImpl {
-    public static @Nullable String getPlayerListHeader() {
+    public static Optional<String> getPlayerListHeader() {
         var header = ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).jflib$getHeader();
-        return header != null ? header.getString() : null;
+        return header != null ? Optional.of(header.getString()) : Optional.empty();
     }
-    public static @Nullable String getPlayerListFooter() {
+    public static Optional<String> getPlayerListFooter() {
         var footer = ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).jflib$getFooter();
-        return footer != null ? footer.getString() : null;
+        return footer != null ? Optional.of(footer.getString()) : Optional.empty();
     }
 
     public static List<String> getPlayerList() {
@@ -32,26 +34,25 @@ public class GPSUtilImpl {
                 .toList();
     }
 
-    public static List<String> getScoreboard() {
-        var obj = getDisplayedScoreboardObjective();
-        if (obj == null) return Collections.emptyList();
-        //noinspection ConstantValue
-        var scores = obj.getScoreboard().getPlayerScores(obj).stream()
-                .filter(score -> score.getOwner() != null && !score.getOwner().startsWith("#"))
-                .toList();
-        if (scores.size() > 15) {
-            scores = Lists.newArrayList(Iterables.skip(scores, scores.size() - 15));
-        }
-        if (scores.isEmpty()) return Collections.emptyList();
-        List<String> lines = new ArrayList<>(scores.size() + 1);
-        lines.add(obj.getDisplayName().getString());
-        for (int i = scores.size() - 1; i >= 0; i--) {
-            Score score = scores.get(i);
-            PlayerTeam team = obj.getScoreboard().getPlayersTeam(score.getOwner());
-            Component formattedName = PlayerTeam.formatNameForTeam(team, Component.literal(score.getOwner()));
-            lines.add(formattedName.getString());
-        }
-        return lines;
+    public static Optional<ScoreboardSnapshot> getScoreboard() {
+        Objective obj = getDisplayedScoreboardObjective();
+        if (obj == null) return Optional.empty();
+        NumberFormat numberFormat = obj.numberFormatOrDefault(StyledFormat.SIDEBAR_DEFAULT);
+        Scoreboard scoreboard = obj.getScoreboard();
+
+        var list = obj.getScoreboard().listPlayerScores(obj).stream()
+                .filter(entry -> !entry.isHidden())
+                .sorted(GuiAccessor.getScoreDisplayOrder())
+                .limit(15)
+                .map(entry -> {
+                    PlayerTeam playerTeam = scoreboard.getPlayersTeam(entry.owner());
+                    Component name = entry.ownerName();
+                    Component formattedName = PlayerTeam.formatNameForTeam(playerTeam, name);
+                    Component formattedValue = entry.formatValue(numberFormat);
+                    return Pair.of(formattedName, formattedValue);
+                }).toList();
+
+        return Optional.of(new ScoreboardSnapshotImpl(obj.getDisplayName(), list));
     }
 
     private static @Nullable Objective getDisplayedScoreboardObjective() {
