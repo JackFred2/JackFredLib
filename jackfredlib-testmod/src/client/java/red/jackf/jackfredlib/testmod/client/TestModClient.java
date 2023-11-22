@@ -5,8 +5,9 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
-import red.jackf.jackfredlib.client.api.gps.PlayerListUtils;
+import red.jackf.jackfredlib.client.api.gps.PlayerListSnapshot;
 import red.jackf.jackfredlib.client.api.gps.ScoreboardSnapshot;
 import red.jackf.jackfredlib.impl.base.LogUtil;
 
@@ -35,11 +36,11 @@ public class TestModClient implements ClientModInitializer {
             dispatcher.register(
                     literal("jflibtest").then(
                             literal("printtablist").executes(ctx -> {
-                                PlayerListUtils.getAll().forEach(LOGGER::info);
+                                PlayerListSnapshot.take().names().forEach(c -> LOGGER.info(c.getString()));
                                 return 0;
                             })).then(
                             literal("area").executes(ctx -> {
-                                LOGGER.info("Area: {}", PlayerListUtils.getPrefixed("Area: "));
+                                LOGGER.info("Area: {}", PlayerListSnapshot.take().nameWithPrefix("Area: ").map(Component::getString));
                                 return 0;
                             })).then(
                             literal("scoreboard").executes(ctx -> {
@@ -47,11 +48,11 @@ public class TestModClient implements ClientModInitializer {
                                 return 0;
                             })).then(
                             literal("header").executes(ctx -> {
-                                LOGGER.info(PlayerListUtils.getHeader().toString());
+                                LOGGER.info(PlayerListSnapshot.take().header().map(Component::getString).orElse("no header"));
                                 return 0;
                             })).then(
                             literal("footer").executes(ctx -> {
-                                LOGGER.info(PlayerListUtils.getFooter().toString());
+                                LOGGER.info(PlayerListSnapshot.take().footer().map(Component::getString).orElse("no footer"));
                                 return 0;
                             }))));
     }

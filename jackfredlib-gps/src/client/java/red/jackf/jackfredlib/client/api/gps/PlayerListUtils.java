@@ -1,21 +1,24 @@
 package red.jackf.jackfredlib.client.api.gps;
 
-import red.jackf.jackfredlib.client.impl.gps.GPSUtilImpl;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Utilities for working with the in-game player list (when holding tab). Many large servers use these to show details
- * other than players, such as Hypixel Skyblock's current location.
+ * <p>Utilities for working with the in-game player list (when holding tab). Many large servers use these to show details
+ * other than players, such as Hypixel Skyblock's current location.</p>
+ *
+ * <p>Deprecated, please use {@link PlayerListSnapshot#take()} and the given methods.</p>
  */
+@Deprecated(since = "1.0.7", forRemoval = true)
 public class PlayerListUtils {
     /**
      * Return the header of the player list if one exists, an empty optional if not present
      * @return An Optional containing the current header for the in-game player list, or an empty Optional if not present.
      */
     public static Optional<String> getHeader() {
-        return GPSUtilImpl.getPlayerListHeader();
+        return PlayerListSnapshot.take().header().map(Component::getString);
     }
 
     /**
@@ -23,7 +26,7 @@ public class PlayerListUtils {
      * @return An Optional containing the current footer for the in-game player list, or an empty Optional if not present.
      */
     public static Optional<String> getFooter() {
-        return GPSUtilImpl.getPlayerListFooter();
+        return PlayerListSnapshot.take().footer().map(Component::getString);
     }
 
     /**
@@ -32,7 +35,9 @@ public class PlayerListUtils {
      * @return A list of all tab list entries, mapped to a string.
      */
     public static List<String> getAll() {
-        return GPSUtilImpl.getPlayerList();
+        return PlayerListSnapshot.take().names().stream()
+                .map(Component::getString)
+                .toList();
     }
 
     /**
@@ -44,10 +49,7 @@ public class PlayerListUtils {
      * found.
      */
     public static Optional<String> getPrefixed(String prefix) {
-        return GPSUtilImpl.getPlayerList().stream()
-                .filter(s -> s.startsWith(prefix))
-                .findFirst()
-                .map(s -> s.substring(prefix.length()));
+        return PlayerListSnapshot.take().nameWithPrefixStripped(prefix);
     }
 
     /**
@@ -56,13 +58,8 @@ public class PlayerListUtils {
      * @return A Dimensions marking the current size of the player list widget.
      */
     public static Dimensions getWidgetSize() {
-        int listSize = GPSUtilImpl.getPlayerList().size();
-        int rows = listSize;
-        int columns;
-        for (columns = 1; rows > 20; rows = (listSize + columns - 1) / columns) {
-            ++columns;
-        }
-        return new Dimensions(columns, rows);
+        PlayerListSnapshot.Dimensions oldDimensions = PlayerListSnapshot.take().size();
+        return new Dimensions(oldDimensions.columns(), oldDimensions.rows());
     }
 
     /**
@@ -77,15 +74,7 @@ public class PlayerListUtils {
      * @return An Optional containing the entry at a given position, or and empty optional if out of bounds / not present.
      */
     public static Optional<String> getFromPosition(int column, int row) {
-        List<String> list = GPSUtilImpl.getPlayerList();
-        var dimensions = getWidgetSize();
-        int targetedColumn = column < 0 ? dimensions.columns + column : column;
-        int targetedRow = row < 0 ? dimensions.rows + row : row;
-        if (targetedColumn < 0 || targetedColumn >= dimensions.columns || targetedRow < 0 || targetedRow >= dimensions.rows)
-            return Optional.empty();
-        int index = targetedRow * dimensions.columns + targetedColumn;
-        if (index < list.size()) return Optional.of(list.get(index));
-        return Optional.empty();
+        return PlayerListSnapshot.take().nameAtPosition(column, row).map(Component::getString);
     }
 
     /**

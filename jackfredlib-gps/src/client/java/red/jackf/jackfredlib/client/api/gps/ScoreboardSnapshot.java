@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * <p>Represents a snapshot of the right-hand scoreboard currently displayed to the client.</p>
  *
- * <p>All examples below will use the following scoreboard as an example:</p>
+ * <p>All examples below will use the following scoreboard:</p>
  *
  * <pre>
  *     +-------------------------+
@@ -110,7 +110,7 @@ public interface ScoreboardSnapshot {
 
     /**
      * <p>Return an optional possibly containing the first found name which is prefixed with the given string. This version
-     * returns it in String format, <b>with the given prefix removed</b>.</p>
+     * returns it as a String, <b>with the given prefix removed</b>.</p>
      *
      * <p>Example: <code>snapshot.nameWithPrefixStripped("Area: ") = Optional["Mines"]</code></p>
      *

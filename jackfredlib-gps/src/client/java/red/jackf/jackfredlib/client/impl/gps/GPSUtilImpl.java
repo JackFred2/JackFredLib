@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.client.impl.gps;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.numbers.NumberFormat;
 import net.minecraft.network.chat.numbers.StyledFormat;
@@ -10,6 +11,7 @@ import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.Nullable;
+import red.jackf.jackfredlib.client.api.gps.PlayerListSnapshot;
 import red.jackf.jackfredlib.client.api.gps.ScoreboardSnapshot;
 import red.jackf.jackfredlib.client.mixins.gps.GuiAccessor;
 import red.jackf.jackfredlib.client.mixins.gps.PlayerTabOverlayAccessor;
@@ -18,20 +20,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class GPSUtilImpl {
-    public static Optional<String> getPlayerListHeader() {
-        var header = ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).jflib$getHeader();
-        return header != null ? Optional.of(header.getString()) : Optional.empty();
-    }
-    public static Optional<String> getPlayerListFooter() {
-        var footer = ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).jflib$getFooter();
-        return footer != null ? Optional.of(footer.getString()) : Optional.empty();
-    }
-
-    public static List<String> getPlayerList() {
-        var tabList = Minecraft.getInstance().gui.getTabList();
-        return ((PlayerTabOverlayAccessor) tabList).jflib$getPlayerInfos().stream()
-                .map(info -> tabList.getNameForDisplay(info).getString())
-                .toList();
+    public static PlayerListSnapshot getPlayerList() {
+        PlayerTabOverlay tabList = Minecraft.getInstance().gui.getTabList();
+        PlayerTabOverlayAccessor accessed = (PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList();
+        Optional<Component> header = Optional.ofNullable(accessed.jflib$getHeader());
+        Optional<Component> footer = Optional.ofNullable(accessed.jflib$getFooter());
+        List<Component> names = accessed.jflib$getPlayerInfos().stream()
+                                        .map(tabList::getNameForDisplay)
+                                        .toList();
+        return new PlayerListSnapshotImpl(header, footer, names);
     }
 
     public static Optional<ScoreboardSnapshot> getScoreboard() {
@@ -41,16 +38,16 @@ public class GPSUtilImpl {
         Scoreboard scoreboard = obj.getScoreboard();
 
         var list = obj.getScoreboard().listPlayerScores(obj).stream()
-                .filter(entry -> !entry.isHidden())
-                .sorted(GuiAccessor.getScoreDisplayOrder())
-                .limit(15)
-                .map(entry -> {
-                    PlayerTeam playerTeam = scoreboard.getPlayersTeam(entry.owner());
-                    Component name = entry.ownerName();
-                    Component formattedName = PlayerTeam.formatNameForTeam(playerTeam, name);
-                    Component formattedValue = entry.formatValue(numberFormat);
-                    return Pair.of(formattedName, formattedValue);
-                }).toList();
+                      .filter(entry -> !entry.isHidden())
+                      .sorted(GuiAccessor.getScoreDisplayOrder())
+                      .limit(15)
+                      .map(entry -> {
+                          PlayerTeam playerTeam = scoreboard.getPlayersTeam(entry.owner());
+                          Component name = entry.ownerName();
+                          Component formattedName = PlayerTeam.formatNameForTeam(playerTeam, name);
+                          Component formattedValue = entry.formatValue(numberFormat);
+                          return Pair.of(formattedName, formattedValue);
+                      }).toList();
 
         return Optional.of(new ScoreboardSnapshotImpl(obj.getDisplayName(), list));
     }
