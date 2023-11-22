@@ -13,9 +13,9 @@ import java.util.stream.Stream;
  * <p>Utilities for interacting with the in-game scoreboard on the right-side of the screen. Some servers use this to
  * provide additional information, which can be used by client mods.</p>
  *
- * <p>Deprecated, please use {@link ScoreboardSnapshot#getCurrent()}, and the given methods.</p>
+ * <p>Deprecated, please use {@link ScoreboardSnapshot#take()}, and the given methods.</p>
  */
-@Deprecated(since = "1.0.5")
+@Deprecated(since = "1.0.5", forRemoval = true)
 public class ScoreboardUtils {
     /**
      * Return all names for the displayed scoreboard, or an empty list if not displayed. Entry order is top down, including
@@ -41,11 +41,10 @@ public class ScoreboardUtils {
      * found.
      */
     public static Optional<String> getPrefixed(String prefix) {
-        return GPSUtilImpl.getScoreboard().flatMap(snapshot -> snapshot.names().stream()
-                                                                       .map(Component::getString)
-                                                                       .filter(s -> s.startsWith(prefix))
-                                                                       .findFirst()
-                                                                       .map(s -> s.substring(prefix.length())));
+        return GPSUtilImpl.getScoreboard().flatMap(snapshot -> {
+            if (snapshot.title().getString().startsWith(prefix)) return Optional.of(snapshot.title().getString().substring(prefix.length()));
+            return snapshot.nameWithPrefixStripped(prefix);
+        });
     }
 
     /**
@@ -64,7 +63,7 @@ public class ScoreboardUtils {
             if (targetedRow < 0 || targetedRow >= size) return null;
 
             if (targetedRow == 0) return snapshot.title().getString();
-            return snapshot.entries().get(targetedRow - 1).getFirst().getString();
+            return snapshot.entryFromTop(targetedRow - 1).map(pair -> pair.getFirst().getString()).orElse(null);
         });
     }
 }

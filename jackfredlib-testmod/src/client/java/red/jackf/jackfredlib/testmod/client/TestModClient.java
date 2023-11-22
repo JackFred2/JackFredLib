@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.commands.Commands;
 import org.slf4j.Logger;
 import red.jackf.jackfredlib.client.api.gps.PlayerListUtils;
-import red.jackf.jackfredlib.client.api.gps.ScoreboardUtils;
+import red.jackf.jackfredlib.client.api.gps.ScoreboardSnapshot;
 import red.jackf.jackfredlib.impl.base.LogUtil;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -43,7 +43,7 @@ public class TestModClient implements ClientModInitializer {
                                 return 0;
                             })).then(
                             literal("scoreboard").executes(ctx -> {
-                                LOGGER.info(ScoreboardUtils.getRows().toString());
+                                LOGGER.info(ScoreboardSnapshot.take().toString());
                                 return 0;
                             })).then(
                             literal("header").executes(ctx -> {
