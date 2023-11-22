@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.client.api.gps;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import red.jackf.jackfredlib.client.impl.gps.GPSUtilImpl;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Optional;
  *
  * @see Component#getString()
  */
+@ApiStatus.AvailableSince("1.0.5")
 public interface ScoreboardSnapshot {
     /**
      * Take a snapshot of the currently displayed player scoreboard, on the right hand of the screen. Returns an empty optional if

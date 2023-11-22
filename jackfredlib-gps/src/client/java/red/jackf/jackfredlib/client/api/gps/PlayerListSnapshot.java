@@ -1,6 +1,7 @@
 package red.jackf.jackfredlib.client.api.gps;
 
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import red.jackf.jackfredlib.client.impl.gps.GPSUtilImpl;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Optional;
  *
  * @see Component#getString()
  */
+@ApiStatus.AvailableSince("1.0.7")
 public interface PlayerListSnapshot {
     /**
      * Take a snapshot of the current player list.

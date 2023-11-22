@@ -1,6 +1,7 @@
 package red.jackf.jackfredlib.client.api.gps;
 
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +10,10 @@ import java.util.Optional;
  * <p>Utilities for working with the in-game player list (when holding tab). Many large servers use these to show details
  * other than players, such as Hypixel Skyblock's current location.</p>
  *
- * <p>Deprecated, please use {@link PlayerListSnapshot#take()} and the given methods.</p>
+ * @deprecated Use {@link PlayerListSnapshot#take()} and the given methods.
  */
 @Deprecated(since = "1.0.7", forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "1.1")
 public class PlayerListUtils {
     /**
      * Return the header of the player list if one exists, an empty optional if not present

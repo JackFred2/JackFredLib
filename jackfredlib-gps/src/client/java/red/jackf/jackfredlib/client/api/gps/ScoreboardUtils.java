@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.client.api.gps;
 
 import com.google.common.collect.Streams;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import red.jackf.jackfredlib.client.impl.gps.GPSUtilImpl;
 
 import java.util.Collections;
@@ -13,9 +14,10 @@ import java.util.stream.Stream;
  * <p>Utilities for interacting with the in-game scoreboard on the right-side of the screen. Some servers use this to
  * provide additional information, which can be used by client mods.</p>
  *
- * <p>Deprecated, please use {@link ScoreboardSnapshot#take()}, and the given methods.</p>
+ * @deprecated Use {@link ScoreboardSnapshot#take()} and the given methods.
  */
 @Deprecated(since = "1.0.5", forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "1.1")
 public class ScoreboardUtils {
     /**
      * Return all names for the displayed scoreboard, or an empty list if not displayed. Entry order is top down, including
