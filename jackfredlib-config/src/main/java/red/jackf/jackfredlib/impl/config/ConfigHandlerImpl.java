@@ -70,6 +70,15 @@ public class ConfigHandlerImpl<T extends Config<T>> implements ConfigHandler<T> 
     }
 
     @Override
+    public T setInstance(T newInstance) {
+        T old = this.instance;
+        this.instance = newInstance;
+        this.save();
+        this.instance.onLoad(old);
+        return old;
+    }
+
+    @Override
     public void load() {
         T oldInstance = this.instance;
 
