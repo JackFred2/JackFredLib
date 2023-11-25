@@ -15,6 +15,8 @@ import java.util.function.Consumer;
  * @param <T> Class of your config.
  */
 public interface ConfigHandlerBuilder<T extends Config<T>> {
+    // REQUIRED
+
     /**
      * Create a new Config Handler with the given settings.
      *
@@ -22,10 +24,8 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
      */
     ConfigHandler<T> build();
 
-    // REQUIRED
-
     /**
-     * Set the file path of this config file.
+     * Set the file path of this config file. Not needed if {@link #fileName(String)} is specified.
      *
      * @param filePath Path to save the file at.
      * @return This config handler builder.
@@ -34,6 +34,7 @@ public interface ConfigHandlerBuilder<T extends Config<T>> {
 
     /**
      * Set the path of this config file by placing it in the default config directory, under <code>config/{name}.json5</code>.
+     * Not needed if {@link #path(Path)} is specified.
      *
      * @param name Name of the used JSON file.
      * @return This config handler builder.
