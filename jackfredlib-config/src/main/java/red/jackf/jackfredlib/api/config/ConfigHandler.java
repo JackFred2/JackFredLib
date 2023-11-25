@@ -28,8 +28,18 @@ public interface ConfigHandler<T extends Config<T>> {
     T instance();
 
     /**
-     * Load the config from the given file. If an error occurs during loading, the config handler will react as defined
-     * by {@link ConfigHandlerBuilder#loadErrorHandling(LoadErrorHandlingMode)}.
+     * Replace the current config with the given instance, and saves to the specified file. The given instance is not
+     * {@link Config#validate()}d - you should make sure yourself that it is valid - but the new instance will have
+     * {@link Config#onLoad(Config)} ran. Can be used for a preset system.
+     *
+     * @param newInstance Instance to use as a replacement.
+     * @return Old instance of the config.
+     */
+    T setInstance(T newInstance);
+
+    /**
+     * Load the config from the designated file. If an error occurs during loading, the config handler will react as
+     * defined by {@link ConfigHandlerBuilder#loadErrorHandling(LoadErrorHandlingMode)}.
      */
     void load();
 
