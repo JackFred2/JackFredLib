@@ -21,7 +21,7 @@ plugins {
 // make it nullable because it's able to be null(!)
 val grgit: Grgit? = project.grgit
 
-fun Project.getSourceSet(name: String) = this.extensions.getByType(SourceSetContainer::class)[name]
+fun Project.getSourceSet(name: String): SourceSet = this.extensions.getByType(SourceSetContainer::class)[name]
 
 operator fun Any?.unaryPlus() = this!!.toString()
 
@@ -54,7 +54,7 @@ val canPublish = lastTagVal != null && newTagVal != null && grgit != null
 println("Can publish: $canPublish")
 
 fun getVersionSuffix(): String {
-    return grgit?.branch?.current()?.name ?: "nogit"
+    return grgit?.branch?.current()?.name ?: properties["minecraft_version"]?.let { "nogit+$it" } ?: "nogit"
 }
 
 allprojects {
@@ -227,29 +227,23 @@ tasks.getByName("build").dependsOn(javadocJarTask)
 ////////////////
 
 fun setupRepositories(repos: RepositoryHandler) {
-    repos.mavenLocal()
-    /*
-    repos.maven {
-        name = "GitHubPackages_JackFredLib"
-        url = uri("https://maven.pkg.github.com/JackFred2/JackFredLib")
-        credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
-        }
-    }*/
-    repos.maven {
-        name = "JackFred-Maven"
-        url = uri("https://maven.jackf.red/releases")
-        credentials {
-            username = System.getenv("JACKFRED_MAVEN_USER")
-            password = System.getenv("JACKFRED_MAVEN_PASS")
+    // only publish to local on non-CI
+    if (!System.getenv().containsKey("CI")) repos.mavenLocal()
+
+    if (canPublish) {
+        repos.maven {
+            name = "JackFred-Maven"
+            url = uri("https://maven.jackf.red/releases")
+            credentials {
+                username = System.getenv("JACKFRED_MAVEN_USER")
+                password = System.getenv("JACKFRED_MAVEN_PASS")
+            }
         }
     }
 }
 
 // Modules
 allprojects {
-    if (!canPublish) return@allprojects
     if (name == "jackfredlib-testmod") return@allprojects
 
     apply(plugin = "maven-publish")
@@ -262,7 +256,7 @@ allprojects {
                 artifactId = this@allprojects.name
 
                 from(components["java"])
-                if (this@allprojects.parent == null) artifact(javadocJarTask)
+                if (this@allprojects == rootProject) artifact(javadocJarTask)
 
                 pom {
                     name = +propertiesHandle["module_name"]
