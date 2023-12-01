@@ -111,13 +111,14 @@ allprojects {
         add("modImplementation", "net.fabricmc:fabric-loader:${properties["loader_version"]}")
         add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${properties["fabric-api_version"]}")
 
+        /*
         // add mixin extras as a depdendency to all, but only bundle on root project
         val mixinExtrasDep = add("implementation",
             add("annotationProcessor",
                 "io.github.llamalad7:mixinextras-fabric:${properties["mixin_extras_version"]}")!!)!!
 
         if (this@allprojects == rootProject)
-            add("include", mixinExtrasDep)
+            add("include", mixinExtrasDep)*/
     }
 
     ///////////////
@@ -302,7 +303,6 @@ if (canPublish) {
             |## JackFredLib
             |
 			|Bundled:
-			|  - Mixin Extras: ${properties["mixin_extras_version"]}
 			${
             subprojects.filter { it.name != "jackfredlib-testmod" && it.name != "jackfredlib-config" }
                 .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.version}" }
