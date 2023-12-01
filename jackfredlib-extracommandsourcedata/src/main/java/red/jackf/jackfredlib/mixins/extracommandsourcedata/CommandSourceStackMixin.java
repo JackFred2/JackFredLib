@@ -22,15 +22,14 @@ public class CommandSourceStackMixin implements ExtraCommandSourceStackDataDuck 
             "withSource",
             "withEntity",
             "withPosition",
-            "withRotation",
-            "withCallback(Lcom/mojang/brigadier/ResultConsumer;)Lnet/minecraft/commands/CommandSourceStack;",
+            "withRotation", // handles facing
+            "withCallback(Lnet/minecraft/commands/CommandResultCallback;)Lnet/minecraft/commands/CommandSourceStack;",
             "withSuppressedOutput",
             "withPermission",
             "withMaximumPermission",
             "withAnchor",
             "withLevel",
-            "withSigningContext",
-            "withReturnValueConsumer"
+            "withSigningContext"
     }, at = @At("RETURN"))
     private CommandSourceStack jackfredlib$copyExtraData(CommandSourceStack orig) {
         ((ExtraCommandSourceStackDataDuck) orig).jackfredlib$setData(this.jflibExtraData);
