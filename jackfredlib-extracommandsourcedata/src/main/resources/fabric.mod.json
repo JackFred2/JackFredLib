@@ -15,7 +15,8 @@
   "icon": "assets/jackfredlib-extracommandsourcedata/icon.png",
   "environment": "*",
   "depends": {
-    "minecraft": ">=1.20.1"
+    "minecraft": ">=1.20.1",
+    "mixinextras": ">=0.2.0"
   },
   "mixins": [
     "jackfredlib-extracommandsourcedata.mixins.json"
