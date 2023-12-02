@@ -153,6 +153,7 @@ dependencies {
     afterEvaluate {
         subprojects.forEach {
             if (it.name == "jackfredlib-testmod") return@forEach
+            if (it.name == "jackfredlib-config") return@forEach
 
             add("api", project(path=it.path, configuration = "namedElements"))
             add("clientImplementation", it.getSourceSet("client").output)
