@@ -42,6 +42,7 @@ repositories {
 
 dependencies {
     add("api", project(path=rootProject.path, configuration = "namedElements"))
+    add("api", project(path=":jackfredlib-config", configuration = "namedElements"))
     rootProject.allprojects.forEach {
         if (it.name == "jackfredlib-testmod") return@forEach
         add("clientImplementation", it.extensions.getByType(SourceSetContainer::class)["client"].output)
