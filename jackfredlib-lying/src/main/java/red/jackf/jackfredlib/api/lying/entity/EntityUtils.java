@@ -12,6 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.lying.entity.builders.display.TextDisplayBuilder;
 import red.jackf.jackfredlib.impl.lying.entity.TransformUtil;
 import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
@@ -108,6 +109,29 @@ public class EntityUtils {
      */
     public static void setDisplayItem(Display.ItemDisplay display, ItemStack stack) {
         ((ItemDisplayAccessor) display).jflib$setItemStack(stack);
+    }
+
+    /**
+     * Sets the glowing outline colour of a display entity. You will need to make the entity glow separately.
+     *
+     * @param display Display to update the glow colour of.
+     * @param colour Colour to change the glowing outline to, in ARGB format.
+     * @see Entity#setGlowingTag(boolean)
+     */
+    public static void setDisplayGlowOverride(Display display, int colour) {
+        ((DisplayAccessor) display).jflib$setGlowColorOverride(colour);
+    }
+
+
+    /**
+     * Sets the glowing outline colour of a display entity. You will need to make the entity glow separately.
+     *
+     * @param display Display to update the glow colour of.
+     * @param colour Colour to change the glowing outline to.
+     * @see Entity#setGlowingTag(boolean)
+     */
+    public static void setDisplayGlowOverride(Display display, Colour colour) {
+        ((DisplayAccessor) display).jflib$setGlowColorOverride(colour.toARGB());
     }
 
     /**
