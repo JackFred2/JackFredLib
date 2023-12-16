@@ -36,23 +36,21 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
     }
 
     @Override
-    public void setGlowColour(ChatFormatting colour) {
+    public void setGlowColour(@Nullable ChatFormatting colour) {
+        var oldColour = this.colour;
         var newColour = FakeTeamUtil.ensureValidColour(colour);
         if (newColour != this.colour) {
-            if (newColour == null) {
-                for (var player : this.getViewingPlayers()) {
-                    removeFakeGlowDataFromPlayer(player);
-                    FakeTeamManager.INSTANCE.removeFromTeam(player, this.entity, this.colour);
-                }
-            } else {
-                for (var player : this.getViewingPlayers()) {
+            this.colour = newColour;
+
+            for (var player : this.getViewingPlayers()) {
+                sendFakeGlowingTagToPlayer(player);
+                if (newColour == null) { // old != null
+                    FakeTeamManager.INSTANCE.removeFromColourTeam(player, this.entity, oldColour);
+                } else {
                     // adding an entity to a team removes it from the old anyway
-                    if (this.colour == null) sendFakeGlowDataToPlayer(player);
-                    FakeTeamManager.INSTANCE.addToTeam(player, this.entity, newColour);
+                    FakeTeamManager.INSTANCE.addToColourTeam(player, this.entity, newColour);
                 }
             }
-
-            this.colour = newColour;
         }
     }
 
@@ -65,11 +63,12 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
         this.entity = entity;
     }
 
-    private void sendFakeGlowDataToPlayer(ServerPlayer player) {
-        var dataValue = new SynchedEntityData.DataValue<>(
+    private void sendFakeGlowingTagToPlayer(ServerPlayer player) {
+        byte data = this.entity.getEntityData().get(DATA);
+        SynchedEntityData.DataValue<Byte> dataValue = new SynchedEntityData.DataValue<>(
             DATA.getId(),
             DATA.getSerializer(),
-            (byte) (this.entity.getEntityData().get(DATA) | (1 << Entity.FLAG_GLOWING))
+            this.colour != null ? FakeGlowPacketMeddling.forceGlowing(data) : FakeGlowPacketMeddling.forceNotGlowing(data)
         );
         player.connection.send(new ClientboundSetEntityDataPacket(
                 this.entity.getId(),
@@ -77,8 +76,8 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
         );
     }
 
-    private void removeFakeGlowDataFromPlayer(ServerPlayer player) {
-        var dataValue = new SynchedEntityData.DataValue<>(
+    private void restoreOriginalGlowingTagToPlayer(ServerPlayer player) {
+        SynchedEntityData.DataValue<Byte> dataValue = new SynchedEntityData.DataValue<>(
                 DATA.getId(),
                 DATA.getSerializer(),
                 this.entity.getEntityData().get(DATA)
@@ -96,10 +95,12 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
 
         super.addPlayer(player);
 
+        sendFakeGlowingTagToPlayer(player);
         if (this.colour != null) {
             // fake the glowing data for an entity
-            sendFakeGlowDataToPlayer(player);
-            FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.colour);
+            FakeTeamManager.INSTANCE.addToColourTeam(player, this.entity, this.colour);
+        } else {
+            FakeTeamManager.INSTANCE.hideOriginalTeam(player, this.entity);
         }
     }
 
@@ -108,9 +109,13 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
         LieManager.INSTANCE.removeEntityGlow(player, this);
         super.removePlayer(player);
 
-        // remove the glowing data for an entity
-        removeFakeGlowDataFromPlayer(player);
-        FakeTeamManager.INSTANCE.removeFromTeam(player, this.entity, this.colour);
+        // restore the glowing data for an entity
+        restoreOriginalGlowingTagToPlayer(player);
+        if (this.entity.getTeam() != null) {
+            FakeTeamManager.INSTANCE.restoreOriginalTeam(player, this.entity);
+        } else if (this.colour != null) {
+            FakeTeamManager.INSTANCE.removeFromColourTeam(player, this.entity, this.colour);
+        }
 
         if (this.fadeCallback != null)
             this.fadeCallback.onFade(player, this);
