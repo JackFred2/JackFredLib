@@ -60,12 +60,12 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
         if (colour == null) {
             this.entity.setGlowingTag(false);
             for (ServerPlayer viewingPlayer : this.getViewingPlayers()) {
-                FakeTeamManager.INSTANCE.removeFromTeam(viewingPlayer, this.entity, this.glowColour);
+                FakeTeamManager.INSTANCE.removeFromColourTeam(viewingPlayer, this.entity, this.glowColour);
             }
         } else {
             this.entity.setGlowingTag(true);
             for (ServerPlayer viewingPlayer : this.getViewingPlayers()) {
-                FakeTeamManager.INSTANCE.addToTeam(viewingPlayer, this.entity, colour);
+                FakeTeamManager.INSTANCE.addToColourTeam(viewingPlayer, this.entity, colour);
             }
         }
         this.glowColour = colour;
@@ -85,7 +85,7 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
 
         this.serverEntity.addPairing(player);
         if (this.glowColour != null)
-            FakeTeamManager.INSTANCE.addToTeam(player, this.entity, this.glowColour);
+            FakeTeamManager.INSTANCE.addToColourTeam(player, this.entity, this.glowColour);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
         this.serverEntity.removePairing(player);
 
         if (this.glowColour != null)
-            FakeTeamManager.INSTANCE.removeFromTeam(player, this.entity, this.glowColour);
+            FakeTeamManager.INSTANCE.removeFromColourTeam(player, this.entity, this.glowColour);
 
         if (this.fadeCallback != null)
             this.fadeCallback.onFade(player, this);
