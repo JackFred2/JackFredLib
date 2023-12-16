@@ -42,7 +42,8 @@ public class LieTest {
                 var handStack = player.getItemInHand(hand);
                 if (ENTITY_LIES.containsKey(handStack.getItem())) {
                     var entityLie = ENTITY_LIES.get(handStack.getItem()).apply(serverLevel, hitResult.getBlockPos().offset(hitResult.getDirection().getNormal()), serverPlayer);
-                    Debris.INSTANCE.schedule(entityLie, 20 * SharedConstants.TICKS_PER_SECOND);
+                    if (handStack.getItem() != Items.NETHERITE_HOE)
+                        Debris.INSTANCE.schedule(entityLie, 20 * SharedConstants.TICKS_PER_SECOND);
                 }
             }
             return InteractionResult.PASS;
@@ -114,6 +115,19 @@ public class LieTest {
                     .glowColour(ChatFormatting.RED)
                     .createAndShow(player);
         });
+        ENTITY_LIES.put(Items.NETHERITE_HOE, ((level, blockPos, player) -> {
+            var entity = EntityBuilders.generic(EntityType.SLIME, level)
+                    .position(blockPos)
+                    .facing(player)
+                    .customName(Component.literal("Out of range test"))
+                    .glowing(true)
+                    .build();
+            return EntityLie.builder(entity)
+                    .onRightClick(((player1, lie, wasSneaking, hand, relativeToEntity) -> {
+                        lie.fade();
+                    })).glowColour(ChatFormatting.GREEN)
+                    .createAndShow(player);
+        }));
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
             if (hand == InteractionHand.MAIN_HAND && hitResult != null && player instanceof ServerPlayer serverPlayer) {
