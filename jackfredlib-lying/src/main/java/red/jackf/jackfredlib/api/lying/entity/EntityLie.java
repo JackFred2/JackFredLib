@@ -11,6 +11,7 @@ import red.jackf.jackfredlib.impl.lying.entity.EntityLieImpl;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * <p>Represents an active Entity Lie being sent to one or more players.</p>
@@ -164,6 +165,18 @@ public interface EntityLie<E extends Entity> extends Lie {
             var lie = new EntityLieImpl<>(entity, glowColour, tickCallback, fadeCallback, leftClickCallback, rightClickCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);
+            return lie;
+        }
+
+        /**
+         * Create this entity lie, and show it to the given stream of initial players.
+         *
+         * @param players Stream of players to initially send this lie to.
+         * @return The constructed entity lie.
+         */
+        public EntityLie<E> createAndShow(Stream<ServerPlayer> players) {
+            var lie = new EntityLieImpl<>(entity, glowColour, tickCallback, fadeCallback, leftClickCallback, rightClickCallback);
+            players.forEach(lie::addPlayer);
             return lie;
         }
     }
