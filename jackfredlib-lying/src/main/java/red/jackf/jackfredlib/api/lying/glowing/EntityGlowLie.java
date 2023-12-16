@@ -14,6 +14,8 @@ import java.util.Collection;
  * <p>Represents an active Entity Glow Lie being sent to one or more players.</p>
  * <p>An entity glow lie adds a glowing border to an existing entity, via faking an entity's glowing packet and team.
  * This allows you to highlight entities without affecting server-side gameplay.</p>
+ * <p>Note that while a glow lie is active, the entity will have it's glowing tag and real team hidden from any viewer's
+ * clients. This can cause issues with client-side behavior to team properties, such as name tag visibility or collisions.</p>
  */
 public interface EntityGlowLie<E extends Entity> extends Lie {
     /**

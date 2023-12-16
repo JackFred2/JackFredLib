@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public enum FakeTeamManager {
             visible.get(colour).remove(profile);
     }
 
-    public void addToTeam(ServerPlayer player, Entity entity, @NotNull ChatFormatting colour) {
+    public void addToColourTeam(ServerPlayer player, Entity entity, @NotNull ChatFormatting colour) {
         colour = FakeTeamUtil.ensureValidColour(colour);
 
         if (!visible.get(colour).contains(player.getGameProfile())) {
@@ -52,22 +53,7 @@ public enum FakeTeamManager {
         }
     }
 
-    public void removeFromAllTeams(ServerPlayer player, Entity entity) {
-        for (var colour : FakeTeamUtil.COLOURS) {
-            if (visible.containsEntry(colour, player.getGameProfile())) {
-                var packet = ClientboundSetPlayerTeamInvoker.createManually(
-                        FakeTeamUtil.getName(colour),
-                        REMOVE_ENTITY,
-                        Optional.empty(),
-                        ImmutableList.of(entity.getScoreboardName())
-                );
-
-                player.connection.send(packet);
-            }
-        }
-    }
-
-    public void removeFromTeam(ServerPlayer player, Entity entity, @NotNull ChatFormatting colour) {
+    public void removeFromColourTeam(ServerPlayer player, Entity entity, @NotNull ChatFormatting colour) {
         colour = FakeTeamUtil.ensureValidColour(colour);
 
         if (visible.get(colour).contains(player.getGameProfile())) {
@@ -79,6 +65,35 @@ public enum FakeTeamManager {
             );
 
             player.connection.send(packet);
+        }
+    }
+
+    public void hideOriginalTeam(ServerPlayer player, Entity entity) {
+        if (entity.getTeam() != null)
+            player.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(entity.getTeam(),
+                                                                                     entity.getScoreboardName(),
+                                                                                     ClientboundSetPlayerTeamPacket.Action.REMOVE));
+    }
+
+    public void restoreOriginalTeam(ServerPlayer player, Entity entity) {
+        if (entity.getTeam() != null) {
+            player.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(
+                    entity.getTeam(),
+                    entity.getScoreboardName(),
+                    ClientboundSetPlayerTeamPacket.Action.ADD));
+        } else {
+            for (var colour : FakeTeamUtil.COLOURS) {
+                if (visible.containsEntry(colour, player.getGameProfile())) {
+                    var packet = ClientboundSetPlayerTeamInvoker.createManually(
+                            FakeTeamUtil.getName(colour),
+                            REMOVE_ENTITY,
+                            Optional.empty(),
+                            ImmutableList.of(entity.getScoreboardName())
+                    );
+
+                    player.connection.send(packet);
+                }
+            }
         }
     }
 }
