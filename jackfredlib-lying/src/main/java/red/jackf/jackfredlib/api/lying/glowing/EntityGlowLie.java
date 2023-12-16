@@ -9,6 +9,7 @@ import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
 import red.jackf.jackfredlib.impl.lying.glowing.EntityGlowLieImpl;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * <p>Represents an active Entity Glow Lie being sent to one or more players.</p>
@@ -127,6 +128,18 @@ public interface EntityGlowLie<E extends Entity> extends Lie {
             var lie = new EntityGlowLieImpl<>(entity, initialColour, tickCallback, fadeCallback);
             for (ServerPlayer player : players)
                 lie.addPlayer(player);
+            return lie;
+        }
+
+        /**
+         * Create this entity glow lie, and show it to the given stream of initial players.
+         *
+         * @param players Stream of players to initially send this lie to.
+         * @return The constructed entity glow lie.
+         */
+        public EntityGlowLie<E> createAndShow(Stream<ServerPlayer> players) {
+            var lie = new EntityGlowLieImpl<>(entity, initialColour, tickCallback, fadeCallback);
+            players.forEach(lie::addPlayer);
             return lie;
         }
     }
