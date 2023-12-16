@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import red.jackf.jackfredlib.mixins.lying.ClientboundSetPlayerTeamInvoker;
 
@@ -70,7 +71,7 @@ public enum FakeTeamManager {
 
     public void hideOriginalTeam(ServerPlayer player, Entity entity) {
         if (entity.getTeam() != null)
-            player.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(entity.getTeam(),
+            player.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket((PlayerTeam) entity.getTeam(),
                                                                                      entity.getScoreboardName(),
                                                                                      ClientboundSetPlayerTeamPacket.Action.REMOVE));
     }
@@ -78,7 +79,7 @@ public enum FakeTeamManager {
     public void restoreOriginalTeam(ServerPlayer player, Entity entity) {
         if (entity.getTeam() != null) {
             player.connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(
-                    entity.getTeam(),
+                    (PlayerTeam) entity.getTeam(),
                     entity.getScoreboardName(),
                     ClientboundSetPlayerTeamPacket.Action.ADD));
         } else {
