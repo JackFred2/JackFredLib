@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.lying.Debris;
+import red.jackf.jackfredlib.api.lying.Tracker;
 import red.jackf.jackfredlib.api.lying.entity.EntityLie;
 import red.jackf.jackfredlib.api.lying.entity.EntityUtils;
 import red.jackf.jackfredlib.api.lying.entity.builders.EntityBuilders;
@@ -119,14 +121,22 @@ public class LieTest {
             var entity = EntityBuilders.generic(EntityType.SLIME, level)
                     .position(blockPos)
                     .facing(player)
-                    .customName(Component.literal("Out of range test"))
+                    .customName(Component.literal("Tracker test"))
                     .glowing(true)
                     .build();
-            return EntityLie.builder(entity)
-                    .onRightClick(((player1, lie, wasSneaking, hand, relativeToEntity) -> {
+            var lie1 = EntityLie.builder(entity)
+                                .onRightClick(((player1, lie, wasSneaking, hand, relativeToEntity) -> {
                         lie.fade();
-                    })).glowColour(ChatFormatting.GREEN)
-                    .createAndShow(player);
+                    })).glowColour(ChatFormatting.GREEN).createAndShow();
+
+            Tracker.<EntityLie<Slime>>builder(level)
+                    .addLie(lie1)
+                    .setFocus(blockPos.getCenter(), 8f)
+                    .addPredicate(ServerPlayer::isShiftKeyDown)
+                    .setUpdateInterval(5)
+                    .build(true);
+
+            return lie1;
         }));
 
         UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
