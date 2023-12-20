@@ -19,7 +19,7 @@ public class TrackerImpl<L extends Lie> implements Tracker<L> {
     private final ServerLevel level;
     private Predicate<Vec3> positionPredicate;
     private final long updateInterval;
-    private Predicate<ServerPlayer> playerPredicate;
+    private final Predicate<ServerPlayer> playerPredicate;
     private final boolean keepWhenEmpty;
     private final Set<L> lies;
 
@@ -48,22 +48,20 @@ public class TrackerImpl<L extends Lie> implements Tracker<L> {
     @Override
     public void setRunning(boolean run) {
         if (this.running != run) {
+            this.running = run;
+
             if (run) {
-                TrackerRunner.addTracker(this.level, this);
                 this.startTick = this.level.getGameTime();
+                TrackerRunner.addTracker(this.level, this);
             } else {
                 TrackerRunner.removeTracker(this.level, this);
             }
-
-            this.running = run;
         }
     }
 
     public void tick() {
         if ((this.level.getGameTime() - this.startTick) % this.updateInterval == 0) {
             this.lies.removeIf(Lie::hasFaded);
-
-            if (!this.running) return;
 
             if (this.lies.isEmpty() && !this.keepWhenEmpty) {
                 TrackerRunner.removeTracker(this.level, this);
