@@ -47,7 +47,7 @@ public interface Tracker<L extends Lie> {
     boolean isRunning();
 
     /**
-     * Start or stop this tracker.
+     * Start or stop this tracker. This immediately runs a check for nearby players.
      *
      * @param run Whether this tracker should run.
      */
@@ -165,7 +165,8 @@ public interface Tracker<L extends Lie> {
         TrackerBuilder<L> keepWhenEmpty();
 
         /**
-         * Create a tracker from this given arguments.
+         * Create a tracker from this given arguments. If {@code startRunning} is true, a check for nearby players will
+         * immediately be made.
          *
          * @param startRunning Whether this tracker should be running when created.
          * @return The constructed tracker.

@@ -133,7 +133,7 @@ public class LieTest {
                     .addLie(lie1)
                     .setFocus(blockPos.getCenter(), 8f)
                     .addPredicate(ServerPlayer::isShiftKeyDown)
-                    .setUpdateInterval(5)
+                    .setUpdateInterval(60)
                     .build(true);
 
             return lie1;

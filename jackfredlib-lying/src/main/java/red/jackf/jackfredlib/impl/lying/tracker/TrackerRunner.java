@@ -13,9 +13,14 @@ public class TrackerRunner {
         this.level = level;
     }
 
-    private void tick() {
+    private void tickAll() {
         for (TrackerImpl<?> tracker : List.copyOf(this.trackers)) {
-            tracker.tick();
+            if (tracker.isRunning()) {
+                tracker.tick();
+            } else {
+                // shouldn't happen but just in case
+                removeTracker(this.level, tracker);
+            }
         }
     }
 
@@ -23,6 +28,7 @@ public class TrackerRunner {
         var runner = RUNNERS.get(level);
         if (runner == null) return;
         runner.trackers.add(tracker);
+        tracker.tick();
     }
 
     public static void removeTracker(ServerLevel level, TrackerImpl<?> tracker) {
@@ -42,6 +48,6 @@ public class TrackerRunner {
     public static void tickLevel(ServerLevel level) {
         TrackerRunner runner = RUNNERS.get(level);
         if (runner == null) return;
-        runner.tick();
+        runner.tickAll();
     }
 }
