@@ -33,7 +33,7 @@ public interface DisplayAccessor {
     void jflib$setShadowRadius(float radius);
 
     @Invoker("setShadowStrength")
-    void jflib$setShadowStrength(float radius);
+    void jflib$setShadowStrength(float strength);
 
     @Invoker("setInterpolationDelay")
     void jflib$setTransformationInterpolationDelay(int ticks);

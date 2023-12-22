@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.api.lying.entity;
 
 import com.mojang.math.Transformation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -112,6 +113,18 @@ public class EntityUtils {
     }
 
     /**
+     * <p>Change a display entity's view range multiplier. This is scaled with a client's Entity View Distance modifier.</p>
+     * <p>The default rangefor a display entity with a modifier of {@code 1.0} and a client Entity View Distance of {@code 100%},
+     * is 64 blocks.</p>
+     *
+     * @param display Display to update
+     * @param viewRangeModifier The new view range modifier to use.
+     */
+    public static void setDisplayViewRange(Display display, float viewRangeModifier) {
+        ((DisplayAccessor) display).jflib$setViewRange(viewRangeModifier);
+    }
+
+    /**
      * Sets the glowing outline colour of a display entity. You will need to make the entity glow separately.
      *
      * @param display Display to update the glow colour of.
@@ -124,7 +137,8 @@ public class EntityUtils {
 
 
     /**
-     * Sets the glowing outline colour of a display entity. You will need to make the entity glow separately.
+     * Sets the glowing outline colour of a display entity. You will need to give the entity the glowing tag
+     * separately.
      *
      * @param display Display to update the glow colour of.
      * @param colour Colour to change the glowing outline to.
@@ -132,6 +146,47 @@ public class EntityUtils {
      */
     public static void setDisplayGlowOverride(Display display, Colour colour) {
         ((DisplayAccessor) display).jflib$setGlowColorOverride(colour.toARGB());
+    }
+
+    /**
+     * Sets the light level override for a display entity.
+     *
+     * @param display Display to update the brightness for.
+     * @param brightness New brightness object to use for the display.
+     */
+    public static void setDisplayBrightnessOverride(Display display, Brightness brightness) {
+        ((DisplayAccessor) display).jflib$setBrightnessOverride(brightness);
+    }
+
+    /**
+     * Sets the light level override for a display entity.
+     *
+     * @param display Display to update the brightness for.
+     * @param block Block light level to use for the display (e.g. from glowstone, torches)
+     * @param sky Sky light level to use for the display (e.g. from the sun, darkened by storms)
+     */
+    public static void setDisplayBrightnessOverride(Display display, int block, int sky) {
+        ((DisplayAccessor) display).jflib$setBrightnessOverride(new Brightness(block, sky));
+    }
+
+    /**
+     * Sets the shadow radius for a display entity.
+     *
+     * @param display Display to update the shadow for.
+     * @param radius New radius for this display's shadow.
+     */
+    public static void setDisplayShadowRadius(Display display, float radius) {
+        ((DisplayAccessor) display).jflib$setShadowRadius(radius);
+    }
+
+    /**
+     * Sets the shadow strength for a display entity.
+     *
+     * @param display Display to update the shadow for.
+     * @param strength New strength for this display's shadow.
+     */
+    public static void setDisplayShadowStrength(Display display, float strength) {
+        ((DisplayAccessor) display).jflib$setShadowStrength(strength);
     }
 
     /**
