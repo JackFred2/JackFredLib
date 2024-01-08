@@ -1,4 +1,4 @@
-package red.jackf.jackfredlib.testmod.client;
+package red.jackf.jackfredlib.testmod.client.colour;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -63,7 +63,7 @@ public class ColourTestScreen extends Screen {
             .build()
             .repeat(50);
 
-    protected ColourTestScreen() {
+    public ColourTestScreen() {
         super(Component.literal("JackFredLib Test Screen"));
     }
 
