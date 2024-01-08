@@ -3,6 +3,8 @@ package red.jackf.jackfredlib.api.colour;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.DyeColor;
+import org.jetbrains.annotations.ApiStatus;
 import red.jackf.jackfredlib.impl.colour.ColourImpl;
 
 /**
@@ -158,4 +160,12 @@ public interface Colour extends Gradient {
      * @return Lerped colour
      */
     Colour lerp(Colour to, float delta);
+
+    /**
+     * Returns the dye colour closest to this colour. Currently calculated using Euclidian distance between this and the
+     * dye's RGB values, though this may change in the future.
+     * @return The dye colour closest to this colour.
+     */
+    @ApiStatus.AvailableSince("1.1.0")
+    DyeColor closestDyeColour();
 }

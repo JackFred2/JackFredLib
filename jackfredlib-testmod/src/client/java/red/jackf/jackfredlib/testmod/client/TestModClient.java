@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import red.jackf.jackfredlib.client.api.gps.PlayerListSnapshot;
 import red.jackf.jackfredlib.client.api.gps.ScoreboardSnapshot;
 import red.jackf.jackfredlib.impl.base.LogUtil;
+import red.jackf.jackfredlib.testmod.client.colour.ClosestColourScreen;
+import red.jackf.jackfredlib.testmod.client.colour.ColourTestScreen;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
@@ -19,12 +21,18 @@ public class TestModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            if (environment.includeIntegrated)
+            if (environment.includeIntegrated) {
                 dispatcher.register(Commands.literal("openColourScreen").executes(ctx -> {
                     Minecraft.getInstance()
                             .execute(() -> Minecraft.getInstance().setScreen(new ColourTestScreen()));
                     return 0;
                 }));
+                dispatcher.register(Commands.literal("openClosestColourScreen").executes(ctx -> {
+                    Minecraft.getInstance()
+                            .execute(() -> Minecraft.getInstance().setScreen(new ClosestColourScreen()));
+                    return 0;
+                }));
+            }
         });
 
         ToastTest.setup();
