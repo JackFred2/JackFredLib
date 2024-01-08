@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.impl.colour;
 
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import red.jackf.jackfredlib.api.colour.Colour;
@@ -126,6 +127,11 @@ public final class ColourImpl implements Colour {
                     Mth.lerpInt(delta, this.g(), to.g()),
                     Mth.lerpInt(delta, this.b(), to.b())
             );
+    }
+
+    @Override
+    public DyeColor closestDyeColour() {
+        return ColourUtils.closestDyeTo(this);
     }
 
     // Gradient methods
