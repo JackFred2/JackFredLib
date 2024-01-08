@@ -1,6 +1,6 @@
 package red.jackf.jackfredlib.testmod.client.colour;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
@@ -19,15 +19,15 @@ public class ClosestColourScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(poseStack);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(guiGraphics);
 
-        GradientUtils.drawHorizontalGradient(poseStack, 3, 0, 300, 3, Gradient.of(Colours.BLACK, Colours.RED), 0f, 1f);
-        GradientUtils.drawVerticalGradient(poseStack, 0, 3, 3, 300, Gradient.of(Colours.BLACK, Colours.GREEN), 0f, 1f);
+        GradientUtils.drawHorizontalGradient(guiGraphics, 3, 0, 300, 3, Gradient.of(Colours.BLACK, Colours.RED), 0f, 1f);
+        GradientUtils.drawVerticalGradient(guiGraphics, 0, 3, 3, 300, Gradient.of(Colours.BLACK, Colours.GREEN), 0f, 1f);
 
-        GradientUtils.drawHorizontalGradient(poseStack, 3, 3, 300, 300, currentColour, 0f, 1f);
+        GradientUtils.drawHorizontalGradient(guiGraphics, 3, 3, 300, 300, currentColour, 0f, 1f);
 
-        GradientUtils.drawHorizontalGradient(poseStack, 3, 340, 300, 60, Gradient.of(Colours.BLACK, Colour.fromRGB(0, 0, 255)), 0f, 1f);
+        GradientUtils.drawHorizontalGradient(guiGraphics, 3, 340, 300, 60, Gradient.of(Colours.BLACK, Colour.fromRGB(0, 0, 255)), 0f, 1f);
 
         if (3 <= mouseX && mouseX < 303) {
             if (mouseY >= 3 && mouseY <= 303) { //r, g
@@ -44,8 +44,8 @@ public class ClosestColourScreen extends Screen {
             this.current = this.currentColour.closestDyeColour();
         }
 
-        this.font.draw(poseStack, "Current: %06x".formatted(this.currentColour.toARGB() & 0xFFFFFF), 320, 50, 0xFFFFFFFF);
-        this.font.draw(poseStack, "Current: %02d, %02d, %02d".formatted(this.currentColour.r(), this.currentColour.g(), this.currentColour.b()), 320, 50, 0xFFFFFFFF);
-        this.itemRenderer.renderGuiItem(poseStack, DyeItem.byColor(current).getDefaultInstance(), 320, 20);
+        guiGraphics.drawString(this.font, "Current: %06x".formatted(this.currentColour.toARGB() & 0xFFFFFF), 320, 50, 0xFFFFFFFF);
+        guiGraphics.drawString(this.font, "Current: %02d, %02d, %02d".formatted(this.currentColour.r(), this.currentColour.g(), this.currentColour.b()), 20, 50, 0xFFFFFFFF);
+        guiGraphics.renderItem(DyeItem.byColor(current).getDefaultInstance(), 320, 20);
     }
 }
