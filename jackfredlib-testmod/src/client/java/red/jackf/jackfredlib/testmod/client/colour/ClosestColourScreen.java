@@ -20,7 +20,7 @@ public class ClosestColourScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         GradientUtils.drawHorizontalGradient(guiGraphics, 3, 0, 300, 3, Gradient.of(Colours.BLACK, Colours.RED), 0f, 1f);
         GradientUtils.drawVerticalGradient(guiGraphics, 0, 3, 3, 300, Gradient.of(Colours.BLACK, Colours.GREEN), 0f, 1f);
