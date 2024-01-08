@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
  * arguments' for mixins. This is designed to hold multiple copies so that {@link #pop()} can be used within looped
  * methods.</p>
  *
- * <p>For examples of this class in use, see <a href="https://github.com/JackFred2/JacksServerSideTweaks/blob/0850b22ef2ea1932342bdec525086376b5659a0c/src/main/java/red/jackf/jsst/mixins/qualityoflife/BlockMixin.java">JSST's usage</a></a></p>
+ * <p>For examples of this class in use, see <a href="https://github.com/JackFred2/JacksServerSideTweaks/blob/0850b22ef2ea1932342bdec525086376b5659a0c/src/main/java/red/jackf/jsst/mixins/qualityoflife/BlockMixin.java">JSST's usage</a></p>
  * @param <T> Type of value being held; supports @Nullable values.
  */
 @ApiStatus.AvailableSince("1.3.0")
