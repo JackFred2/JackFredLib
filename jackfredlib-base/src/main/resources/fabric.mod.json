@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "red.jackf.jackfredlib.impl.base.ServerTrackerImpl"
+      "red.jackf.jackfredlib.impl.base.ServerTrackerImpl::setup"
     ]
   },
   "depends": {
