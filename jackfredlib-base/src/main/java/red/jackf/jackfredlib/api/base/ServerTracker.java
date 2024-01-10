@@ -13,7 +13,7 @@ public interface ServerTracker {
     /**
      * Obtain the current server tracker instance.
      */
-    ServerTracker INSTANCE = new ServerTrackerImpl();
+    ServerTracker INSTANCE = ServerTrackerImpl.INSTANCE;
 
     /**
      * Get the current MinecraftServer instance, if available.
