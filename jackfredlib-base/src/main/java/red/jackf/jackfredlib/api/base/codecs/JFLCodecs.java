@@ -94,7 +94,13 @@ public class JFLCodecs {
         return codec.xmap(HashSet::new, Function.identity());
     }
 
-
+    /**
+     * Modifies a map codec so that the decoded map is mutable instance of the standard immutable map.
+     * @param codec Map codec to modify.
+     * @return A map codec that returns a mutable map.
+     * @param <T> Key type of the map being decoded
+     * @param <U> Value type of the map being decoded
+     */
     public static <T, U> Codec<Map<T, U>> mutableMap(Codec<Map<T, U>> codec) {
         return codec.xmap(HashMap::new, Function.identity());
     }
