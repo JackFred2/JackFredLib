@@ -7,10 +7,11 @@ on:
       lastTagOverride:
         description: 'Previous Tag Override (prefix with "v")'
         required: false
-        type: boolean
-      #newTag:
-      #  description: 'New Tag | Format: (ex: v0.1.3)'
-      #  required: true
+        type: string
+      newTag:
+        description: 'New Tag | Format: (ex: v0.1.3)'
+        required: true
+        type: string
       changelogHeader:
         description: 'Message to place at the top of the changelog.'
         required: true
@@ -37,7 +38,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      # tag parsing
+      # previous tag parsing
+      # we use an env variable here because it's easier than joining two step outputs I think
       - name: Set previous tag from override
         if: ${{ inputs.lastTagOverride != null }}
         run: |
@@ -59,9 +61,9 @@ jobs:
             echo "PREVIOUS_TAG=NONE" >> "$GITHUB_ENV"
           fi
 
-      - name: Get current version from gradle & check it doesn't exist
+      # new tag validation
+      - name: Check new version doesn't exist
         run: |
-          current=$(./gradlew -q :getRootVersion | tail -n 1)
           if git show-ref --tags --verify --quiet "refs/tags/${{ inputs.newTag }}"; then
             echo "newTag already exists, failing"
             exit 1
@@ -99,7 +101,7 @@ jobs:
         run: ./gradlew check build
 
       - name: Publish to JackFred Maven and GitHub Release
-        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon=${{ inputs.changelogHeader }}"
+        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon=${{ inputs.changelogHeader }} -PnewTag=${{ inputs.newTag }}"
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
