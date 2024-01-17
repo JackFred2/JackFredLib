@@ -47,17 +47,31 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>, incl
 // PROJECT CONFIGURATIONS //
 ////////////////////////////
 
-val canPublish = grgit != null
-
-println("Can publish: $canPublish")
+var canPublish = grgit != null
 
 fun getVersionSuffix(): String {
     // git branch, or nogit+MCVER
     return grgit?.branch?.current()?.name ?: "nogit+${properties["minecraft_version"]!!}"
 }
 
-allprojects {
+rootProject.version = properties["newTag"]?.let {
+    "$it+${grgit!!.branch.current().name}"
+} ?: run {
+    canPublish = false
+    if (grgit != null) {
+        "dev+${properties["minecraft_version"]!!}+${grgit.log()[0].abbreviatedId}"
+    } else {
+        "dev+${properties["minecraft_version"]!!}+nogit"
+    }
+}
+
+subprojects {
     version = "${+properties["module_version"]}+${getVersionSuffix()}"
+}
+
+println("Can publish ${rootProject.version}: $canPublish")
+
+allprojects {
     group = properties["maven_group"]!!
 
     apply(plugin = "fabric-loom")
@@ -367,12 +381,6 @@ if (canPublish) {
 //////////
 // MISC //
 //////////
-
-tasks.register("getRootVersion") {
-    doLast {
-        println(rootProject.version)
-    }
-}
 
 tasks.register<UpdateDependenciesTask>("updateModDependencies") {
     mcVersion.set(properties["minecraft_version"]!!.toString())
