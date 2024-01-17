@@ -47,21 +47,20 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>, incl
 // PROJECT CONFIGURATIONS //
 ////////////////////////////
 
-val lastTagVal = properties["lastTag"]?.toString()
-val newTagVal = properties["newTag"]?.toString()
-val canPublish = lastTagVal != null && newTagVal != null && grgit != null
+val canPublish = grgit != null
 
 println("Can publish: $canPublish")
 
 fun getVersionSuffix(): String {
-    return grgit?.branch?.current()?.name ?: properties["minecraft_version"]?.let { "nogit+$it" } ?: "nogit"
+    // git branch, or nogit+MCVER
+    return grgit?.branch?.current()?.name ?: "nogit+${properties["minecraft_version"]!!}"
 }
 
 allprojects {
     version = "${+properties["module_version"]}+${getVersionSuffix()}"
     group = properties["maven_group"]!!
 
-    apply(plugin="fabric-loom")
+    apply(plugin = "fabric-loom")
 
     tasks.withType<JavaCompile> {
         options.compilerArgs.add("-Xlint:unchecked")
@@ -155,7 +154,7 @@ dependencies {
             if (it.name == "jackfredlib-testmod") return@forEach
             if (it.name == "jackfredlib-config") return@forEach
 
-            add("api", project(path=it.path, configuration = "namedElements"))
+            add("api", project(path = it.path, configuration = "namedElements"))
             add("clientImplementation", it.getSourceSet("client").output)
         }
     }
@@ -293,33 +292,46 @@ allprojects {
 if (canPublish) {
     apply(plugin = "com.github.breadmoirai.github-release")
 
-    val generateChangelogTask = tasks.register<GenerateChangelogTask>("generateChangelog") {
-        lastTag.set(lastTagVal)
-        newTag.set(newTagVal)
-        githubUrl.set(properties["github_url"]!!.toString())
-        prefixFilters.set(properties["changelog_filter"]!!.toString().split(","))
+    val lastTagVal = if (System.getenv("PREVIOUS_TAG") == "NONE") null else System.getenv("PREVIOUS_TAG")
+    val newTagVal = rootProject.version.toString()
 
-        // Add a bundled block for each module version
-        prologue.set("""
-            |## JackFredLib
-            |
-			|Bundled:
-			${
-            subprojects.filter { it.name != "jackfredlib-testmod" && it.name != "jackfredlib-config" }
-                .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.version}" }
-            }
-            |
-            |## JackFredLib: Config v${project("jackfredlib-config").version}
-            |
-            |Bundled:
-            |  - Jankson: ${properties["jankson_version"]}
-            |  - Apache Commons IO: ${properties["commons_io_version"]}
-            |  - JackFredLib: Base: ${project("jackfredlib-base").version}
-			""".trimMargin())
+    var generateChangelogTask: TaskProvider<GenerateChangelogTask>? = null
+
+    if (lastTagVal != null) {
+        val changelogHeader = if (properties.containsKey("PchangelogHeaderAddon")) {
+            +properties["PchangelogHeaderAddon"] + "\n\n"
+        } else {
+            ""
+        }
+
+        generateChangelogTask = tasks.register<GenerateChangelogTask>("generateChangelog") {
+            lastTag.set(lastTagVal)
+            newTag.set(newTagVal)
+            githubUrl.set(properties["github_url"]!!.toString())
+            prefixFilters.set(properties["changelog_filter"]!!.toString().split(","))
+
+            // Add a bundled block for each module version
+            prologue.set(changelogHeader + """
+                |## JackFredLib
+                |
+                |Bundled:
+                ${
+                    subprojects.filter { it.name != "jackfredlib-testmod" && it.name != "jackfredlib-config" }
+                        .joinToString(separator = "\n") { "|  - ${it.properties["module_name"]}: ${it.version}" }
+                }
+                |
+                |## JackFredLib: Config v${project("jackfredlib-config").version}
+                |
+                |Bundled:
+                |  - Jankson: ${properties["jankson_version"]}
+                |  - Apache Commons IO: ${properties["commons_io_version"]}
+                |  - JackFredLib: Base: ${project("jackfredlib-base").version}
+                """.trimMargin())
+        }
     }
 
     tasks.named<GithubReleaseTask>("githubRelease") {
-        dependsOn(generateChangelogTask)
+        generateChangelogTask?.let { dependsOn(it) }
 
         authorization = System.getenv("GITHUB_TOKEN")?.let { "Bearer $it" }
         owner = properties["github_owner"]!!.toString()
@@ -340,8 +352,14 @@ if (canPublish) {
                 it.tasks["remapSourcesJar"].outputs.files,
             )
         }
-        body = provider {
-            return@provider generateChangelogTask.get().changelogFile.get().asFile.readText()
+        body = if (generateChangelogTask != null) {
+            provider {
+                generateChangelogTask!!.get().changelogFile.get().asFile.readText()
+            }
+        } else {
+            provider {
+                "No Changelog Generated"
+            }
         }
     }
 }
@@ -349,6 +367,12 @@ if (canPublish) {
 //////////
 // MISC //
 //////////
+
+tasks.register("getRootVersion") {
+    doLast {
+        println(rootProject.version)
+    }
+}
 
 tasks.register<UpdateDependenciesTask>("updateModDependencies") {
     mcVersion.set(properties["minecraft_version"]!!.toString())
