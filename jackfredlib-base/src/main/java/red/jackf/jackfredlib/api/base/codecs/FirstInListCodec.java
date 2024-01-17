@@ -9,6 +9,13 @@ import java.util.Arrays;
 import java.util.Objects;
 
 class FirstInListCodec<T> implements Codec<T> {
+    private static final DataResult<?> NO_CODECS = DataResult.error(() -> "No codecs");
+
+    private static <X> DataResult<X> noCodecsError() {
+        //noinspection unchecked
+        return (DataResult<X>) NO_CODECS;
+    }
+
     private final Codec<T>[] codecs;
 
     @SafeVarargs
@@ -18,25 +25,30 @@ class FirstInListCodec<T> implements Codec<T> {
 
     @Override
     public <A> DataResult<Pair<T, A>> decode(DynamicOps<A> ops, A input) {
+        DataResult<Pair<T, A>> data = noCodecsError();
+
         for (Codec<T> codec : this.codecs) {
-            DataResult<Pair<T, A>> data = codec.decode(ops, input);
+            data = codec.decode(ops, input);
             if (data.result().isPresent()) {
                 return data;
             }
         }
-        return DataResult.error(() -> "No codecs can decode " + input);
+
+        return data;
     }
 
     @Override
     public <A> DataResult<A> encode(T input, DynamicOps<A> ops, A prefix) {
+        DataResult<A> data = noCodecsError();
+
         for (Codec<T> codec : this.codecs) {
-            DataResult<A> data = codec.encode(input, ops, prefix);
+            data = codec.encode(input, ops, prefix);
             if (data.result().isPresent()) {
                 return data;
             }
         }
 
-        return DataResult.error(() -> "No codecs can encode " + input);
+        return data;
     }
 
     @Override
