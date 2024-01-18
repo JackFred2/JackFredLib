@@ -1,5 +1,5 @@
 name: Publish
-run-name: Publish
+run-name: Publish JFLib Version v${{ inputs.newTag}}+${{ env.GITHUB_REF_NAME }}
 
 on:
   workflow_dispatch:
@@ -14,8 +14,7 @@ on:
         type: string
       changelogHeader:
         description: 'Message to place at the top of the changelog.'
-        required: true
-        default: ""
+        required: false
         type: string
 
 permissions:
@@ -33,6 +32,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      # input validation
+      - name: Fail on invalid tag format
+        if: ${{ !startsWith(inputs.newTag, 'v') }}
+        run: exit 1
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -61,16 +65,22 @@ jobs:
             echo "PREVIOUS_TAG=NONE" >> "$GITHUB_ENV"
           fi
 
-      # new tag validation
+      # new tag parsing and concat
+      - id: new-tag-generator
+        name: Format new tag from input and branch
+        run: |
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          newTag=$branch+${{ inputs.newTag }}
+          echo "NEW_TAG=$newTag" >> "GITHUB_ENV"
+          echo "NEW_TAG=$newTag" >> "$GITHUB_OUTPUT"
+
       - name: Check new version doesn't exist
         run: |
-          if git show-ref --tags --verify --quiet "refs/tags/${{ inputs.newTag }}"; then
+          if git show-ref --tags --verify --quiet "refs/tags/${{ steps.new-tag-generator.outputs.NEW_TAG }}"; then
             echo "newTag already exists, failing"
             exit 1
           else
             echo "newTag doesn't exist"
-            branch=$(git rev-parse --abbrev-ref HEAD)
-            echo "NEW_TAG=${{ inputs.newTag }}+$branch" >> "$GITHUB_ENV"
             exit 0
           fi
 
@@ -81,7 +91,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/tags/${{ inputs.newTag }}",
+              ref: "refs/tags/${{ steps.new-tag-generator.outputs.NEW_TAG }}",
               sha: context.sha
             })
 
@@ -103,7 +113,7 @@ jobs:
         run: ./gradlew check build
 
       - name: Publish to JackFred Maven and GitHub Release
-        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon=${{ inputs.changelogHeader }}"
+        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon="${{ inputs.changelogHeader }}"
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
