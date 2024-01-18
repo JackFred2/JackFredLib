@@ -69,6 +69,8 @@ jobs:
             exit 1
           else
             echo "newTag doesn't exist"
+            branch=$(git rev-parse --abbrev-ref HEAD)
+            echo "NEW_TAG=${{ inputs.newTag }}+$branch" >> "$GITHUB_ENV"
             exit 0
           fi
 
@@ -101,7 +103,7 @@ jobs:
         run: ./gradlew check build
 
       - name: Publish to JackFred Maven and GitHub Release
-        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon=${{ inputs.changelogHeader }} -PnewTag=${{ inputs.newTag }}"
+        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon=${{ inputs.changelogHeader }}"
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
