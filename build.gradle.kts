@@ -54,9 +54,7 @@ fun getVersionSuffix(): String {
     return grgit?.branch?.current()?.name ?: "nogit+${properties["minecraft_version"]!!}"
 }
 
-rootProject.version = properties["newTag"]?.let {
-    "$it+${grgit!!.branch.current().name}"
-} ?: run {
+rootProject.version = System.getenv("NEW_TAG")?.substring(1) ?: run {
     canPublish = false
     if (grgit != null) {
         "dev+${properties["minecraft_version"]!!}+${grgit.log()[0].abbreviatedId}"
@@ -69,7 +67,7 @@ subprojects {
     version = "${+properties["module_version"]}+${getVersionSuffix()}"
 }
 
-println("Can publish ${rootProject.version}: $canPublish")
+println("Can publish v${rootProject.version}: $canPublish")
 
 allprojects {
     group = properties["maven_group"]!!
@@ -307,7 +305,7 @@ if (canPublish) {
     apply(plugin = "com.github.breadmoirai.github-release")
 
     val lastTagVal = if (System.getenv("PREVIOUS_TAG") == "NONE") null else System.getenv("PREVIOUS_TAG")
-    val newTagVal = rootProject.version.toString()
+    val newTagVal = "v" + rootProject.version
 
     var generateChangelogTask: TaskProvider<GenerateChangelogTask>? = null
 
