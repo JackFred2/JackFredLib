@@ -1,5 +1,5 @@
 name: Publish
-run-name: Publish JFLib Version v${{ inputs.newTag}}+${{ env.GITHUB_REF_NAME }}
+run-name: Publish JFLib Version v${{ inputs.newTag }}+${{ github.ref_name }}
 
 on:
   workflow_dispatch:
