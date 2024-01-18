@@ -84,6 +84,11 @@ jobs:
             exit 0
           fi
 
+      - name: Output build spec
+        run: |
+          echo "Previous: $PREVIOUS_TAG"
+          echo "New: $NEW_TAG"
+
       - name: Create version tag
         uses: actions/github-script@v6
         with:
@@ -113,7 +118,7 @@ jobs:
         run: ./gradlew check build
 
       - name: Publish to JackFred Maven and GitHub Release
-        run: ./gradlew generateChangelog publish githubRelease -PchangelogHeaderAddon="${{ inputs.changelogHeader }}"
+        run: ./gradlew publish githubRelease -PchangelogHeaderAddon="${{ inputs.changelogHeader }}"
         env:
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
