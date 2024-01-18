@@ -131,4 +131,4 @@ jobs:
         with:
           name: Artifacts
           path: |
-            api/build/libs/
+            build/libs/
