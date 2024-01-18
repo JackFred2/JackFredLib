@@ -47,16 +47,21 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>, incl
 // PROJECT CONFIGURATIONS //
 ////////////////////////////
 
-var canPublish = grgit != null
+var canPublish = grgit != null && System.getenv().containsKey("NEW_TAG")
 
 fun getVersionSuffix(): String {
     // git branch, or nogit+MCVER
     return grgit?.branch?.current()?.name ?: "nogit+${properties["minecraft_version"]!!}"
 }
 
-rootProject.version = System.getenv("NEW_TAG")?.substring(1) ?: run {
+println("Prev: " + System.getenv("PREVIOUS_TAG"))
+println("New: " + System.getenv("NEW_TAG"))
+
+if (System.getenv().containsKey("NEW_TAG")) {
+    rootProject.version = System.getenv("NEW_TAG").substring(1)
+} else {
     canPublish = false
-    if (grgit != null) {
+    rootProject.version = if (grgit != null) {
         "dev+${properties["minecraft_version"]!!}+${grgit.log()[0].abbreviatedId}"
     } else {
         "dev+${properties["minecraft_version"]!!}+nogit"
