@@ -71,7 +71,7 @@ jobs:
         run: |
           branch=$(git rev-parse --abbrev-ref HEAD)
           newTag=${{ inputs.newTag }}+$branch
-          echo "NEW_TAG=$newTag" >> "GITHUB_ENV"
+          echo "NEW_TAG=$newTag" >> "$GITHUB_ENV"
           echo "NEW_TAG=$newTag" >> "$GITHUB_OUTPUT"
 
       - name: Check new version doesn't exist
