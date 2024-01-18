@@ -315,8 +315,14 @@ if (canPublish) {
     var generateChangelogTask: TaskProvider<GenerateChangelogTask>? = null
 
     if (lastTagVal != null) {
-        val changelogHeader = if (properties.containsKey("PchangelogHeaderAddon")) {
-            +properties["PchangelogHeaderAddon"] + "\n\n"
+        val changelogHeader = if (properties.containsKey("changelogHeaderAddon")) {
+            val addonProp = +properties["changelogHeaderAddon"]
+
+            if (addonProp.isNotBlank()) {
+                addonProp + "\n\n"
+            } else {
+                ""
+            }
         } else {
             ""
         }
