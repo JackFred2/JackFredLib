@@ -110,6 +110,10 @@ jobs:
       - name: build & run tests
         run: ./gradlew check build
 
+      - name: make gradle wrapper executable
+        if: ${{ runner.os != 'Windows' }}
+        run: chmod +x ./gradlew
+
       - name: Publish to JackFred Maven and GitHub Release
         run: ./gradlew publish githubRelease -PchangelogHeaderAddon="${{ inputs.changelogHeader }}"
         env:
