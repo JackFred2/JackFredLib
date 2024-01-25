@@ -1,5 +1,5 @@
 name: Publish
-run-name: Publish JFLib Version ${{ inputs.newTag }}+${{ github.ref_name }}
+run-name: Publish JFLib
 
 on:
   workflow_dispatch:
@@ -51,11 +51,11 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
 
-      # get new tag in the form vX.Y.Z
+      # get new tag in the form vX.Y.Z, saved to new_tag=vX.Y.Z
       - name: Pull Mod Version
         id: pull-new-version
         run: |
-          grep 'module_version=' gradle.properties | sed 's/module_version=/v/g' >> $GITHUB_OUTPUT
+          grep 'module_version=' gradle.properties | sed 's/module_version=/new_tag=v/g' >> $GITHUB_OUTPUT
 
       # previous tag parsing
       # we use an env variable here because it's easier than joining two step outputs I think
@@ -86,7 +86,7 @@ jobs:
         name: Format new tag from input and branch
         run: |
           branch=$(git rev-parse --abbrev-ref HEAD)
-          newTag=${{ inputs.newTag }}+$branch
+          newTag=${{ steps.pull-new-version.outputs.new_tag }}+$branch
           echo "NEW_TAG=$newTag" >> "$GITHUB_ENV"
           echo "NEW_TAG=$newTag" >> "$GITHUB_OUTPUT"
 
