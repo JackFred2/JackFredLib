@@ -116,6 +116,9 @@ jobs:
               sha: context.sha
             })
 
+      - name: Fetch new tag for changelog generation
+        run: git fetch --tags
+
       - name: build & run tests
         run: ./gradlew check build
 
