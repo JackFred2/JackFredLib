@@ -4,16 +4,12 @@ run-name: Publish JFLib Version ${{ inputs.newTag }}+${{ github.ref_name }}
 on:
   workflow_dispatch:
     inputs:
-      lastTagOverride:
-        description: 'Previous Tag Override (prefix with "v")'
-        required: false
-        type: string
-      newTag:
-        description: 'New Tag | Format: (ex: v0.1.3)'
-        required: true
-        type: string
       changelogHeader:
         description: 'Message to place at the top of the changelog.'
+        required: false
+        type: string
+      lastTagOverride:
+        description: 'Previous tag for changelog generation'
         required: false
         type: string
 
@@ -32,15 +28,25 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      # input validation
-      - name: Fail on invalid tag format
-        if: ${{ !startsWith(inputs.newTag, 'v') }}
-        run: exit 1
-
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Set up JDK${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # get new tag in the form vX.Y.Z
+      - name: Pull Mod Version
+        id: pull-new-version
+        run: |
+          grep 'module_version=' gradle.properties | sed 's/module_version=/v/g' >> $GITHUB_OUTPUT
 
       # previous tag parsing
       # we use an env variable here because it's easier than joining two step outputs I think
@@ -66,6 +72,7 @@ jobs:
           fi
 
       # new tag parsing and concat
+      # vX.Y.Z -> vX.Y.Z+1.20.4
       - id: new-tag-generator
         name: Format new tag from input and branch
         run: |
@@ -100,26 +107,13 @@ jobs:
               sha: context.sha
             })
 
-      - name: Fetch tags
-        run: git fetch --tags
-
-      - name: Fetch repo data
-        run: git fetch origin
-
-      - name: Set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: build & run tests
         run: ./gradlew check build
 
       - name: Publish to JackFred Maven and GitHub Release
         run: ./gradlew publish githubRelease -PchangelogHeaderAddon="${{ inputs.changelogHeader }}"
         env:
+          RELEASE: true
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JACKFRED_MAVEN_USER: ${{ secrets.JACKFRED_MAVEN_USER }}
