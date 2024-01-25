@@ -18,7 +18,7 @@ plugins {
 // PROJECT UTILS //
 ///////////////////
 
-// make it nullable because it's able to be null(!)
+// make it nullable because it's able to be null but project.grgit isn't defined to be
 val grgit: Grgit? = project.grgit
 
 fun Project.getSourceSet(name: String): SourceSet = this.extensions.getByType(SourceSetContainer::class)[name]
@@ -43,28 +43,29 @@ extra["moduleDependencies"] = fun(project: Project, depNames: List<String>, incl
     }
 }
 
-////////////////////////////
-// PROJECT CONFIGURATIONS //
-////////////////////////////
+////////////////
+// VERSIONING //
+////////////////
 
-var canPublish = grgit != null && System.getenv().containsKey("NEW_TAG")
+var canPublish = grgit != null && System.getenv("RELEASE") != null
 
 fun getVersionSuffix(): String {
     // git branch, or nogit+MCVER
     return grgit?.branch?.current()?.name ?: "nogit+${properties["minecraft_version"]!!}"
 }
 
-println("Prev: " + System.getenv("PREVIOUS_TAG"))
-println("New: " + System.getenv("NEW_TAG"))
+//println("Prev: " + System.getenv("PREVIOUS_TAG"))
+//println("New: " + System.getenv("NEW_TAG"))
 
 if (System.getenv().containsKey("NEW_TAG")) {
     rootProject.version = System.getenv("NEW_TAG").substring(1)
 } else {
+    val versionStr = "${properties["module_version"]}+${properties["minecraft_version"]!!}"
     canPublish = false
     rootProject.version = if (grgit != null) {
-        "dev+${properties["minecraft_version"]!!}+${grgit.log()[0].abbreviatedId}"
+        "$versionStr+dev-${grgit.log()[0].abbreviatedId}"
     } else {
-        "dev+${properties["minecraft_version"]!!}+nogit"
+        "$versionStr+dev-nogit"
     }
 }
 
@@ -72,7 +73,7 @@ subprojects {
     version = "${+properties["module_version"]}+${getVersionSuffix()}"
 }
 
-println("Can publish v${rootProject.version}: $canPublish")
+//println("Can publish v${rootProject.version}: $canPublish")
 
 allprojects {
     group = properties["maven_group"]!!
