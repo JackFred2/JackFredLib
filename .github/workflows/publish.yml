@@ -41,6 +41,11 @@ jobs:
 
       - name: setup gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-includes: |
+            caches
+            notifications
+            loom-cache
 
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
