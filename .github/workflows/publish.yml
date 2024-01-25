@@ -39,8 +39,8 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: setup gradle
+        uses: gradle/gradle-build-action@v2
 
       # get new tag in the form vX.Y.Z
       - name: Pull Mod Version

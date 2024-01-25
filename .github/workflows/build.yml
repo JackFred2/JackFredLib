@@ -22,18 +22,14 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v4
 
-      - name: validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
-
       - name: setup JDK${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
 
-      - name: make gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
-        run: chmod +x ./gradlew
+      - name: setup gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: build & run tests
         run: ./gradlew check build
