@@ -52,7 +52,7 @@ public class Toasts {
         send(ToastBuilder.builder(ToastFormat.WHITE_SHARP, ModUtils.getModTitle(modid))
                 .addMessage(message)
                 .progressShowsVisibleTime()
-                .withImage(ImageSpec.modIcon(modid))
+                .withIcon(ToastIcon.modIcon(modid))
                 .expiresAfter(2500L + (Minecraft.getInstance().font.width(message) * 10L))
                 .build());
     }
