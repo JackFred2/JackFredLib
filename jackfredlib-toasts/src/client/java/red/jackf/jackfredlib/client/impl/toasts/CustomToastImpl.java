@@ -3,14 +3,15 @@ package red.jackf.jackfredlib.client.impl.toasts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.client.api.toasts.CustomToast;
-import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
 import red.jackf.jackfredlib.client.api.toasts.ToastFormat;
+import red.jackf.jackfredlib.client.api.toasts.ToastIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class CustomToastImpl implements CustomToast {
     private final ToastFormat format;
     private Component title;
     private final List<FormattedCharSequence> messageLines = new ArrayList<>();
-    private @Nullable ImageSpec image;
+    private ToastIcon icon;
     private final VisibilityChecker visibiltyFunction;
     private final CustomToastBuilderImpl.ProgressPuller progressPuller;
     private final boolean rainbowProgress;
@@ -37,13 +38,13 @@ public class CustomToastImpl implements CustomToast {
     public CustomToastImpl(ToastFormat format,
                            Component title,
                            List<Component> messages,
-                           @Nullable ImageSpec image,
+                           @Nullable ToastIcon icon,
                            VisibilityChecker visibiltyFunction,
                            CustomToastBuilderImpl.ProgressPuller progressPuller,
                            boolean rainbowProgress) {
         this.format = format;
         this.title = title;
-        this.image = image;
+        this.icon = icon;
         this.visibiltyFunction = visibiltyFunction;
         this.progressPuller = progressPuller;
         this.rainbowProgress = rainbowProgress;
@@ -54,8 +55,9 @@ public class CustomToastImpl implements CustomToast {
         this.title = title;
     }
 
-    public void setImage(@Nullable ImageSpec image) {
-        this.image = image;
+    @Override
+    public void setImage(@Nullable ToastIcon icon) {
+        this.icon = icon;
     }
 
     public void setMessage(List<Component> messages) {
@@ -65,25 +67,37 @@ public class CustomToastImpl implements CustomToast {
         }
     }
 
+    private int leftWidth() {
+        var guiSprites = Minecraft.getInstance().getGuiSprites();
+        var sprite = guiSprites.getSpriteScaling(guiSprites.getSprite(format.texture()));
+        if (sprite instanceof GuiSpriteScaling.NineSlice nineSlice) {
+            return nineSlice.border().left();
+        } else {
+            return DEFAULT_PADDING;
+        }
+    }
+
     @Override
     public int width() {
         var font = Minecraft.getInstance().font;
         var width = IntStream.concat(IntStream.of(font.width(this.title)),
-                                     this.messageLines.stream().mapToInt(font::width)).max().orElse(0);
-        if (image != null) width += (IMAGE_SIZE + DEFAULT_PADDING);
-        return width + DEFAULT_PADDING + format.leftWidth();
+                this.messageLines.stream().mapToInt(font::width)).max().orElse(0);
+        if (icon != null) width += (icon.width() + DEFAULT_PADDING);
+        return width + DEFAULT_PADDING + leftWidth();
     }
 
     @Override
     public int height() {
         var font = Minecraft.getInstance().font;
-        var total = 7 + (1 + messageLines.size()) * (font.lineHeight + 2);
-        return Mth.positiveCeilDiv(total, 32) * 32;
+
+        int textHeight = 7 + (1 + messageLines.size()) * (font.lineHeight + 2);
+        int iconHeight = icon != null ? icon.height() : 0;
+        return Mth.positiveCeilDiv(Math.max(iconHeight, textHeight), 32) * 32;
     }
 
     // max width, minus left and right padding, minus another padding and the image size if an image is present
     private int getMaxTextAreaWidth() {
-        return MAX_WIDTH - format.leftWidth() - DEFAULT_PADDING - (image != null ? IMAGE_SIZE + DEFAULT_PADDING : 0);
+        return MAX_WIDTH - leftWidth() - DEFAULT_PADDING - (icon != null ? icon.width() + DEFAULT_PADDING : 0);
     }
 
     @Override
@@ -95,33 +109,26 @@ public class CustomToastImpl implements CustomToast {
         if (visibleTimeStart == -1L) visibleTimeStart = timeVisible;
         if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
 
-        graphics.blitNineSliced(format.image(),
-                                0,
-                                0,
-                                width(),
-                                height(),
-                                format.leftWidth(),
-                                format.topHeight(),
-                                DEFAULT_PADDING,
-                                DEFAULT_PADDING,
-                                160,
-                                32,
-                                0,
-                                format.vOffset());
+        // background
+        graphics.blitSprite(format.texture(),
+                0,
+                0,
+                0,
+                width(),
+                height());
 
         var font = component.getMinecraft().font;
-        var textX = format.leftWidth();
+        var textX = leftWidth();
 
-        if (image != null) {
-            textX += IMAGE_SIZE + DEFAULT_PADDING;
-            graphics.blit(image.location(),
-                          format.leftWidth(), DEFAULT_PADDING,
-                          IMAGE_SIZE, IMAGE_SIZE,
-                          image.uOffset(), image.vOffset(),
-                          image.uWidth(), image.vHeight(),
-                          image.textureWidth(), image.textureHeight());
+        // image if present
+        if (icon != null) {
+            textX += icon.width() + DEFAULT_PADDING;
+            icon.render(graphics,
+                    leftWidth(),
+                    DEFAULT_PADDING);
         }
 
+        // title and message
         if (messageLines.isEmpty()) {
             graphics.drawString(font, title, textX, 12, format.titleColour(), false);
         } else {
@@ -134,6 +141,7 @@ public class CustomToastImpl implements CustomToast {
             }
         }
 
+        // progress bar
         var progressBarWidth = width() - 2 * 3;
         var progressBarY = height() - 5;
         if (this.progress != 0f) {

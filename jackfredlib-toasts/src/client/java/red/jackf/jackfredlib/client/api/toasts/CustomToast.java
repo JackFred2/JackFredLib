@@ -25,12 +25,12 @@ public interface CustomToast extends Toast {
     void refresh();
 
     /**
-     * Set the image to be displayed on this toast.
+     * Set the icon to be displayed on this toast.
      *
-     * @see ImageSpec
-     * @param image Image to display, or null to remove image
+     * @see ToastIcon
+     * @param icon Icon to display, or null to remove.
      */
-    void setImage(@Nullable ImageSpec image);
+    void setImage(@Nullable ToastIcon icon);
 
     /**
      * Set the title of this toast.

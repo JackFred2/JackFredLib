@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
+import red.jackf.jackfredlib.client.api.toasts.ToastIcon;
 import red.jackf.jackfredlib.impl.base.LogUtil;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ModUtils {
-    private static final Map<String, ImageSpec> CACHE = new HashMap<>();
+    private static final Map<String, ToastIcon> ICON_CACHE = new HashMap<>();
     private static final Logger LOGGER = LogUtil.getLogger("Toasts/ModIconLoader");
     private ModUtils() {}
 
@@ -27,8 +27,8 @@ public class ModUtils {
                 .orElse(Component.literal(modid));
     }
 
-    public static @Nullable ImageSpec specFromModId(String modid) {
-        return CACHE.computeIfAbsent(modid, ModUtils::_specFromModId);
+    public static @Nullable ToastIcon iconFromModId(String modid) {
+        return ICON_CACHE.computeIfAbsent(modid, ModUtils::_specFromModId);
     }
 
     private static void devOnlyWarn(String str, Object... args) {
@@ -36,7 +36,7 @@ public class ModUtils {
             LOGGER.warn(str, args);
     }
 
-    private static @Nullable ImageSpec _specFromModId(String modid) {
+    private static @Nullable ToastIcon _specFromModId(String modid) {
         LOGGER.debug("Trying to load icon for mod '{}'", modid);
         var mod = FabricLoader.getInstance().getModContainer(modid).orElse(null);
         if (mod == null) {
@@ -61,9 +61,9 @@ public class ModUtils {
             // trim assets/{modid}/; shouldn't cause issues but if it does we'll return null
             var trimmedPath = iconPath.replace("assets/%s/".formatted(modid), "");
 
-            var spec = ImageSpec.image(new ResourceLocation(modid, trimmedPath), image.getWidth(), image.getHeight());
+            var icon = ToastIcon.image(new ResourceLocation(modid, trimmedPath), image.getWidth(), image.getHeight());
             LOGGER.debug("Caching spec {}:{} ({}x{})", modid, iconPath, image.getWidth(), image.getHeight());
-            return spec;
+            return icon;
         } catch (IOException ex) {
             LOGGER.error("IO error loading icon for mod '{}': ", modid, ex);
             return null;
