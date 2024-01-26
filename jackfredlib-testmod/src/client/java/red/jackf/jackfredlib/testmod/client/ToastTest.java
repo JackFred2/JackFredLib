@@ -21,20 +21,19 @@ import static net.minecraft.network.chat.Component.literal;
 public class ToastTest {
     private static final Supplier<CustomToast> TITLE_AND_MESSAGE = Memoizer.of(() -> ToastBuilder.builder(ToastFormat.DARK, literal("Test Toast"))
             .addMessage(literal("A fairly long message to stretch the toast height to get reach two slots instead of the default 1"))
-            .withImage(ImageSpec.image(new ResourceLocation("jackfredlib-testmod", "test_toast.png"), 120, 120))
+            .withIcon(ToastIcon.image(new ResourceLocation("jackfredlib-testmod", "test_toast.png"), 120, 120))
             .progressPuller(toast -> Optional.of(toast.getProgress() + 0.005f))
             .rainbowProgressBar(true)
             .build());
 
     private static final Supplier<CustomToast> SHORT = Memoizer.of(() -> ToastBuilder.builder(ToastFormat.WHITE, literal("Test Toast 2"))
             .addMessage(literal("A shorter message"))
-            .expiresAfter(7500L)
-            .progressShowsVisibleTime()
+            .expiresAfter(3000L)
             .build());
 
     private static final Supplier<CustomToast> REPEATABLE_SHORT_SHARP = () -> ToastBuilder.builder(ToastFormat.WHITE_SHARP, literal("Repeatable Toast"))
             .addMessage(literal("0%"))
-            .withImage(ImageSpec.modIcon("jackfredlib"))
+            .withIcon(ToastIcon.modIcon("jackfredlib"))
             .progressPuller(toast -> {
                 var newProg = Math.min(toast.getProgress() + ((float) Math.random() / 150), 1f);
                 toast.setMessage(List.of(literal("%.02f%%".formatted(newProg * 100))));
@@ -52,7 +51,7 @@ public class ToastTest {
             .addMessage(literal("A reaaaally long message so that the yellow exclamation mark to the left is only displayed once instead of repeating"))
             .addMessage(literal("Another message line"))
             .addMessage(literal("Staggered loading too!"))
-            .withImage(ImageSpec.modIcon("invalid"))
+            .withIcon(ToastIcon.modIcon("invalid"))
             .progressPuller(toast -> Optional.of(Math.random() < 0.03 ? toast.getProgress() + 0.1f : toast.getProgress()))
             .expiresWhenProgressComplete(2000L)
             .build());
@@ -76,6 +75,19 @@ public class ToastTest {
                 var mod = mods.get((int) (Math.random() * mods.size()));
                 // get a random mod and send it's name and desc
                 Toasts.INSTANCE.sendFromMod(mod.getMetadata().getId(), Component.nullToEmpty(mod.getMetadata().getDescription()));
+            } else if (stack.is(Items.STONE_PICKAXE)) {
+                Toasts.INSTANCE.send(ToastBuilder.builder(ToastFormat.BLUE_ALERT, literal("large image"))
+                        .addMessage(literal("line ".repeat(6)))
+                        .withIcon(ToastIcon.image(new ResourceLocation("jackfredlib-testmod", "test_toast.png"), 2, 120, 120))
+                        .progressPuller(toast -> {
+                            if (toast.getTimeVisible() > 5000L) {
+                                return Optional.of((float) (toast.getTimeVisible() - 5000L) / 5000L);
+                            } else {
+                                return Optional.empty();
+                            }
+                        })
+                        .expiresWhenProgressComplete(1000L)
+                        .build());
             }
             return InteractionResultHolder.pass(ItemStack.EMPTY);
         });

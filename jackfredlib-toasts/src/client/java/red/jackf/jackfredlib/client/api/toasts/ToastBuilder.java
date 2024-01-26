@@ -37,16 +37,16 @@ public interface ToastBuilder {
     ToastBuilder addMessage(Component message);
 
     /**
-     * <p>Adds an image to be displayed on the left side of the toast. Text will be shifted right if an image exists.</p>
+     * <p>Adds an icon to be displayed on the left side of the toast. Text will be shifted right if an icon exists.</p>
      *
      * <p>Images will be scaled to render a 20x20 pixel image.</p>
      *
-     * @see ImageSpec
-     * @apiNote Default: no image (null).
-     * @param image Image to display.
+     * @see ToastIcon
+     * @apiNote Default: no icon (null).
+     * @param icon Icon to display.
      * @return This toast builder.
      */
-    ToastBuilder withImage(@Nullable ImageSpec image);
+    ToastBuilder withIcon(@Nullable ToastIcon icon);
 
     /**
      * <p>Sets how long this toast should display for, in milliseconds.</p>

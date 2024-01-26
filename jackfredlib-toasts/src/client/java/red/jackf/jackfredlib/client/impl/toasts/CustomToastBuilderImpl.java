@@ -4,10 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
-import red.jackf.jackfredlib.client.api.toasts.CustomToast;
-import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
-import red.jackf.jackfredlib.client.api.toasts.ToastBuilder;
-import red.jackf.jackfredlib.client.api.toasts.ToastFormat;
+import red.jackf.jackfredlib.client.api.toasts.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +15,7 @@ public class CustomToastBuilderImpl implements ToastBuilder {
     private final List<Component> messages = new ArrayList<>();
     private final ToastFormat format;
     @Nullable
-    private ImageSpec image;
+    private ToastIcon icon;
     // default to expiring after 5000 milliseconds
     private long lifetime = 5000L;
     private long progressCompleteExpiryTime = -1;
@@ -37,8 +34,9 @@ public class CustomToastBuilderImpl implements ToastBuilder {
         return this;
     }
 
-    public CustomToastBuilderImpl withImage(@Nullable ImageSpec image) {
-        this.image = image;
+    @Override
+    public ToastBuilder withIcon(@Nullable ToastIcon icon) {
+        this.icon = icon;
         return this;
     }
 
@@ -83,6 +81,6 @@ public class CustomToastBuilderImpl implements ToastBuilder {
             visibilityChecker = toast -> (toast.getTimeVisible()) > lifeTime ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
         }
 
-        return new CustomToastImpl(format, title, messages, image, visibilityChecker, progressPuller, rainbowProgress);
+        return new CustomToastImpl(format, title, messages, icon, visibilityChecker, progressPuller, rainbowProgress);
     }
 }
