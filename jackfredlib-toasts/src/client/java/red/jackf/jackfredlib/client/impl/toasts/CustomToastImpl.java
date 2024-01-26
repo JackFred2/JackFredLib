@@ -3,7 +3,6 @@ package red.jackf.jackfredlib.client.impl.toasts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
-import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -68,13 +67,7 @@ public class CustomToastImpl implements CustomToast {
     }
 
     private int leftWidth() {
-        var guiSprites = Minecraft.getInstance().getGuiSprites();
-        var sprite = guiSprites.getSpriteScaling(guiSprites.getSprite(format.texture()));
-        if (sprite instanceof GuiSpriteScaling.NineSlice nineSlice) {
-            return nineSlice.border().left();
-        } else {
-            return DEFAULT_PADDING;
-        }
+        return format.leftWidth();
     }
 
     @Override
@@ -110,12 +103,13 @@ public class CustomToastImpl implements CustomToast {
         if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
 
         // background
-        graphics.blitSprite(format.texture(),
-                0,
-                0,
-                0,
-                width(),
-                height());
+        graphics.blitNineSliced(format.image(),
+                0,0,
+                width(), height(),
+                format.leftWidth(), format.topHeight(),
+                DEFAULT_PADDING, DEFAULT_PADDING,
+                160, 32,
+                0, format.vOffset());
 
         var font = component.getMinecraft().font;
         var textX = leftWidth();
