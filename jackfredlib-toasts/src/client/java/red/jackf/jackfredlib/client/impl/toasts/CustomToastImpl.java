@@ -10,8 +10,8 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.client.api.toasts.CustomToast;
-import red.jackf.jackfredlib.client.api.toasts.ImageSpec;
 import red.jackf.jackfredlib.client.api.toasts.ToastFormat;
+import red.jackf.jackfredlib.client.api.toasts.ToastIcon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class CustomToastImpl implements CustomToast {
     private final ToastFormat format;
     private Component title;
     private final List<FormattedCharSequence> messageLines = new ArrayList<>();
-    private @Nullable ImageSpec image;
+    private ToastIcon icon;
     private final VisibilityChecker visibiltyFunction;
     private final CustomToastBuilderImpl.ProgressPuller progressPuller;
     private final boolean rainbowProgress;
@@ -38,13 +38,13 @@ public class CustomToastImpl implements CustomToast {
     public CustomToastImpl(ToastFormat format,
                            Component title,
                            List<Component> messages,
-                           @Nullable ImageSpec image,
+                           @Nullable ToastIcon icon,
                            VisibilityChecker visibiltyFunction,
                            CustomToastBuilderImpl.ProgressPuller progressPuller,
                            boolean rainbowProgress) {
         this.format = format;
         this.title = title;
-        this.image = image;
+        this.icon = icon;
         this.visibiltyFunction = visibiltyFunction;
         this.progressPuller = progressPuller;
         this.rainbowProgress = rainbowProgress;
@@ -55,8 +55,9 @@ public class CustomToastImpl implements CustomToast {
         this.title = title;
     }
 
-    public void setImage(@Nullable ImageSpec image) {
-        this.image = image;
+    @Override
+    public void setImage(@Nullable ToastIcon icon) {
+        this.icon = icon;
     }
 
     public void setMessage(List<Component> messages) {
@@ -81,20 +82,22 @@ public class CustomToastImpl implements CustomToast {
         var font = Minecraft.getInstance().font;
         var width = IntStream.concat(IntStream.of(font.width(this.title)),
                 this.messageLines.stream().mapToInt(font::width)).max().orElse(0);
-        if (image != null) width += (IMAGE_SIZE + DEFAULT_PADDING);
+        if (icon != null) width += (icon.width() + DEFAULT_PADDING);
         return width + DEFAULT_PADDING + leftWidth();
     }
 
     @Override
     public int height() {
         var font = Minecraft.getInstance().font;
-        var total = 7 + (1 + messageLines.size()) * (font.lineHeight + 2);
-        return Mth.positiveCeilDiv(total, 32) * 32;
+
+        int textHeight = 7 + (1 + messageLines.size()) * (font.lineHeight + 2);
+        int iconHeight = icon != null ? icon.height() : 0;
+        return Mth.positiveCeilDiv(Math.max(iconHeight, textHeight), 32) * 32;
     }
 
     // max width, minus left and right padding, minus another padding and the image size if an image is present
     private int getMaxTextAreaWidth() {
-        return MAX_WIDTH - leftWidth() - DEFAULT_PADDING - (image != null ? IMAGE_SIZE + DEFAULT_PADDING : 0);
+        return MAX_WIDTH - leftWidth() - DEFAULT_PADDING - (icon != null ? icon.width() + DEFAULT_PADDING : 0);
     }
 
     @Override
@@ -118,14 +121,11 @@ public class CustomToastImpl implements CustomToast {
         var textX = leftWidth();
 
         // image if present
-        if (image != null) {
-            textX += IMAGE_SIZE + DEFAULT_PADDING;
-            graphics.blit(image.location(),
-                    leftWidth(), DEFAULT_PADDING,
-                    IMAGE_SIZE, IMAGE_SIZE,
-                    image.uOffset(), image.vOffset(),
-                    image.uWidth(), image.vHeight(),
-                    image.textureWidth(), image.textureHeight());
+        if (icon != null) {
+            textX += icon.width() + DEFAULT_PADDING;
+            icon.render(graphics,
+                    leftWidth(),
+                    DEFAULT_PADDING);
         }
 
         // title and message
