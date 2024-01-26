@@ -1,12 +1,17 @@
 package red.jackf.jackfredlib.client.api.toasts;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import org.apache.http.util.Args;
 import org.jetbrains.annotations.Nullable;
 import red.jackf.jackfredlib.client.impl.toasts.ModUtils;
 import red.jackf.jackfredlib.client.impl.toasts.icon.ImageIcon;
+import red.jackf.jackfredlib.client.impl.toasts.icon.ItemStackIcon;
+
+import java.util.List;
 
 /**
  * An icon displayed at the left side of a toast.
@@ -75,6 +80,49 @@ public interface ToastIcon {
     }
 
     /**
+     * Create a toast icon that displays a given ItemStack.
+     *
+     * @param stack ItemStack to display.
+     * @return An icon rendering the given ItemStack.
+     */
+    static ToastIcon item(ItemStack stack) {
+        return new ItemStackIcon(List.of(stack), 1);
+    }
+
+
+    /**
+     * Create a toast icon that displays a given ItemStack.
+     *
+     * @param stack ItemStack to display.
+     * @param sizeInSlots Amount of slots to take up for the toast.
+     * @return An icon rendering the given ItemStack.
+     */
+    static ToastIcon item(ItemStack stack, int sizeInSlots) {
+        return new ItemStackIcon(List.of(stack), sizeInSlots);
+    }
+
+    /**
+     * Create a toast icon that displays a sequence of ItemStacks. Which stack is displayed depends on the {@link CustomToast#getProgress()}.
+     *
+     * @param stacks ItemStacks to display.
+     * @return An icon rendering the given ItemStack.
+     */
+    static ToastIcon items(List<ItemStack> stacks) {
+        return new ItemStackIcon(stacks, 1);
+    }
+
+    /**
+     * Create a toast icon that displays a sequence of ItemStacks. Which stack is displayed depends on the {@link CustomToast#getProgress()}.
+     *
+     * @param stacks ItemStacks to display.
+     * @param sizeInSlots Amount of slots to take up for the toast.
+     * @return An icon rendering the given ItemStack.
+     */
+    static ToastIcon items(List<ItemStack> stacks, int sizeInSlots) {
+        return new ItemStackIcon(stacks, sizeInSlots);
+    }
+
+    /**
      * Creates a toast icon from a given mod's icon, sized to 20x20 (1 toast slot).
      *
      * @param modid Mod ID to use the icon for.
@@ -95,26 +143,36 @@ public interface ToastIcon {
         return Mth.clamp(toastSlots, 1, 5) * 32 - 12;
     }
 
+    //////////////////
+    // CUSTOM ICONS //
+    //////////////////
+
     /**
      * Render the given icon at a given screen position.
      *
+     * @param toast Toast currently rendering this icon.
+     * @param component ToastComponent that owns and is rendering the toast.
      * @param graphics Graphics being used to render.
      * @param x X position of the top left corner of the toast.
      * @param y Y position of the top left corner of the toast.
      */
-    void render(GuiGraphics graphics, int x, int y);
+    void render(CustomToast toast, ToastComponent component, GuiGraphics graphics, int x, int y);
 
     /**
      * Return the width of the icon. Used to calculate the size of the toast background.
      *
      * @return The width of the icon.
      */
-    int width();
+    default int width() {
+        return DEFAULT_SIZE;
+    }
 
     /**
      * Return the height of the icon. Used to calculate the size of the toast background.
      *
      * @return The height of the icon.
      */
-    int height();
+    default int height() {
+        return DEFAULT_SIZE;
+    }
 }
