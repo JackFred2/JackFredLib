@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.client.api.toasts;
 
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * A custom toast instance with utility features and an optional progress bar.
  */
+@ApiStatus.NonExtendable
 public interface CustomToast extends Toast {
 
     /**

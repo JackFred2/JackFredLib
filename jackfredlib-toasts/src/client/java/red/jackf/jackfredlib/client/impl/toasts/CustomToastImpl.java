@@ -120,7 +120,9 @@ public class CustomToastImpl implements CustomToast {
         // image if present
         if (icon != null) {
             textX += icon.width() + DEFAULT_PADDING;
-            icon.render(pose,
+            icon.render(this,
+                    component,
+                    pose,
                     leftWidth(),
                     DEFAULT_PADDING);
         }
