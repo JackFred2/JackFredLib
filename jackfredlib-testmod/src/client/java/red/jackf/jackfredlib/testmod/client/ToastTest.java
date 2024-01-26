@@ -88,6 +88,18 @@ public class ToastTest {
                         })
                         .expiresWhenProgressComplete(1000L)
                         .build());
+            } else if (stack.is(Items.WOODEN_SWORD)) {
+                Toasts.INSTANCE.send(ToastBuilder.builder(ToastFormat.DARK, literal("Item Test"))
+                        .withIcon(ToastIcon.item(Items.GOLDEN_PICKAXE.getDefaultInstance()))
+                        .build());
+            } else if (stack.is(Items.STONE_SWORD)) {
+                Toasts.INSTANCE.send(ToastBuilder.builder(ToastFormat.WHITE_SHARP, literal("Item Test 2"))
+                        .withIcon(ToastIcon.items(List.of(
+                                Items.IRON_BLOCK.getDefaultInstance(),
+                                Items.GOLD_BLOCK.getDefaultInstance(),
+                                Items.DIAMOND_BLOCK.getDefaultInstance()
+                        ), player.isCrouching() ? 2 : 1))
+                        .progressShowsVisibleTime().build());
             }
             return InteractionResultHolder.pass(ItemStack.EMPTY);
         });
