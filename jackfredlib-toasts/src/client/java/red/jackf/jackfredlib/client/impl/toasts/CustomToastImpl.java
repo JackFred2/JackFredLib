@@ -1,7 +1,9 @@
 package red.jackf.jackfredlib.client.impl.toasts;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -94,7 +96,7 @@ public class CustomToastImpl implements CustomToast {
     }
 
     @Override
-    public @NotNull Visibility render(GuiGraphics graphics, ToastComponent component, long timeVisible) {
+    public @NotNull Visibility render(PoseStack pose, ToastComponent component, long timeVisible) {
         var newProgress = this.progressPuller.pull(this);
         newProgress.ifPresent(this::setProgress);
 
@@ -103,8 +105,9 @@ public class CustomToastImpl implements CustomToast {
         if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
 
         // background
-        graphics.blitNineSliced(format.image(),
-                0,0,
+        RenderSystem.setShaderTexture(0, format.image());
+        GuiComponent.blitNineSliced(pose,
+                0, 0,
                 width(), height(),
                 format.leftWidth(), format.topHeight(),
                 DEFAULT_PADDING, DEFAULT_PADDING,
@@ -117,21 +120,21 @@ public class CustomToastImpl implements CustomToast {
         // image if present
         if (icon != null) {
             textX += icon.width() + DEFAULT_PADDING;
-            icon.render(graphics,
+            icon.render(pose,
                     leftWidth(),
                     DEFAULT_PADDING);
         }
 
         // title and message
         if (messageLines.isEmpty()) {
-            graphics.drawString(font, title, textX, 12, format.titleColour(), false);
+            font.draw(pose, title, textX, 12, format.titleColour());
         } else {
             int textYStart = 7;
-            graphics.drawString(font, title, textX, textYStart, format.titleColour(), false);
+            font.draw(pose, title, textX, textYStart, format.titleColour());
             for (int i = 1; i <= messageLines.size(); i++) {
                 var line = messageLines.get(i - 1);
                 var textY = textYStart + (i * 11);
-                graphics.drawString(font, line, textX, textY, this.format.messageColour(), false);
+                font.draw(pose, line, textX, textY, this.format.messageColour());
             }
         }
 
@@ -141,7 +144,7 @@ public class CustomToastImpl implements CustomToast {
         if (this.progress != 0f) {
             int colour = rainbowProgress ? 0xFF_000000 | Mth.hsvToRgb(progress / 3f, 1f, 1f) : format.progressBarColour();
 
-            graphics.fill(3, progressBarY, 3 + (int) (progressBarWidth * progress), progressBarY + 2, colour);
+            GuiComponent.fill(pose, 3, progressBarY, 3 + (int) (progressBarWidth * progress), progressBarY + 2, colour);
         }
 
         return visibiltyFunction.check(this);

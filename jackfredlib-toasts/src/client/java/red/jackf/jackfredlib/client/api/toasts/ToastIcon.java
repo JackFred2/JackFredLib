@@ -1,6 +1,6 @@
 package red.jackf.jackfredlib.client.api.toasts;
 
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.apache.http.util.Args;
@@ -98,11 +98,11 @@ public interface ToastIcon {
     /**
      * Render the given icon at a given screen position.
      *
-     * @param graphics Graphics being used to render.
+     * @param pose Pose stack being used to render.
      * @param x X position of the top left corner of the toast.
      * @param y Y position of the top left corner of the toast.
      */
-    void render(GuiGraphics graphics, int x, int y);
+    void render(PoseStack pose, int x, int y);
 
     /**
      * Return the width of the icon. Used to calculate the size of the toast background.
