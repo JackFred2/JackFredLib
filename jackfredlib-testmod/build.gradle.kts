@@ -17,6 +17,8 @@ loom {
         client()
         ideConfigGenerated(true)
         name("Test Mod Client")
+
+        programArgs.addAll("--username JackFred".split(" "))
     }
 }
 
