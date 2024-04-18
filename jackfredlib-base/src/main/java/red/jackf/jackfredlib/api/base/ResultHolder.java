@@ -4,6 +4,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * Represents a result of an action that either holds an object ({@link State#VALUE}), an explicit lack of an object
  * ({@link State#EMPTY}), or to pass for further processing ({@link State#PASS}). Designed for use with Fabric
@@ -78,6 +80,17 @@ public final class ResultHolder<T> {
     public T get() {
         if (state == State.VALUE) return value;
         throw new IllegalArgumentException("Tried to get value from a non-VALUE result");
+    }
+
+    /**
+     * Gets the value of this result as an {@link Optional}.
+     *
+     * @return An optional containing the value within this holder if VALUE, or an empty optional if EMPTY.
+     * @throws IllegalArgumentException If this result is a PASS result.
+     */
+    @ApiStatus.AvailableSince("1.4.0")
+    public Optional<T> asOptional() {
+        return Optional.ofNullable(this.getNullable());
     }
 
     /**
