@@ -17,11 +17,11 @@ public class FakeGlowPacketMeddling {
         List<SynchedEntityData.DataValue<?>> copy = new ArrayList<>(original.packedItems().size() + 1);
         boolean hasAddedGlowing = false;
         for (SynchedEntityData.DataValue<?> packedItem : original.packedItems()) {
-            if (packedItem.id() == Entity.DATA_SHARED_FLAGS_ID.getId()) {
+            if (packedItem.id() == Entity.DATA_SHARED_FLAGS_ID.id()) {
                 hasAddedGlowing = true;
                 byte data = (byte) packedItem.value();
-                copy.add(new SynchedEntityData.DataValue<>(Entity.DATA_SHARED_FLAGS_ID.getId(),
-                                                           Entity.DATA_SHARED_FLAGS_ID.getSerializer(),
+                copy.add(new SynchedEntityData.DataValue<>(Entity.DATA_SHARED_FLAGS_ID.id(),
+                                                           Entity.DATA_SHARED_FLAGS_ID.serializer(),
                                                            shouldGlow ? forceGlowing(data) : forceNotGlowing(data)));
             } else {
                 copy.add(packedItem);
@@ -29,8 +29,8 @@ public class FakeGlowPacketMeddling {
         }
         if (!hasAddedGlowing) {
             byte entityData = entityGlowLie.entity().getEntityData().get(Entity.DATA_SHARED_FLAGS_ID);
-            copy.add(new SynchedEntityData.DataValue<>(Entity.DATA_SHARED_FLAGS_ID.getId(),
-                                                       Entity.DATA_SHARED_FLAGS_ID.getSerializer(),
+            copy.add(new SynchedEntityData.DataValue<>(Entity.DATA_SHARED_FLAGS_ID.id(),
+                                                       Entity.DATA_SHARED_FLAGS_ID.serializer(),
                                                        shouldGlow ? forceGlowing(entityData) : forceNotGlowing(entityData)));
         }
         return new ClientboundSetEntityDataPacket(original.id(), copy);

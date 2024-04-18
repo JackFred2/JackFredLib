@@ -53,7 +53,7 @@ dependencies {
     implementation("blue.endless:jankson:${properties["jankson_version"]}")
     implementation("commons-io:commons-io:${properties["commons_io_version"]}")
 
-    modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
+    // modRuntimeOnly("com.terraformersmc:modmenu:${properties["modmenu_version"]}")
 }
 
 tasks.withType<JavaCompile>().configureEach {

@@ -66,8 +66,8 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
     private void sendFakeGlowingTagToPlayer(ServerPlayer player) {
         byte data = this.entity.getEntityData().get(DATA);
         SynchedEntityData.DataValue<Byte> dataValue = new SynchedEntityData.DataValue<>(
-            DATA.getId(),
-            DATA.getSerializer(),
+            DATA.id(),
+            DATA.serializer(),
             this.colour != null ? FakeGlowPacketMeddling.forceGlowing(data) : FakeGlowPacketMeddling.forceNotGlowing(data)
         );
         player.connection.send(new ClientboundSetEntityDataPacket(
@@ -78,8 +78,8 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
 
     private void restoreOriginalGlowingTagToPlayer(ServerPlayer player) {
         SynchedEntityData.DataValue<Byte> dataValue = new SynchedEntityData.DataValue<>(
-                DATA.getId(),
-                DATA.getSerializer(),
+                DATA.id(),
+                DATA.serializer(),
                 this.entity.getEntityData().get(DATA)
         );
         player.connection.send(new ClientboundSetEntityDataPacket(

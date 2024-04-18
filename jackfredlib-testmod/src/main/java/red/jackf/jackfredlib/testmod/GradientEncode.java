@@ -1,6 +1,7 @@
 package red.jackf.jackfredlib.testmod;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.nbt.NbtOps;
@@ -39,16 +40,16 @@ public class GradientEncode {
     }
 
     private static <T> void doOps(DynamicOps<T> op, Gradient gradient, Consumer<String> errConsumer) {
-        var encoded = Gradient.CODEC.encodeStart(op, gradient);
-        encoded.get().ifLeft(json -> {
-            var decoded = Gradient.CODEC.decode(op, json);
-            decoded.get().mapLeft(Pair::getFirst).ifLeft(gradient2 -> {
+        DataResult<T> encoded = Gradient.CODEC.encodeStart(op, gradient);
+        encoded.ifSuccess(t -> {
+            var decoded = Gradient.CODEC.decode(op, t);
+            decoded.map(Pair::getFirst).ifSuccess(gradient2 -> {
                 if (!gradient.equals(gradient2)) {
                     errConsumer.accept(op.getClass().getSimpleName() + " ERR");
                     errConsumer.accept("Before: %s".formatted(gradient));
                     errConsumer.accept("After: %s".formatted(gradient2));
                 }
-            }).ifRight(partial -> errConsumer.accept("Error decode: " + partial.message()));
-        }).ifRight(partial -> errConsumer.accept("Error encode: " + partial.message()));
+            }).ifError(err -> errConsumer.accept("Error decode: " + err.message()));
+        }).ifError(err -> errConsumer.accept("Error encode: " + err.message()));
     }
 }

@@ -32,10 +32,12 @@ public enum FakeTeamManager {
         colour = FakeTeamUtil.ensureValidColour(colour);
 
         if (!visible.get(colour).contains(player.getGameProfile())) {
+            ClientboundSetPlayerTeamPacket.Parameters params = FakeTeamUtil.createFakeParameters(colour);
+
             var packet = ClientboundSetPlayerTeamInvoker.createManually(
                     FakeTeamUtil.getName(colour),
                     CREATE_TEAM,
-                    Optional.of(FakeTeamUtil.FAKE_PARAMETERS.get(colour)),
+                    Optional.ofNullable(params),
                     ImmutableList.of(entity.getScoreboardName())
             );
 

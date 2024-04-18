@@ -2,18 +2,17 @@ package red.jackf.jackfredlib.impl.lying.faketeams;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.world.scores.Team;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import red.jackf.jackfredlib.api.base.ServerTracker;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FakeTeamUtil {
     private FakeTeamUtil() {}
@@ -22,8 +21,6 @@ public class FakeTeamUtil {
             .filter(ChatFormatting::isColor)
             .toList();
 
-    static final Map<ChatFormatting, ClientboundSetPlayerTeamPacket.Parameters> FAKE_PARAMETERS = generateFakeParameters();
-
     @Contract("null -> null; !null -> !null")
     public static @Nullable ChatFormatting ensureValidColour(@Nullable ChatFormatting colour) {
         if (colour == null) return null;
@@ -31,27 +28,21 @@ public class FakeTeamUtil {
         return colour;
     }
 
-    private static Map<ChatFormatting, ClientboundSetPlayerTeamPacket.Parameters> generateFakeParameters() {
-        var map = new HashMap<ChatFormatting, ClientboundSetPlayerTeamPacket.Parameters>(16);
+    @Nullable
+    static ClientboundSetPlayerTeamPacket.Parameters createFakeParameters(ChatFormatting colour) {
+        var server = ServerTracker.INSTANCE.getServer();
+        if (server == null) return null;
+        var buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), server.registryAccess());
 
-        for (ChatFormatting colour : COLOURS) {
-            String name = getName(colour);
+        ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, Component.literal(getName(colour)));
+        buf.writeByte(0);
+        buf.writeUtf(Team.Visibility.ALWAYS.name);
+        buf.writeUtf(Team.CollisionRule.ALWAYS.name);
+        buf.writeEnum(colour);
+        ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, Component.empty());
+        ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, Component.empty());
 
-            var fakeBuf = new FriendlyByteBuf(Unpooled.buffer());
-            fakeBuf.writeComponent(Component.literal(name)); // display name
-            fakeBuf.writeByte(0); // options
-            fakeBuf.writeUtf(Team.Visibility.ALWAYS.name); // team visibility
-            fakeBuf.writeUtf(Team.CollisionRule.ALWAYS.name); // collision
-
-            fakeBuf.writeEnum(colour); // colour
-
-            fakeBuf.writeComponent(CommonComponents.EMPTY); // prefix
-            fakeBuf.writeComponent(CommonComponents.EMPTY); // suffix
-
-            map.put(colour, new ClientboundSetPlayerTeamPacket.Parameters(fakeBuf));
-        }
-
-        return map;
+        return new ClientboundSetPlayerTeamPacket.Parameters(buf);
     }
 
     static String getName(ChatFormatting colour) {
