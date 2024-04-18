@@ -6,7 +6,7 @@ repositories {
     maven {
         url = uri("https://jitpack.io")
         content {
-            includeGroupAndSubgroups("com.github.iPortalTeam.ImmersivePortalsMod")
+            includeGroupAndSubgroups("com.github.iPortalTeam")
             includeGroupAndSubgroups("com.github.qouteall.ImmersivePortalsMod")
         }
     }
@@ -17,6 +17,10 @@ repositories {
             includeGroupAndSubgroups("me.shedaniel")
         }
     }
+
+    maven {
+        url  = uri("https://api.modrinth.com/maven")
+    }
 }
 
 @Suppress("UNCHECKED_CAST")
@@ -25,10 +29,11 @@ val moduleDependencies = rootProject.extra["moduleDependencies"] as (Project, Li
 moduleDependencies(project, listOf("jackfredlib-base", "jackfredlib-colour"), false)
 
 dependencies {
-    listOf("imm_ptl_core", "q_misc_util", "build").forEach {
+    modCompileOnly("com.github.iPortalTeam:ImmersivePortalsMod:${properties["imm_ptl_version"]}")
+    /*listOf("imm_ptl_core", "q_misc_util", "build").forEach {
         // ImmPtl compat
         modCompileOnly("com.github.qouteall.ImmersivePortalsMod:$it:${properties["imm_ptl_version"]}")
-    }
+    }*/
 }
 
 loom {
