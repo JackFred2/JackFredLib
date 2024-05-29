@@ -61,7 +61,7 @@ public class ModUtils {
             // trim assets/{modid}/; shouldn't cause issues but if it does we'll return null
             var trimmedPath = iconPath.replace("assets/%s/".formatted(modid), "");
 
-            var icon = ToastIcon.image(new ResourceLocation(modid, trimmedPath), image.getWidth(), image.getHeight());
+            var icon = ToastIcon.image(ResourceLocation.fromNamespaceAndPath(modid, trimmedPath), image.getWidth(), image.getHeight());
             LOGGER.debug("Caching spec {}:{} ({}x{})", modid, iconPath, image.getWidth(), image.getHeight());
             return icon;
         } catch (IOException ex) {

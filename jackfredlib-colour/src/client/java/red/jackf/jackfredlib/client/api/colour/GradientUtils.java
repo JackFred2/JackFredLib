@@ -113,10 +113,10 @@ public class GradientUtils {
         int b2 = to.b();
         int a2 = to.a();
 
-        buffer.vertex(pose, x1, y1, 0).color(r1, g1, b1, a1).endVertex();
-        buffer.vertex(pose, x1, y2, 0).color(r2, g2, b2, a2).endVertex();
-        buffer.vertex(pose, x2, y2, 0).color(r2, g2, b2, a2).endVertex();
-        buffer.vertex(pose, x2, y1, 0).color(r1, g1, b1, a1).endVertex();
+        buffer.addVertex(pose, x1, y1, 0).setColor(r1, g1, b1, a1);
+        buffer.addVertex(pose, x1, y2, 0).setColor(r2, g2, b2, a2);
+        buffer.addVertex(pose, x2, y2, 0).setColor(r2, g2, b2, a2);
+        buffer.addVertex(pose, x2, y1, 0).setColor(r1, g1, b1, a1);
     }
 
     private static void drawHorizontalGradient(VertexConsumer buffer, Matrix4f pose,
@@ -131,9 +131,9 @@ public class GradientUtils {
         int b2 = to.b();
         int a2 = to.a();
 
-        buffer.vertex(pose, x1, y1, 0).color(r1, g1, b1, a1).endVertex();
-        buffer.vertex(pose, x1, y2, 0).color(r1, g1, b1, a1).endVertex();
-        buffer.vertex(pose, x2, y2, 0).color(r2, g2, b2, a2).endVertex();
-        buffer.vertex(pose, x2, y1, 0).color(r2, g2, b2, a2).endVertex();
+        buffer.addVertex(pose, x1, y1, 0).setColor(r1, g1, b1, a1);
+        buffer.addVertex(pose, x1, y2, 0).setColor(r1, g1, b1, a1);
+        buffer.addVertex(pose, x2, y2, 0).setColor(r2, g2, b2, a2);
+        buffer.addVertex(pose, x2, y1, 0).setColor(r2, g2, b2, a2);
     }
 }

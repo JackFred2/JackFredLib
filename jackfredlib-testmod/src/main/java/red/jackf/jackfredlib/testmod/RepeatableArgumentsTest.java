@@ -20,7 +20,7 @@ import static net.minecraft.commands.Commands.literal;
 
 public class RepeatableArgumentsTest {
     private static final ExtraSourceData.Definition<MutliArgData> DEFINITION = new ExtraSourceData.Definition<>(
-            new ResourceLocation("jackfredlib-testmod", "repeated_args"),
+            ResourceLocation.fromNamespaceAndPath("jackfredlib-testmod", "repeated_args"),
             MutliArgData.class,
             MutliArgData::new
     );

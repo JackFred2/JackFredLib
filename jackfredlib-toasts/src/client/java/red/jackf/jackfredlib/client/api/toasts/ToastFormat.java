@@ -10,7 +10,7 @@ public record ToastFormat(ResourceLocation texture,
                           int messageColour,
                           int progressBarColour) {
     private static ResourceLocation tex(String path) {
-        return new ResourceLocation("jackfredlib-toasts", path);
+        return ResourceLocation.fromNamespaceAndPath("jackfredlib-toasts", path);
     }
 
     /**
