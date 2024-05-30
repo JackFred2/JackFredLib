@@ -45,9 +45,9 @@ public class TestConfig implements Config<TestConfig> {
     public Pojo pojo = new Pojo();
 
     public List<ResourceLocation> idList = new ArrayList<>(List.of(
-            new ResourceLocation("diamond"),
-            new ResourceLocation("mekanism", "steel"),
-            new ResourceLocation("randomconcepts", "aquamarine")
+            ResourceLocation.withDefaultNamespace("diamond"),
+            ResourceLocation.fromNamespaceAndPath("mekanism", "steel"),
+            ResourceLocation.fromNamespaceAndPath("randomconcepts", "aquamarine")
     ));
 
     public Map<String, Double> map = new HashMap<>(Map.of(
