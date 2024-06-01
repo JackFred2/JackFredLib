@@ -12,11 +12,10 @@ Collection of common utilities for my Minecraft mods, and where I'm figuring out
   practical example [Chest Tracker](https://modrinth.com/mod/chest-tracker).
 - Simple config module, oriented for server side but works on both
 
-Feel free to use yourself (see wiki for instructions and a basic overview).
+## Usage
 
-## Usage:
-
-See the [maven](https://maven.jackf.red/#/releases) as well as the [javadoc](https://maven.jackf.red/javadoc/releases/red/jackf/jackfredlib/jackfredlib/latest).
+JackFredLib is available on my [maven](https://maven.jackf.red/#/releases). For usage, see the attached sources, the 
+[javadoc](https://maven.jackf.red/javadoc/releases/red/jackf/jackfredlib/jackfredlib/latest), or the [wiki](https://docs.jackf.red/jackfredlib).
 
 ## IntelliJ Import Error
 
