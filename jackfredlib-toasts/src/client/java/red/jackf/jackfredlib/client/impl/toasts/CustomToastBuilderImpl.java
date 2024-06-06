@@ -57,7 +57,8 @@ public class CustomToastBuilderImpl implements ToastBuilder {
     }
 
     public CustomToastBuilderImpl progressShowsVisibleTime() {
-        this.progressPuller = toast -> Optional.of((float) (toast.getTimeVisible()) / lifetime);
+        double modifier = Minecraft.getInstance().options.notificationDisplayTime().get();
+        this.progressPuller = toast -> Optional.of((float) (toast.getTimeVisible()) / (lifetime * (float) modifier));
         return this;
     }
 
