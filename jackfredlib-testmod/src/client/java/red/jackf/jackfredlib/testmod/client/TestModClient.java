@@ -21,7 +21,7 @@ public class TestModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            if (environment.includeIntegrated) {
+            if (true /*environment.includeIntegrated*/) {
                 dispatcher.register(Commands.literal("openColourScreen").executes(ctx -> {
                     Minecraft.getInstance()
                             .execute(() -> Minecraft.getInstance().setScreen(new ColourTestScreen()));

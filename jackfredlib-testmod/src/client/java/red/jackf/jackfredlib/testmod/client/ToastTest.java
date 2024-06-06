@@ -1,13 +1,16 @@
 package red.jackf.jackfredlib.testmod.client;
 
+import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import red.jackf.jackfredlib.api.base.Memoizer;
 import red.jackf.jackfredlib.client.api.toasts.*;
 
@@ -19,6 +22,8 @@ import java.util.function.Supplier;
 import static net.minecraft.network.chat.Component.literal;
 
 public class ToastTest {
+    private static int stoneMined = 0;
+
     private static final Supplier<CustomToast> TITLE_AND_MESSAGE = Memoizer.of(() -> ToastBuilder.builder(ToastFormat.DARK, literal("Test Toast"))
             .addMessage(literal("A fairly long message to stretch the toast height to get reach two slots instead of the default 1"))
             .withIcon(ToastIcon.image(ResourceLocation.fromNamespaceAndPath("jackfredlib-testmod", "test_toast.png"), 120, 120))
@@ -101,7 +106,42 @@ public class ToastTest {
                         ), player.isCrouching() ? 2 : 1))
                         .progressShowsVisibleTime().build());
             }
+
+            // jflib docs example
+            else if (stack.is(Items.GOLD_INGOT)) {
+                stoneMined = 0;
+
+                Toasts.INSTANCE.send(ToastBuilder.builder(ToastFormat.DARK, literal("Mine 5 stone!"))
+                        .withIcon(ToastIcon.item(Items.STONE.getDefaultInstance()))
+                        .progressPuller(ignored -> Optional.of(Mth.clamp(((float) stoneMined / 5), 0, 1f)))
+                        .expiresWhenProgressComplete(1000L)
+                        .build());
+            } else if (stack.is(Items.IRON_INGOT)) {
+                List<ItemStack> ironArmour = List.of(
+                        Items.IRON_HELMET.getDefaultInstance(),
+                        Items.IRON_CHESTPLATE.getDefaultInstance(),
+                        Items.IRON_LEGGINGS.getDefaultInstance(),
+                        Items.IRON_BOOTS.getDefaultInstance()
+                );
+
+                var items = ToastBuilder.builder(ToastFormat.DARK, Component.literal("New Armour!"))
+                        .addMessage(Component.literal("You have unlocked iron armour!"))
+                        .withIcon(ToastIcon.items(ironArmour))
+                        .progressShowsVisibleTime()
+                        .expiresAfter(4000L)
+                        .build();
+
+                Toasts.INSTANCE.send(items);
+            }
+
+
             return InteractionResultHolder.pass(ItemStack.EMPTY);
+        });
+
+        ClientPlayerBlockBreakEvents.AFTER.register((world, player, pos, state) -> {
+            if (state.is(Blocks.STONE)) {
+                stoneMined = Math.min(5, stoneMined + 1);
+            }
         });
     }
 }
