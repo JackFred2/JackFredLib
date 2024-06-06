@@ -16,6 +16,7 @@ import red.jackf.jackfredlib.client.api.toasts.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -132,6 +133,19 @@ public class ToastTest {
                         .build();
 
                 Toasts.INSTANCE.send(items);
+            } else if (stack.is(Items.DIAMOND)) {
+                var formats = Map.of(
+                        ToastFormat.DARK, "DARK (advancements)",
+                        ToastFormat.WHITE, "WHITE (recipe unlocks)",
+                        ToastFormat.BLUE_ALERT, "BLUE_ALERT (system messages)",
+                        ToastFormat.WHITE_SHARP, "WHITE_SHARP (tutorials)"
+                );
+
+                for (Map.Entry<ToastFormat, String> entry : formats.entrySet()) {
+                    Toasts.INSTANCE.send(ToastBuilder.builder(entry.getKey(), literal(entry.getValue()))
+                            .progressShowsVisibleTime()
+                            .build());
+                }
             }
 
 
