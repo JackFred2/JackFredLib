@@ -24,7 +24,7 @@
   },
   "accessWidener": "jackfredlib-lying.accesswidener",
   "depends": {
-    "minecraft": ">=1.20.1",
+    "minecraft": ">=1.20",
     "fabricloader": "*",
     "fabric-lifecycle-events-v1": "*",
     "jackfredlib-base": ">=1.2.0",
