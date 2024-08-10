@@ -13,8 +13,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @ApiStatus.AvailableSince("1.3.0")
 public class Ephemeral2<T>  {
-    @Nullable
-    private T value = null;
+    private final ThreadLocal<T> value = new ThreadLocal<>();
     private int count = 0;
 
     /**
@@ -32,7 +31,7 @@ public class Ephemeral2<T>  {
      */
     public synchronized void push(T value, int count) {
         if (Math.max(0, count) == 0) return;
-        this.value = value;
+        this.value.set(value);
         this.count = count;
     }
 
@@ -50,7 +49,7 @@ public class Ephemeral2<T>  {
      * @throws IllegalStateException If there are no values currently being held.
      */
     public synchronized T pop() {
-        if (count == 0) throw new IllegalStateException("No value available - use .hasValue()");
+        if (this.count == 0) throw new IllegalStateException("No value available - use .hasValue()");
         return popNullable();
     }
 
@@ -59,14 +58,14 @@ public class Ephemeral2<T>  {
      * @return The value currently being held, or {@code null} if no value to being held.
      */
     public synchronized @Nullable T popNullable() {
-        if (count == 0) return null;
+        if (this.count == 0) return null;
         this.count--;
-        if (count == 0) {
-            @Nullable T value = this.value;
-            this.value = null;
+        if (this.count == 0) {
+            @Nullable T value = this.value.get();
+            this.value.remove();
             return value;
         } else {
-            return value;
+            return this.value.get();
         }
     }
 }
