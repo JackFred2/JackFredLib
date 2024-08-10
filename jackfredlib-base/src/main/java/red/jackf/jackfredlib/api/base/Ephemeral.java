@@ -6,8 +6,11 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A holder for ephemerally storing a value; you can add an object but only retrieve it once. Used internally to surrogate
  * arguments for mixins.
+ *
+ * @deprecated Use {@link  Ephemeral2}
  * @param <T> Type of value being stored.
  */
+@Deprecated(forRemoval = true, since = "1.4.1")
 @ApiStatus.AvailableSince("1.2.0")
 public class Ephemeral<T> {
     @Nullable
