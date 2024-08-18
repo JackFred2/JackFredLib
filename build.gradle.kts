@@ -82,6 +82,8 @@ allprojects {
 
     tasks.withType<JavaCompile> {
         options.compilerArgs.add("-Xlint:unchecked")
+
+        options.release.set(21)
     }
 
     project.extensions.configure<JavaPluginExtension> {
