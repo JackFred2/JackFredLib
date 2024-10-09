@@ -43,7 +43,7 @@ public class LieTest {
             if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
                 var handStack = player.getItemInHand(hand);
                 if (ENTITY_LIES.containsKey(handStack.getItem())) {
-                    var entityLie = ENTITY_LIES.get(handStack.getItem()).apply(serverLevel, hitResult.getBlockPos().offset(hitResult.getDirection().getNormal()), serverPlayer);
+                    var entityLie = ENTITY_LIES.get(handStack.getItem()).apply(serverLevel, hitResult.getBlockPos().offset(hitResult.getDirection().getUnitVec3i()), serverPlayer);
                     if (handStack.getItem() != Items.NETHERITE_HOE)
                         Debris.INSTANCE.schedule(entityLie, 20 * SharedConstants.TICKS_PER_SECOND);
                 }

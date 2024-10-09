@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
@@ -32,7 +33,7 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @param level Level to create the entity in
      */
     protected BuilderBase(EntityType<E> type, ServerLevel level) {
-        this.entity = type.create(level);
+        this.entity = type.create(level, EntitySpawnReason.COMMAND);
         if (this.entity == null) throw new IllegalArgumentException("Could not create entity; likely caused by being" +
                 "part of a disabled feature.");
     }

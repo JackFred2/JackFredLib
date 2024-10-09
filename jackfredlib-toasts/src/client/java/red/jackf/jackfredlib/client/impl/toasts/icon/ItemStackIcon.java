@@ -2,7 +2,6 @@ package red.jackf.jackfredlib.client.impl.toasts.icon;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.apache.http.util.Args;
@@ -25,7 +24,7 @@ public class ItemStackIcon implements ToastIcon {
     }
 
     @Override
-    public void render(CustomToast toast, ToastComponent component, GuiGraphics graphics, int x, int y) {
+    public void render(CustomToast toast, GuiGraphics graphics, int x, int y) {
         int scale = 2 * sizeInSlots - 1;
 
         int index = Mth.clamp((int) (toast.getProgress() * this.items.size()), 0, this.items.size() - 1);

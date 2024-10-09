@@ -1,7 +1,7 @@
 package red.jackf.jackfredlib.client.api.toasts;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 import red.jackf.jackfredlib.api.base.Memoizer;
@@ -59,7 +59,7 @@ public class Toasts {
 
     private static final Logger LOGGER = LogUtil.getLogger("Toasts");
 
-    private final ToastComponent toasts = Minecraft.getInstance().getToasts();
+    private final ToastManager toasts = Minecraft.getInstance().getToastManager();
 
     private Toasts() {}
 }

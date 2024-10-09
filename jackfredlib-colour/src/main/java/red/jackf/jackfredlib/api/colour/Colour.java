@@ -1,7 +1,7 @@
 package red.jackf.jackfredlib.api.colour;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -28,7 +28,7 @@ public interface Colour extends Gradient {
      * @return Built Colour instance
      */
     static Colour fromARGB(int a, int r, int g, int b) {
-        return new ColourImpl(FastColor.ARGB32.color(a, r, g, b));
+        return new ColourImpl(ARGB.color(a, r, g, b));
     }
 
     /**

@@ -1,6 +1,6 @@
 package red.jackf.jackfredlib.impl.colour;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -34,22 +34,22 @@ public final class ColourImpl implements Colour {
 
     @Override
     public int a() {
-        return FastColor.ARGB32.alpha(integer);
+        return ARGB.alpha(integer);
     }
 
     @Override
     public int r() {
-        return FastColor.ARGB32.red(integer);
+        return ARGB.red(integer);
     }
 
     @Override
     public int g() {
-        return FastColor.ARGB32.green(integer);
+        return ARGB.green(integer);
     }
 
     @Override
     public int b() {
-        return FastColor.ARGB32.blue(integer);
+        return ARGB.blue(integer);
     }
 
     @Override

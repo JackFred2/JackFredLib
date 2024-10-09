@@ -2,7 +2,7 @@ package red.jackf.jackfredlib.client.impl.toasts.icon;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.http.util.Args;
 import red.jackf.jackfredlib.client.api.toasts.CustomToast;
@@ -54,12 +54,13 @@ public class ImageIcon implements ToastIcon {
     }
 
     @Override
-    public void render(CustomToast toast, ToastComponent component, GuiGraphics graphics, int x, int y) {
+    public void render(CustomToast toast, GuiGraphics graphics, int x, int y) {
         RenderSystem.enableBlend();
-        graphics.blit(location,
+        graphics.blit(RenderType::guiTextured,
+                location,
                 x, y,
-                width, height,
                 uOffset, vOffset,
+                width, height,
                 uWidth, vHeight,
                 textureWidth, textureHeight);
         RenderSystem.disableBlend();

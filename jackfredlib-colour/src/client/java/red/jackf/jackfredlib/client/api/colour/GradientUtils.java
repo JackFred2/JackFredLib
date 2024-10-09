@@ -31,22 +31,24 @@ public class GradientUtils {
      * @param gradientEnd Point of the gradient to end sampling at.
      */
     public static void drawHorizontalGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient, float gradientStart, float gradientEnd) {
-        if (gradientStart == gradientEnd) graphics.fill(x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
-        gradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
-
-        var buffer = graphics.bufferSource().getBuffer(RenderType.gui());
-        var pose = graphics.pose().last().pose();
-
-        float lastKey = gradient.getPoints().firstKey();
-        for (float secondKey : gradient.getPoints().navigableKeySet()) {
-            if (secondKey == lastKey) continue; // don't do last
-            float x1 = x + (width * lastKey);
-            float x2 = x + (width * secondKey);
-            drawHorizontalGradient(buffer, pose, x1, y, x2, y + height, gradient.sample(lastKey), gradient.sample(secondKey));
-            lastKey = secondKey;
+        if (gradientStart == gradientEnd) {
+            graphics.fill(x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
+            return;
         }
+        final Gradient usedGradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
 
-        graphics.flush();
+        graphics.drawSpecial(buffer -> {
+            var pose = graphics.pose().last().pose();
+
+            float lastKey = usedGradient.getPoints().firstKey();
+            for (float secondKey : usedGradient.getPoints().navigableKeySet()) {
+                if (secondKey == lastKey) continue; // don't do last
+                float x1 = x + (width * lastKey);
+                float x2 = x + (width * secondKey);
+                drawHorizontalGradient(buffer.getBuffer(RenderType.gui()), pose, x1, y, x2, y + height, usedGradient.sample(lastKey), usedGradient.sample(secondKey));
+                lastKey = secondKey;
+            }
+        });
     }
 
     /**
@@ -66,22 +68,24 @@ public class GradientUtils {
      * @param gradientEnd Point of the gradient to end sampling at.
      */
     public static void drawVerticalGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient, float gradientStart, float gradientEnd) {
-        if (gradientStart == gradientEnd) graphics.fill(x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
-        gradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
-
-        var buffer = graphics.bufferSource().getBuffer(RenderType.gui());
-        var pose = graphics.pose().last().pose();
-
-        float lastKey = gradient.getPoints().firstKey();
-        for (float secondKey : gradient.getPoints().navigableKeySet()) {
-            if (secondKey == lastKey) continue; // don't do last
-            float y1 = y + (height * lastKey);
-            float y2 = y + (height * secondKey);
-            drawVerticalGradient(buffer, pose, x, y1, x + width, y2, gradient.sample(lastKey), gradient.sample(secondKey));
-            lastKey = secondKey;
+        if (gradientStart == gradientEnd) {
+            graphics.fill(x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
+            return;
         }
+        final Gradient usedGradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
 
-        graphics.flush();
+        graphics.drawSpecial(buffer -> {
+            var pose = graphics.pose().last().pose();
+
+            float lastKey = usedGradient.getPoints().firstKey();
+            for (float secondKey : usedGradient.getPoints().navigableKeySet()) {
+                if (secondKey == lastKey) continue; // don't do last
+                float y1 = y + (height * lastKey);
+                float y2 = y + (height * secondKey);
+                drawVerticalGradient(buffer.getBuffer(RenderType.gui()), pose, x, y1, x + width, y2, usedGradient.sample(lastKey), usedGradient.sample(secondKey));
+                lastKey = secondKey;
+            }
+        });
     }
 
     private static Gradient generateRepeatedGradient(Gradient gradient, float gradientStart, float gradientEnd) {

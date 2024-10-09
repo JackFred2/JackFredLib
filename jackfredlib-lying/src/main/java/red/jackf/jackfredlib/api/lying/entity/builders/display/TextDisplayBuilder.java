@@ -2,7 +2,7 @@ package red.jackf.jackfredlib.api.lying.entity.builders.display;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
@@ -111,7 +111,7 @@ public class TextDisplayBuilder extends DisplayBuilder<Display.TextDisplay, Text
      * @see #textOpacity(int)
      */
     public TextDisplayBuilder backgroundColour(int a, int r, int g, int b) {
-        return backgroundColour(FastColor.ARGB32.color(a, r, g, b));
+        return backgroundColour(ARGB.color(a, r, g, b));
     }
 
     /**

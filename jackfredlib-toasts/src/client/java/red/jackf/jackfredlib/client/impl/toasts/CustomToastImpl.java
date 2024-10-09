@@ -1,8 +1,10 @@
 package red.jackf.jackfredlib.client.impl.toasts;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -101,7 +103,17 @@ public class CustomToastImpl implements CustomToast {
     }
 
     @Override
-    public @NotNull Visibility render(GuiGraphics graphics, ToastComponent component, long timeVisible) {
+    public @NotNull Visibility getWantedVisibility() {
+        return visibiltyFunction.check(this);
+    }
+
+    @Override
+    public void update(ToastManager toastManager, long timeVisible) {
+        this.visibleTime = timeVisible;
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, Font font, long timeVisible) {
         var newProgress = this.progressPuller.pull(this);
         newProgress.ifPresent(this::setProgress);
 
@@ -110,21 +122,18 @@ public class CustomToastImpl implements CustomToast {
         if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
 
         // background
-        graphics.blitSprite(format.texture(),
-                0,
+        graphics.blitSprite(RenderType::guiTextured,
+                format.texture(),
                 0,
                 0,
                 width(),
                 height());
-
-        var font = component.getMinecraft().font;
         var textX = leftWidth();
 
         // image if present
         if (icon != null) {
             textX += icon.width() + DEFAULT_PADDING;
             icon.render(this,
-                    component,
                     graphics,
                     leftWidth(),
                     DEFAULT_PADDING);
@@ -151,8 +160,6 @@ public class CustomToastImpl implements CustomToast {
 
             graphics.fill(3, progressBarY, 3 + (int) (progressBarWidth * progress), progressBarY + 2, colour);
         }
-
-        return visibiltyFunction.check(this);
     }
 
     @Override

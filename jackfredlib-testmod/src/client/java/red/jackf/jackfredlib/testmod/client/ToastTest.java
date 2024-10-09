@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -64,7 +64,7 @@ public class ToastTest {
 
     public static void setup() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (!world.isClientSide || hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(ItemStack.EMPTY);
+            if (!world.isClientSide || hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
             var stack = player.getItemInHand(hand);
             if (stack.is(Items.DIAMOND_PICKAXE)) {
                 TITLE_AND_MESSAGE.get().setProgress(0f);
@@ -149,7 +149,7 @@ public class ToastTest {
             }
 
 
-            return InteractionResultHolder.pass(ItemStack.EMPTY);
+            return InteractionResult.PASS;
         });
 
         ClientPlayerBlockBreakEvents.AFTER.register((world, player, pos, state) -> {
