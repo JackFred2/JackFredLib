@@ -6,6 +6,7 @@ import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Interaction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,10 +17,7 @@ import org.joml.Vector3f;
 import red.jackf.jackfredlib.api.colour.Colour;
 import red.jackf.jackfredlib.api.lying.entity.builders.display.TextDisplayBuilder;
 import red.jackf.jackfredlib.impl.lying.entity.TransformUtil;
-import red.jackf.jackfredlib.mixins.lying.entity.BlockDisplayAccessor;
-import red.jackf.jackfredlib.mixins.lying.entity.DisplayAccessor;
-import red.jackf.jackfredlib.mixins.lying.entity.ItemDisplayAccessor;
-import red.jackf.jackfredlib.mixins.lying.entity.TextDisplayAccessor;
+import red.jackf.jackfredlib.mixins.lying.entity.*;
 
 /**
  * Collection of common utilities for manipulating entities.
@@ -324,6 +322,36 @@ public class EntityUtils {
     public static void startInterpolationIn(Display display, int delay) {
         delay = Math.max(0, delay);
         ((DisplayAccessor) display).jflib$setTransformationInterpolationDelay(delay);
+    }
+
+    /**
+     * Sets an interaction entity's width.
+     *
+     * @param interaction Interaction to update
+     * @param width Width in blocks of the interaction entity.
+     */
+    public static void setInteractionWidth(Interaction interaction, float width) {
+        ((InteractionAccessor) interaction).jflib$setWidth(width);
+    }
+
+    /**
+     * Sets an interaction entity's height.
+     *
+     * @param interaction Interaction to update
+     * @param height Height in blocks of the interaction entity.
+     */
+    public static void setInteractionHeight(Interaction interaction, float height) {
+        ((InteractionAccessor) interaction).jflib$setHeight(height);
+    }
+
+    /**
+     * Sets whether an interaction has a visual response.
+     *
+     * @param interaction Interaction to update
+     * @param response Whether this interaction should give a response.
+     */
+    public static void setInteractionResponse(Interaction interaction, boolean response) {
+        ((InteractionAccessor) interaction).jflib$setResponse(response);
     }
 
     /**

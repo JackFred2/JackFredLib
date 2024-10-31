@@ -51,4 +51,13 @@ public class EntityBuilders {
     public static TextDisplayBuilder textDisplay(ServerLevel level) {
         return new TextDisplayBuilder(level);
     }
+
+    /**
+     * Create a new builder for an <a href="https://minecraft.fandom.com/wiki/Interaction">Interaction Entity</a>.
+     * @param level Level to create the entity in
+     * @return Builder for an interaction entity
+     */
+    public static InteractionBuilder interaction(ServerLevel level) {
+        return new InteractionBuilder(level);
+    }
 }
