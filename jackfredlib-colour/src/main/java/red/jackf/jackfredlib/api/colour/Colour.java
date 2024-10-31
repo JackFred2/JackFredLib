@@ -1,10 +1,12 @@
 package red.jackf.jackfredlib.api.colour;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.ChatFormatting;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import red.jackf.jackfredlib.impl.colour.ColourImpl;
 
 /**
@@ -82,11 +84,31 @@ public interface Colour extends Gradient {
     }
 
     /**
+     * Creates a colour from a Minecraft {@link ChatFormatting} enum. Returns {@code null} if not a colour format
+     * (i.e., {@link ChatFormatting#isColor()} is false.)
+     *
+     * @param format Chat formatting to use
+     * @return A colour based on the given formatting, or null if not a colour.
+     */
+    @Contract("null -> null")
+    static Colour fromChatFormat(ChatFormatting format) {
+        //noinspection DataFlowIssue
+        return format == null || !format.isColor() ? null : Colour.fromInt(format.getColor());
+    }
+
+    /**
      * Returns the ARGB representation of this colour as an integer
      *
      * @return Integer representation of this colour, in ARGB format.
      */
     int toARGB();
+
+    /**
+     * Returns the RGB representation of this colour with full alpha (255), as an integer
+     *
+     * @return Integer representation of this colour, in RGB format and full alpha.
+     */
+    int toRGB();
 
     /**
      * Get the alpha (transparency) component of this colour in the range [0, 255], where 0 is transparent and 255 is
