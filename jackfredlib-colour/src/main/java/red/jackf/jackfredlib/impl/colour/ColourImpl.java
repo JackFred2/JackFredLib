@@ -33,6 +33,11 @@ public final class ColourImpl implements Colour {
     }
 
     @Override
+    public int toRGB() {
+        return FastColor.ARGB32.opaque(integer);
+    }
+
+    @Override
     public int a() {
         return FastColor.ARGB32.alpha(integer);
     }
