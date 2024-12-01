@@ -71,7 +71,7 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B positionCentered(Vec3 position) {
-        this.entity.moveTo(position.subtract(0, -this.entity.getBbHeight() / 2, 0));
+        this.entity.moveTo(position.subtract(0, this.entity.getBbHeight() / 2, 0));
         return self();
     }
 
