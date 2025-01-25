@@ -3,6 +3,7 @@ package red.jackf.jackfredlib.impl.lying.tracker;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +59,18 @@ public class TrackerBuilderImpl<L extends Lie> implements Tracker.TrackerBuilder
     @Override
     public TrackerBuilderImpl<L> setBounds(@NotNull AABB bounds) {
         this.positionPredicate = TrackerPredicates.forBounds(bounds);
+        return this;
+    }
+
+    @Override
+    public Tracker.TrackerBuilder<L> setAround(@NotNull Entity focus, double radius) {
+        this.positionPredicate = TrackerPredicates.forEntity(focus, radius);
+        return this;
+    }
+
+    @Override
+    public Tracker.TrackerBuilder<L> setPositionPredicate(@NotNull Predicate<Vec3> predicate) {
+        this.positionPredicate = predicate;
         return this;
     }
 

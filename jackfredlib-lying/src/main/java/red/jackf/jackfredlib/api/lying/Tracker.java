@@ -2,6 +2,7 @@ package red.jackf.jackfredlib.api.lying;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -140,6 +141,22 @@ public interface Tracker<L extends Lie> {
          * @param bounds Bounding box that the player needs to be within to see the lie.
          */
         TrackerBuilder<L> setBounds(@NotNull AABB bounds);
+
+        /**
+         * Sets the position requirement to be within a radius around a given entity. If the entity is removed, the
+         * predicate always fails.
+         *
+         * @param focus Focal entity to look around.
+         * @param radius Radius around said entity.
+         */
+        TrackerBuilder<L> setAround(@NotNull Entity focus, double radius);
+
+        /**
+         * Sets a custom positional requirement for the lie.
+         *
+         * @param predicate Positional predicate to use.
+         */
+        TrackerBuilder<L> setPositionPredicate(@NotNull Predicate<Vec3> predicate);
 
         /**
          * Sets the update interval for this tracker. Players will only be added or removed from lies every
