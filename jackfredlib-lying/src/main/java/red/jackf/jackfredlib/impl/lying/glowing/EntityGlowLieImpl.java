@@ -108,13 +108,14 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
     public void removePlayer(ServerPlayer player) {
         LieManager.INSTANCE.removeEntityGlow(player, this);
         super.removePlayer(player);
-
-        // restore the glowing data for an entity
-        restoreOriginalGlowingTagToPlayer(player);
-        if (this.entity.getTeam() != null) {
-            FakeTeamManager.INSTANCE.restoreOriginalTeam(player, this.entity);
-        } else if (this.colour != null) {
-            FakeTeamManager.INSTANCE.removeFromColourTeam(player, this.entity, this.colour);
+        // client auto-removes entity from team when removed; if we do it again a disconnect occurs
+        if (!this.entity.isRemoved()) {
+            restoreOriginalGlowingTagToPlayer(player);
+            if (this.entity.getTeam() != null) {
+                FakeTeamManager.INSTANCE.restoreOriginalTeam(player, this.entity);
+            } else if (this.colour != null) {
+                FakeTeamManager.INSTANCE.removeFromColourTeam(player, this.entity, this.colour);
+            }
         }
 
         if (this.fadeCallback != null)
