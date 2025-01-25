@@ -122,6 +122,9 @@ public class EntityGlowLieImpl<E extends Entity> extends LieImpl implements Enti
     }
 
     public void tick(ServerPlayer player) {
+        if (this.entity.isRemoved())
+            this.fade();
+
         if (this.tickCallback != null)
             this.tickCallback.onTick(player, this);
     }
