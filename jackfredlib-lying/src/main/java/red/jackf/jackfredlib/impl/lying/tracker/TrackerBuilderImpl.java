@@ -9,6 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import red.jackf.jackfredlib.api.lying.Lie;
 import red.jackf.jackfredlib.api.lying.Tracker;
+import red.jackf.jackfredlib.api.lying.TrackerPredicates;
 
 import java.util.*;
 import java.util.function.Predicate;
