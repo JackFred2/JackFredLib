@@ -36,8 +36,8 @@ public class FakeTeamUtil {
 
         ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, Component.literal(getName(colour)));
         buf.writeByte(0);
-        buf.writeUtf(Team.Visibility.ALWAYS.name);
-        buf.writeUtf(Team.CollisionRule.ALWAYS.name);
+        Team.Visibility.STREAM_CODEC.encode(buf, Team.Visibility.ALWAYS);
+        Team.CollisionRule.STREAM_CODEC.encode(buf, Team.CollisionRule.ALWAYS);
         buf.writeEnum(colour);
         ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, Component.empty());
         ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, Component.empty());

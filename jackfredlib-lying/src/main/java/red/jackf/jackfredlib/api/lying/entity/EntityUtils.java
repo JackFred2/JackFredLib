@@ -378,11 +378,12 @@ public class EntityUtils {
         //if (source instanceof Display) { // if this wasn't offset the displays would be backwards
         yRot += 180.0F % 360.0F;
         //}
-        source.moveTo(source.getX(),
+        source.setPos(source.getX(),
                       source.getY(),
-                      source.getZ(),
-                      Mth.positiveModulo(yRot, 360f),
-                      Mth.positiveModulo(xRot, 360f));
+                      source.getZ());
+        source.setYRot(Mth.positiveModulo(yRot, 360f));
+        source.setXRot(Mth.positiveModulo(xRot, 360f));
+
         if (source instanceof LivingEntity living) {
             living.setYBodyRot(yRot);
             living.setYHeadRot(yRot);

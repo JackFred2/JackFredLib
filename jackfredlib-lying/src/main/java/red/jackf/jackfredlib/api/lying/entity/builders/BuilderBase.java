@@ -52,7 +52,7 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B position(Vec3 position) {
-        this.entity.moveTo(position);
+        this.entity.setPos(position);
         return self();
     }
 
@@ -71,7 +71,7 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B positionCentered(Vec3 position) {
-        this.entity.moveTo(position.subtract(0, this.entity.getBbHeight() / 2, 0));
+        this.entity.setPos(position.subtract(0, this.entity.getBbHeight() / 2, 0));
         return self();
     }
 
@@ -91,11 +91,8 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B rotation(float xRot, float yRot) {
-        this.entity.moveTo(this.entity.getX(),
-                this.entity.getY(),
-                this.entity.getZ(),
-                Mth.positiveModulo(yRot, 360.0F),
-                Mth.clamp(xRot, -90.0F, 90.0F));
+        this.entity.setYRot(Mth.positiveModulo(yRot, 360.0F));
+        this.entity.setXRot(Mth.clamp(xRot, -90.0F, 90.0F));
         return self();
     }
 

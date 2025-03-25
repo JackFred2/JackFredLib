@@ -44,7 +44,10 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
                 entity,
                 entity.getType().updateInterval(),
                 entity.getType().trackDeltas(),
-                packet -> getViewingPlayers().forEach(player -> player.connection.send(packet))
+                packet -> getViewingPlayers().forEach(player -> player.connection.send(packet)),
+                (packet, ignored) -> getViewingPlayers().stream()
+                        .filter(player -> !ignored.contains(player.getUUID()))
+                        .forEach(player -> player.connection.send(packet))
         );
     }
 
