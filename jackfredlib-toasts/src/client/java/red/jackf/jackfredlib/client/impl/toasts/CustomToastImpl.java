@@ -124,7 +124,7 @@ public class CustomToastImpl implements CustomToast {
         // background
 
 
-        graphics.blitSprite(RenderPipelines.GUI,
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                 format.texture(),
                 0,
                 0,

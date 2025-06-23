@@ -55,7 +55,7 @@ public class ImageIcon implements ToastIcon {
     @Override
     public void render(CustomToast toast, GuiGraphics graphics, int x, int y) {
         //RenderSystem.enableBlend();
-        graphics.blit(RenderPipelines.GUI,
+        graphics.blit(RenderPipelines.GUI_TEXTURED,
                 location,
                 x, y,
                 uOffset, vOffset,
