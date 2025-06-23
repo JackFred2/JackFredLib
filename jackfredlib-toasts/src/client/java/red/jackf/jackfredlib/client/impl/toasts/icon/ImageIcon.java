@@ -1,7 +1,7 @@
 package red.jackf.jackfredlib.client.impl.toasts.icon;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.http.util.Args;
 import red.jackf.jackfredlib.client.api.toasts.CustomToast;
@@ -55,7 +55,7 @@ public class ImageIcon implements ToastIcon {
     @Override
     public void render(CustomToast toast, GuiGraphics graphics, int x, int y) {
         //RenderSystem.enableBlend();
-        graphics.blit(RenderType::guiTextured,
+        graphics.blit(RenderPipelines.GUI,
                 location,
                 x, y,
                 uOffset, vOffset,

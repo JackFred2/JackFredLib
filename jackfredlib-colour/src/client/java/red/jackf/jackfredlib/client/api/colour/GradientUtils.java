@@ -1,11 +1,9 @@
 package red.jackf.jackfredlib.client.api.colour;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
-import red.jackf.jackfredlib.api.colour.Colour;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.renderer.RenderPipelines;
+import org.joml.Matrix3x2f;
 import red.jackf.jackfredlib.api.colour.Gradient;
 
 /**
@@ -31,24 +29,9 @@ public class GradientUtils {
      * @param gradientEnd Point of the gradient to end sampling at.
      */
     public static void drawHorizontalGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient, float gradientStart, float gradientEnd) {
-        if (gradientStart == gradientEnd) {
-            graphics.fill(x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
-            return;
-        }
-        final Gradient usedGradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
-
-        graphics.drawSpecial(buffer -> {
-            var pose = graphics.pose().last().pose();
-
-            float lastKey = usedGradient.getPoints().firstKey();
-            for (float secondKey : usedGradient.getPoints().navigableKeySet()) {
-                if (secondKey == lastKey) continue; // don't do last
-                float x1 = x + (width * lastKey);
-                float x2 = x + (width * secondKey);
-                drawHorizontalGradient(buffer.getBuffer(RenderType.gui()), pose, x1, y, x2, y + height, usedGradient.sample(lastKey), usedGradient.sample(secondKey));
-                lastKey = secondKey;
-            }
-        });
+        graphics.guiRenderState.submitGuiElement(new GradientRenderState(
+                RenderPipelines.GUI, TextureSetup.noTexture(), new Matrix3x2f(graphics.pose()), x, y, x + width, y + height, gradient, gradientStart, gradientEnd, false, graphics.scissorStack.peek()
+        ));
     }
 
     /**
@@ -68,76 +51,8 @@ public class GradientUtils {
      * @param gradientEnd Point of the gradient to end sampling at.
      */
     public static void drawVerticalGradient(GuiGraphics graphics, int x, int y, int width, int height, Gradient gradient, float gradientStart, float gradientEnd) {
-        if (gradientStart == gradientEnd) {
-            graphics.fill(x, y, x + width, y + height, gradient.sample(gradientStart).toARGB());
-            return;
-        }
-        final Gradient usedGradient = generateRepeatedGradient(gradient, gradientStart, gradientEnd);
-
-        graphics.drawSpecial(buffer -> {
-            var pose = graphics.pose().last().pose();
-
-            float lastKey = usedGradient.getPoints().firstKey();
-            for (float secondKey : usedGradient.getPoints().navigableKeySet()) {
-                if (secondKey == lastKey) continue; // don't do last
-                float y1 = y + (height * lastKey);
-                float y2 = y + (height * secondKey);
-                drawVerticalGradient(buffer.getBuffer(RenderType.gui()), pose, x, y1, x + width, y2, usedGradient.sample(lastKey), usedGradient.sample(secondKey));
-                lastKey = secondKey;
-            }
-        });
-    }
-
-    private static Gradient generateRepeatedGradient(Gradient gradient, float gradientStart, float gradientEnd) {
-        if (gradient instanceof Colour) return gradient;
-        final boolean reversed = gradientEnd < gradientStart;
-        final float start = reversed ? gradientEnd : gradientStart;
-        final float end = reversed ? gradientStart : gradientEnd;
-
-        int copies = Mth.floor(end) - Mth.floor(start) + 1;
-        if (copies > 1)
-            gradient = gradient.repeat(copies);
-        if (reversed)
-            gradient = gradient.reversed();
-        float sliceStart = Gradient.wrapPoint(start) / copies;
-        float sliceEnd = (Gradient.wrapPoint(end) + copies - 1) / copies;
-        gradient = gradient.slice(sliceStart, sliceEnd);
-        return gradient;
-    }
-
-    private static void drawVerticalGradient(VertexConsumer buffer, Matrix4f pose,
-                                               float x1, float y1, float x2, float y2,
-                                               Colour from, Colour to) {
-        int r1 = from.r();
-        int g1 = from.g();
-        int b1 = from.b();
-        int a1 = from.a();
-        int r2 = to.r();
-        int g2 = to.g();
-        int b2 = to.b();
-        int a2 = to.a();
-
-        buffer.addVertex(pose, x1, y1, 0).setColor(r1, g1, b1, a1);
-        buffer.addVertex(pose, x1, y2, 0).setColor(r2, g2, b2, a2);
-        buffer.addVertex(pose, x2, y2, 0).setColor(r2, g2, b2, a2);
-        buffer.addVertex(pose, x2, y1, 0).setColor(r1, g1, b1, a1);
-    }
-
-    private static void drawHorizontalGradient(VertexConsumer buffer, Matrix4f pose,
-                                               float x1, float y1, float x2, float y2,
-                                               Colour from, Colour to) {
-        int r1 = from.r();
-        int g1 = from.g();
-        int b1 = from.b();
-        int a1 = from.a();
-        int r2 = to.r();
-        int g2 = to.g();
-        int b2 = to.b();
-        int a2 = to.a();
-
-        buffer.addVertex(pose, x1, y1, 0).setColor(r1, g1, b1, a1);
-        buffer.addVertex(pose, x1, y2, 0).setColor(r1, g1, b1, a1);
-        buffer.addVertex(pose, x2, y2, 0).setColor(r2, g2, b2, a2);
-        buffer.addVertex(pose, x2, y1, 0).setColor(r2, g2, b2, a2);
+        graphics.guiRenderState.submitGuiElement(new GradientRenderState(
+                RenderPipelines.GUI, TextureSetup.noTexture(), new Matrix3x2f(graphics.pose()), x, y, x + width, y + height, gradient, gradientStart, gradientEnd, true, graphics.scissorStack.peek()
+        ));
     }
 }
