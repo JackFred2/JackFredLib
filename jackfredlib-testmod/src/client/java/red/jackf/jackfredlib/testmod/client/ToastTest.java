@@ -64,7 +64,7 @@ public class ToastTest {
 
     public static void setup() {
         UseItemCallback.EVENT.register((player, world, hand) -> {
-            if (!world.isClientSide || hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
+            if (!world.isClientSide() || hand != InteractionHand.MAIN_HAND) return InteractionResult.PASS;
             var stack = player.getItemInHand(hand);
             if (stack.is(Items.DIAMOND_PICKAXE)) {
                 TITLE_AND_MESSAGE.get().setProgress(0f);

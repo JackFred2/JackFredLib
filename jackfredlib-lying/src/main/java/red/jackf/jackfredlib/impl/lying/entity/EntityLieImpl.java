@@ -1,6 +1,8 @@
 package red.jackf.jackfredlib.impl.lying.entity;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +17,8 @@ import red.jackf.jackfredlib.impl.lying.compat.imm_ptl.Compatibility;
 import red.jackf.jackfredlib.impl.lying.compat.imm_ptl.ImmersivePortalsCompat;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamManager;
 import red.jackf.jackfredlib.impl.lying.faketeams.FakeTeamUtil;
+
+import java.util.function.Predicate;
 
 public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLie<E> {
     private final E entity;
@@ -44,7 +48,41 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
                 entity,
                 entity.getType().updateInterval(),
                 entity.getType().trackDeltas(),
-                packet -> getViewingPlayers().forEach(player -> player.connection.send(packet))
+                new ServerEntity.Synchronizer() {
+                    public void sendToTracking(Packet<? super ClientGamePacketListener> packet) {
+                        // forward packet to all current viewing players
+                        for (ServerPlayer player : EntityLieImpl.this.getViewingPlayers()) {
+                            player.connection.send(packet);
+                        }
+                    }
+
+                    public void sendToTrackingAndSelf(Packet<? super ClientGamePacketListener> packet) {
+                        // forward packet to all viewing players (and you can add any additional logic for "self" if needed)
+                        for (ServerPlayer player : EntityLieImpl.this.getViewingPlayers()) {
+                            player.connection.send(packet);
+                        }
+                    }
+
+                    @Override
+                    public void sendToTrackingPlayers(Packet<? super ClientGamePacketListener> packet) {
+
+                    }
+
+                    @Override
+                    public void sendToTrackingPlayersAndSelf(Packet<? super ClientGamePacketListener> packet) {
+
+                    }
+
+                    @Override
+                    public void sendToTrackingPlayersFiltered(Packet<? super ClientGamePacketListener> packet, Predicate<ServerPlayer> filter) {
+                        // forward packet only to viewing players that satisfy the provided filter
+                        for (ServerPlayer player : EntityLieImpl.this.getViewingPlayers()) {
+                            if (filter.test(player)) {
+                                player.connection.send(packet);
+                            }
+                        }
+                    }
+                }
         );
     }
 
