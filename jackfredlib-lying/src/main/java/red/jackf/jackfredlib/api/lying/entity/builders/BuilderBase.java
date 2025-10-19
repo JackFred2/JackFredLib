@@ -30,6 +30,7 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      *
      * @see EntityType
      * @param type Entity type to be used.
+     * @throws IllegalArgumentException if the entity could not be created, likely caused by being part of a disabled feature.
      * @param level Level to create the entity in
      */
     protected BuilderBase(EntityType<E> type, ServerLevel level) {

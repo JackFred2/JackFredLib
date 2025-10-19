@@ -74,7 +74,6 @@ public class CustomToastImpl implements CustomToast {
     }
 
     private int leftWidth() {
-        // Получаем TextureAtlas GUI через AtlasManager и извлекаем спрайт/метаданные
         TextureAtlas guiAtlas = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.GUI);
         TextureAtlasSprite sprite = guiAtlas.getSprite(format.texture());
         GuiSpriteScaling scaling = ((GuiMetadataSection) sprite.contents().getAdditionalMetadata(GuiMetadataSection.TYPE).orElse(GuiMetadataSection.DEFAULT)).scaling();
@@ -127,7 +126,7 @@ public class CustomToastImpl implements CustomToast {
         if (visibleTimeStart == -1L) visibleTimeStart = timeVisible;
         if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
 
-        // background — используем корректный RenderPipelines constant
+        // background
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                 format.texture(),
                 0,

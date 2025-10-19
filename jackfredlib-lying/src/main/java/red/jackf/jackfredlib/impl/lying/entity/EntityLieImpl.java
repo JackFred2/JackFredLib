@@ -29,6 +29,16 @@ public class EntityLieImpl<E extends Entity> extends LieImpl implements EntityLi
     private final @Nullable LeftClickCallback<E> leftClickCallback;
     private final @Nullable RightClickCallback<E> rightClickCallback;
 
+    /**
+     * Creates a new entity lie with the specified entity and callbacks.
+     *
+     * @param entity Entity to manage
+     * @param glowColour Glow colour for this entity, or null for no glow
+     * @param tickCallback Callback invoked each tick for viewing players, or null
+     * @param fadeCallback Callback invoked when a player stops viewing this entity, or null
+     * @param leftClickCallback Callback invoked when a player left-clicks this entity, or null
+     * @param rightClickCallback Callback invoked when a player right-clicks this entity, or null
+     */
     public EntityLieImpl(
             E entity,
             @Nullable ChatFormatting glowColour,

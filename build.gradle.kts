@@ -144,13 +144,11 @@ allprojects {
     // PACKAGING //
     ///////////////
 
-    // Определяем переменные с безопасными значениями
     val moduleName = project.properties["module_name"]?.toString() ?: "jackfredlib"
     val moduleDescription = project.properties["module_description"]?.toString() ?: "Library for WhereIsIt"
     val rootModuleName = rootProject.properties["module_name"]?.toString() ?: "WhereIsIt"
     val rootModuleDescription = rootProject.properties["module_description"]?.toString() ?: "WhereIsIt project"
 
-// Настраиваем processResources
     tasks.withType<ProcessResources>().configureEach {
         inputs.property("module_version", project.version)
         inputs.property("module_name", moduleName)
@@ -298,8 +296,8 @@ allprojects {
                     }
                     developers {
                         developer {
-                            url = "https://github.com/ponuing"  // ИЗМЕНЕНО
-                            name = "ponuing"  // ИЗМЕНЕНО
+                            url = "https://github.com/ponuing"
+                            name = "ponuing"
                         }
                     }
                     scm {

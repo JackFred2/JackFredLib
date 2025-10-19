@@ -1,10 +1,7 @@
 package red.jackf.jackfredlib.client.api.colour;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import org.joml.Matrix3x2f;
 import red.jackf.jackfredlib.api.colour.Colour;
@@ -46,7 +43,6 @@ public class GradientUtils {
             float x2 = x + (width * secondKey);
             int fromArgb = usedGradient.sample(lastKey).toARGB();
             int toArgb = usedGradient.sample(secondKey).toARGB();
-            // Используем GuiGraphics.fillGradient — работает в 1.21.9
             graphics.fillGradient((int)Math.floor(x1), y, (int)Math.ceil(x2), y + height, fromArgb, toArgb);
             lastKey = secondKey;
         }
@@ -104,7 +100,6 @@ public class GradientUtils {
         return gradient;
     }
 
-    // Обратите внимание: здесь Matrix3x2f (2D) вместо Matrix4f
     private static void drawVerticalGradient(VertexConsumer buffer, Matrix3x2f pose,
                                              float x1, float y1, float x2, float y2,
                                              Colour from, Colour to) {
@@ -117,14 +112,12 @@ public class GradientUtils {
         int b2 = to.b();
         int a2 = to.a();
 
-        // В 1.21.9 ожидается, что VertexConsumer поддерживает добавление вершин с Matrix3x2f
         buffer.addVertex(x1, y1, 0).setColor(r1, g1, b1, a1);
         buffer.addVertex(x1, y2, 0).setColor(r2, g2, b2, a2);
         buffer.addVertex(x2, y2, 0).setColor(r2, g2, b2, a2);
         buffer.addVertex(x2, y1, 0).setColor(r1, g1, b1, a1);
     }
 
-    // Обратите внимание: здесь Matrix3x2f (2D) вместо Matrix4f
     private static void drawHorizontalGradient(VertexConsumer buffer, Matrix3x2f pose,
                                                float x1, float y1, float x2, float y2,
                                                Colour from, Colour to) {

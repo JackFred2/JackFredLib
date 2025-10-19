@@ -112,7 +112,7 @@ public class EntityUtils {
 
     /**
      * <p>Change a display entity's view range multiplier. This is scaled with a client's Entity View Distance modifier.</p>
-     * <p>The default rangefor a display entity with a modifier of {@code 1.0} and a client Entity View Distance of {@code 100%},
+     * <p>The default range for a display entity with a modifier of {@code 1.0} and a client Entity View Distance of {@code 100%},
      * is 64 blocks.</p>
      *
      * @param display Display to update
@@ -161,7 +161,7 @@ public class EntityUtils {
      *
      * @param display Display to update the brightness for.
      * @param block Block light level to use for the display (e.g. from glowstone, torches)
-     * @param sky Sky light level to use for the display (e.g. from the sun, darkened by storms)
+     * @param sky Skylight level to use for the display (e.g. from the sun, darkened by storms)
      */
     public static void setDisplayBrightnessOverride(Display display, int block, int sky) {
         ((DisplayAccessor) display).jflib$setBrightnessOverride(new Brightness(block, sky));

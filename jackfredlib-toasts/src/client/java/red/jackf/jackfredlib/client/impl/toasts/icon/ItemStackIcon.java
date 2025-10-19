@@ -29,12 +29,10 @@ public class ItemStackIcon implements ToastIcon {
 
         int index = Mth.clamp((int) (toast.getProgress() * this.items.size()), 0, this.items.size() - 1);
 
-        // В 1.21.x у Matrix3x2fStack методы pushMatrix/popMatrix, translate(x,y) и scale(x,y)
         graphics.pose().pushMatrix();
         graphics.pose().translate(x + INSET, y + INSET);
         graphics.pose().scale((float) scale, (float) scale);
 
-        // renderFakeItem доступен в GuiGraphics (вариант без seed)
         graphics.renderFakeItem(this.items.get(index), 0, 0);
 
         graphics.pose().popMatrix();
