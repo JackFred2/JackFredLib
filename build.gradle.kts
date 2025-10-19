@@ -260,11 +260,11 @@ fun setupRepositories(repos: RepositoryHandler) {
 
     if (canPublish) {
         repos.maven {
-            name = "JackFred-Maven"
-            url = uri("https://maven.jackf.red/releases")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ponuing/JackFredLib")
             credentials {
-                username = System.getenv("JACKFRED_MAVEN_USER")
-                password = System.getenv("JACKFRED_MAVEN_PASS")
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
@@ -298,13 +298,13 @@ allprojects {
                     }
                     developers {
                         developer {
-                            url = "https://jackf.red"
-                            name = "JackFred2"
+                            url = "https://github.com/ponuing"  // ИЗМЕНЕНО
+                            name = "ponuing"  // ИЗМЕНЕНО
                         }
                     }
                     scm {
-                        connection = "scm:git:git://github.com/JackFred2/JackFredLib.git"
-                        developerConnection = "scm:git:git://github.com/JackFred2/JackFredLib.git"
+                        connection = "scm:git:git://github.com/ponuing/JackFredLib.git"
+                        developerConnection = "scm:git:git://github.com/ponuing/JackFredLib.git"
                         url = +propertiesHandle["github_url"]
                     }
                 }

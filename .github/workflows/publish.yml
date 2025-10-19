@@ -14,16 +14,14 @@ on:
         type: string
 
 permissions:
-  # packages: write
+  packages: write
   contents: write
 
 jobs:
   publish:
     strategy:
       matrix:
-        # Use these Java versions
         java: [21]
-        # and run on both Linux and Windows
         os: [ubuntu-22.04]
     runs-on: ${{ matrix.os }}
 
@@ -51,14 +49,11 @@ jobs:
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
 
-      # get new tag in the form vX.Y.Z, saved to new_tag=vX.Y.Z
       - name: Pull Mod Version
         id: pull-new-version
         run: |
           grep 'module_version=' gradle.properties | sed 's/module_version=/new_tag=v/g' >> $GITHUB_OUTPUT
 
-      # previous tag parsing
-      # we use an env variable here because it's easier than joining two step outputs I think
       - name: Set previous tag from override
         if: ${{ inputs.lastTagOverride != null }}
         run: |
@@ -80,8 +75,6 @@ jobs:
             echo "PREVIOUS_TAG=NONE" >> "$GITHUB_ENV"
           fi
 
-      # new tag parsing and concat
-      # vX.Y.Z -> vX.Y.Z+1.20.4
       - id: new-tag-generator
         name: Format new tag from input and branch
         run: |
@@ -122,14 +115,12 @@ jobs:
       - name: build & run tests
         run: ./gradlew check build
 
-      - name: Publish to JackFred Maven and GitHub Release
+      - name: Publish to GitHub Packages and GitHub Release
         run: ./gradlew publish githubRelease -PchangelogHeaderAddon="${{ inputs.changelogHeader }}"
         env:
           RELEASE: true
           GITHUB_ACTOR: ${{ secrets.GITHUB_ACTOR }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          JACKFRED_MAVEN_USER: ${{ secrets.JACKFRED_MAVEN_USER }}
-          JACKFRED_MAVEN_PASS: ${{ secrets.JACKFRED_MAVEN_PASS }}
 
       - name: Capture build artifacts
         if: ${{ runner.os == 'Linux' }}
