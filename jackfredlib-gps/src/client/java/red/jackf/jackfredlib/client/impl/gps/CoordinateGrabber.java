@@ -48,9 +48,18 @@ public class CoordinateGrabber {
             ));
         // LAN server
         } else if (serverData.isLan()) {
-            String motd = serverData.motd.getString();
+            // LAN-FIX VERSION: motd can be null sometimes, fallback to server name or empty string
+            String motd = serverData.motd != null ? serverData.motd.getString() : 
+                         (serverData.name != null ? serverData.name : "LAN");
+            // Extract world name from MOTD format "PlayerName - WorldName"
+            // Use singleplayer prefix so LAN guests share the same Memory Bank as host
+            String worldName = motd;
+            int separatorIndex = motd.indexOf(" - ");
+            if (separatorIndex != -1 && separatorIndex + 3 < motd.length()) {
+                worldName = motd.substring(separatorIndex + 3);
+            }
             return Optional.of(new Coordinate.Lan(
-                    "lan/" + Sanitizer.sanitize(motd),
+                    "singleplayer/" + Sanitizer.sanitize(worldName),
                     "LAN: " + motd
             ));
         // Multiplayer
