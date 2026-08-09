@@ -1,3 +1,7 @@
+# Archival Notice
+
+https://gist.github.com/JackFred2/58d267bd7043fd92442a451315bbd6d5
+
 # JackFredLib
 
 Collection of common utilities for my Minecraft mods, and where I'm figuring out gradle/CI. Currently includes:
