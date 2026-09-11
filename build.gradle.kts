@@ -8,9 +8,9 @@ import red.jackf.GenerateChangelogTask
 import red.jackf.UpdateDependenciesTask
 
 plugins {
-    id("fabric-loom") version "1.9-SNAPSHOT" apply false
+    id("fabric-loom") version "1.11-SNAPSHOT" apply false
     id("com.github.breadmoirai.github-release") version "2.4.1" apply false
-    id("org.ajoberstar.grgit") version "5.0.+"
+    id("org.ajoberstar.grgit") version "5.2.1"
     id("maven-publish")
 }
 
@@ -144,18 +144,23 @@ allprojects {
     // PACKAGING //
     ///////////////
 
-    tasks.withType<ProcessResources>().configureEach {
-        inputs.property("module_version", version)
-        inputs.property("module_name", +properties["module_name"])
-        inputs.property("module_description", +properties["module_description"])
+    val moduleName = project.properties["module_name"]?.toString() ?: "jackfredlib"
+    val moduleDescription = project.properties["module_description"]?.toString() ?: "Library for WhereIsIt"
+    val rootModuleName = rootProject.properties["module_name"]?.toString() ?: "WhereIsIt"
+    val rootModuleDescription = rootProject.properties["module_description"]?.toString() ?: "WhereIsIt project"
 
-        inputs.property("root_module_name", +rootProject.properties["module_name"])
-        inputs.property("root_module_description", +rootProject.properties["module_description"])
+    tasks.withType<ProcessResources>().configureEach {
+        inputs.property("module_version", project.version)
+        inputs.property("module_name", moduleName)
+        inputs.property("module_description", moduleDescription)
+        inputs.property("root_module_name", rootModuleName)
+        inputs.property("root_module_description", rootModuleDescription)
 
         filesMatching("fabric.mod.json") {
             expand(inputs.properties)
         }
     }
+
 
     tasks.named<Jar>("jar") {
         from(rootProject.file("LICENSE")) {
@@ -253,11 +258,11 @@ fun setupRepositories(repos: RepositoryHandler) {
 
     if (canPublish) {
         repos.maven {
-            name = "JackFred-Maven"
-            url = uri("https://maven.jackf.red/releases")
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ponuing/JackFredLib")
             credentials {
-                username = System.getenv("JACKFRED_MAVEN_USER")
-                password = System.getenv("JACKFRED_MAVEN_PASS")
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
         }
     }
@@ -291,19 +296,18 @@ allprojects {
                     }
                     developers {
                         developer {
-                            url = "https://jackf.red"
-                            name = "JackFred2"
+                            url = "https://github.com/ponuing"
+                            name = "ponuing"
                         }
                     }
                     scm {
-                        connection = "scm:git:git://github.com/JackFred2/JackFredLib.git"
-                        developerConnection = "scm:git:git://github.com/JackFred2/JackFredLib.git"
+                        connection = "scm:git:git://github.com/ponuing/JackFredLib.git"
+                        developerConnection = "scm:git:git://github.com/ponuing/JackFredLib.git"
                         url = +propertiesHandle["github_url"]
                     }
                 }
             }
         }
-
         setupRepositories(repositories)
     }
 }

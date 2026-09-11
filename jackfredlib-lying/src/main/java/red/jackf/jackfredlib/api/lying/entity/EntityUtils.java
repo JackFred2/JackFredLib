@@ -112,7 +112,7 @@ public class EntityUtils {
 
     /**
      * <p>Change a display entity's view range multiplier. This is scaled with a client's Entity View Distance modifier.</p>
-     * <p>The default rangefor a display entity with a modifier of {@code 1.0} and a client Entity View Distance of {@code 100%},
+     * <p>The default range for a display entity with a modifier of {@code 1.0} and a client Entity View Distance of {@code 100%},
      * is 64 blocks.</p>
      *
      * @param display Display to update
@@ -161,7 +161,7 @@ public class EntityUtils {
      *
      * @param display Display to update the brightness for.
      * @param block Block light level to use for the display (e.g. from glowstone, torches)
-     * @param sky Sky light level to use for the display (e.g. from the sun, darkened by storms)
+     * @param sky Skylight level to use for the display (e.g. from the sun, darkened by storms)
      */
     public static void setDisplayBrightnessOverride(Display display, int block, int sky) {
         ((DisplayAccessor) display).jflib$setBrightnessOverride(new Brightness(block, sky));
@@ -372,20 +372,51 @@ public class EntityUtils {
      */
     public static void face(Entity source, Vec3 target) {
         var vector = target.subtract(source.position());
-        var yRot = (float) (Mth.atan2(vector.z, vector.x) * 180.0F / (float) Math.PI) + 90.0F;
+        var yRot = (float) (Mth.atan2(vector.z(), vector.x()) * 180.0F / (float) Math.PI) + 90.0F;
         //noinspection SuspiciousNameCombination
-        var xRot = (float) (Mth.atan2(vector.horizontalDistance(), vector.y) * 180.0F / (float) Math.PI) - 90.0F;
+        var xRot = (float) (Mth.atan2(vector.horizontalDistance(), vector.y()) * 180.0F / (float) Math.PI) - 90.0F;
         //if (source instanceof Display) { // if this wasn't offset the displays would be backwards
         yRot += 180.0F % 360.0F;
         //}
-        source.moveTo(source.getX(),
-                      source.getY(),
-                      source.getZ(),
-                      Mth.positiveModulo(yRot, 360f),
-                      Mth.positiveModulo(xRot, 360f));
+
+        float yaw = Mth.positiveModulo(yRot, 360f);
+        float pitch = Mth.positiveModulo(xRot, 360f);
+
+        double x = source.getX();
+        double y = source.getY();
+        double z = source.getZ();
+
+        // Try to call absMoveTo(x,y,z,yaw,pitch) reflectively (present in many mappings).
+        // If it's not available, fall back to setting position and rotations separately.
+        try {
+            source.getClass()
+                    .getMethod("absMoveTo", double.class, double.class, double.class, float.class, float.class)
+                    .invoke(source, x, y, z, yaw, pitch);
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            // fallback: set position then rotation setters (common names)
+            try {
+                source.setPos(x, y, z);
+            } catch (LinkageError ignored2) {
+            }
+            try {
+                source.setYRot(yaw);
+            } catch (LinkageError ignored2) {
+            }
+            try {
+                source.setXRot(pitch);
+            } catch (LinkageError ignored2) {
+            }
+        }
+
         if (source instanceof LivingEntity living) {
-            living.setYBodyRot(yRot);
-            living.setYHeadRot(yRot);
+            try {
+                living.setYBodyRot(yaw);
+            } catch (LinkageError ignored) {
+            }
+            try {
+                living.setYHeadRot(yaw);
+            } catch (LinkageError ignored) {
+            }
         }
     }
 }

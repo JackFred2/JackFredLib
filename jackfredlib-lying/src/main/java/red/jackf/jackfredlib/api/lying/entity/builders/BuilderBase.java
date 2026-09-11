@@ -30,6 +30,7 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      *
      * @see EntityType
      * @param type Entity type to be used.
+     * @throws IllegalArgumentException if the entity could not be created, likely caused by being part of a disabled feature.
      * @param level Level to create the entity in
      */
     protected BuilderBase(EntityType<E> type, ServerLevel level) {
@@ -52,7 +53,16 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B position(Vec3 position) {
-        this.entity.moveTo(position);
+        // Use Vec3 accessor methods (x(), y(), z()) and set position via setPos(double,double,double)
+        // setPos is available in common mappings; if your mappings differ, adapt accordingly.
+        try {
+            // prefer absMoveTo if available (some mappings have it)
+            this.entity.getClass().getMethod("absMoveTo", double.class, double.class, double.class)
+                    .invoke(this.entity, position.x(), position.y(), position.z());
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            // fallback: setPos
+            this.entity.setPos(position.x(), position.y(), position.z());
+        }
         return self();
     }
 
@@ -71,7 +81,15 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B positionCentered(Vec3 position) {
-        this.entity.moveTo(position.subtract(0, this.entity.getBbHeight() / 2, 0));
+        // center the entity by subtracting half the bounding box height from the y coordinate
+        Vec3 target = position.subtract(0.0, this.entity.getBbHeight() / 2.0, 0.0);
+        try {
+            // prefer absMoveTo if available
+            this.entity.getClass().getMethod("absMoveTo", double.class, double.class, double.class)
+                    .invoke(this.entity, target.x(), target.y(), target.z());
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            this.entity.setPos(target.x(), target.y(), target.z());
+        }
         return self();
     }
 
@@ -91,11 +109,31 @@ public abstract class BuilderBase<E extends Entity, B extends BuilderBase<E, B>>
      * @return This builder
      */
     public B rotation(float xRot, float yRot) {
-        this.entity.moveTo(this.entity.getX(),
-                this.entity.getY(),
-                this.entity.getZ(),
-                Mth.positiveModulo(yRot, 360.0F),
-                Mth.clamp(xRot, -90.0F, 90.0F));
+        float yaw = Mth.positiveModulo(yRot, 360.0F);
+        float pitch = Mth.clamp(xRot, -90.0F, 90.0F);
+
+        double x = this.entity.getX();
+        double y = this.entity.getY();
+        double z = this.entity.getZ();
+
+        // Try to call absMoveTo(x,y,z,yaw,pitch) if present; otherwise set pos and rotations separately.
+        try {
+            this.entity.getClass().getMethod("absMoveTo", double.class, double.class, double.class, float.class, float.class)
+                    .invoke(this.entity, x, y, z, yaw, pitch);
+        } catch (ReflectiveOperationException | LinkageError ignored) {
+            try {
+                this.entity.setPos(x, y, z);
+            } catch (LinkageError ignored2) {
+            }
+            try {
+                this.entity.setYRot(yaw);
+            } catch (LinkageError ignored2) {
+            }
+            try {
+                this.entity.setXRot(pitch);
+            } catch (LinkageError ignored2) {
+            }
+        }
         return self();
     }
 

@@ -77,8 +77,13 @@ public class LieManager {
     }
 
     private static <E extends Entity> void doMigrateEntity(EntityGlowLieImpl<E> lie, Entity entity) {
-        //noinspection unchecked
-        lie.setEntity((E) entity);
+        // Double-check safety here before the unchecked cast:
+        // we only proceed if UUID and exact runtime class match, so the cast to E is safe at runtime.
+        if (!lie.entity().getUUID().equals(entity.getUUID()) || lie.entity().getClass() != entity.getClass()) return;
+
+        @SuppressWarnings("unchecked")
+        E casted = (E) entity;
+        lie.setEntity(casted);
     }
 
     /////////////////

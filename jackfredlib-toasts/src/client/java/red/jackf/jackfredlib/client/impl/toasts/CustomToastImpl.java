@@ -4,8 +4,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.ToastManager;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.metadata.gui.GuiMetadataSection;
 import net.minecraft.client.resources.metadata.gui.GuiSpriteScaling;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -70,9 +74,10 @@ public class CustomToastImpl implements CustomToast {
     }
 
     private int leftWidth() {
-        var guiSprites = Minecraft.getInstance().getGuiSprites();
-        var sprite = guiSprites.getSpriteScaling(guiSprites.getSprite(format.texture()));
-        if (sprite instanceof GuiSpriteScaling.NineSlice nineSlice) {
+        TextureAtlas guiAtlas = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.GUI);
+        TextureAtlasSprite sprite = guiAtlas.getSprite(format.texture());
+        GuiSpriteScaling scaling = ((GuiMetadataSection) sprite.contents().getAdditionalMetadata(GuiMetadataSection.TYPE).orElse(GuiMetadataSection.DEFAULT)).scaling();
+        if (scaling instanceof GuiSpriteScaling.NineSlice nineSlice) {
             return nineSlice.border().left();
         } else {
             return DEFAULT_PADDING;
@@ -122,7 +127,7 @@ public class CustomToastImpl implements CustomToast {
         if (progress >= 1f && progressCompleteTime == -1) progressCompleteTime = timeVisible;
 
         // background
-        graphics.blitSprite(RenderType::guiTextured,
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                 format.texture(),
                 0,
                 0,
